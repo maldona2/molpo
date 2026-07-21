@@ -18,7 +18,7 @@
   border: 1px solid var(--borde);
   border-radius: var(--r-card);
   padding: 32px 30px;
-  background: #fff;
+  background: var(--surface);
   transition: box-shadow 0.2s, transform 0.2s;
 }
 .card:hover {
@@ -36,7 +36,7 @@
   font-family: var(--font-founders), sans-serif;
   font-weight: 500;
   font-size: 18px;
-  color: var(--azul-primario);
+  color: var(--accent);
 }
 .cardTitle {
   font-size: 23px;

@@ -1,4 +1,5 @@
 import { site } from "@/lib/site";
+import ThemeToggle from "./ThemeToggle";
 import styles from "./Nav.module.css";
 
 export default function Nav() {
@@ -18,6 +19,7 @@ export default function Nav() {
           <a href={site.contact.whatsappUrl} className={styles.cta} rel="noopener">
             WhatsApp
           </a>
+          <ThemeToggle />
         </div>
       </div>
     </nav>

@@ -102,6 +102,6 @@
   background: rgba(215, 232, 248, 0.14);
 }
 .light .tag {
-  color: var(--azul-primario);
+  color: var(--accent);
   background: var(--chip-2);
 }

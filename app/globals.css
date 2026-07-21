@@ -10,41 +10,67 @@ html {
 }
 body {
   margin: 0;
-  color: #20303f;
-  background: #fff;
+  color: var(--text);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 img {
   max-width: 100%;
   display: block;
 }
 a {
-  color: #18365d;
+  color: var(--link);
   text-decoration: none;
 }
 a:hover {
-  color: #4e78a9;
+  color: var(--link-hover);
 }
 h1,
 h2,
 h3 {
   font-family: var(--font-founders), sans-serif;
-  color: #09172b;
+  color: var(--text-strong);
   letter-spacing: -0.02em;
   margin: 0;
 }
 
 /* ===== Tokens de marca ===== */
 :root {
-  /* colores */
+  color-scheme: light dark;
+  /* paleta de marca (fija, no cambia por tema) */
   --azul-profundo: #09172b;
   --azul-primario: #18365d;
   --azul-medio: #4e78a9;
   --azul-claro: #8cb3de;
   --celeste-palido: #d7e8f8;
   --blanco: #ffffff;
-  /* neutros */
+  /* degradados (superficies oscuras en ambos temas) */
+  --grad-hero: radial-gradient(120% 130% at 8% 0%, #4e78a9 0%, #18365d 44%, #09172b 100%);
+  --grad-cta: radial-gradient(120% 150% at 85% 0%, #4e78a9, #18365d 45%, #09172b);
+  --grad-avatar: radial-gradient(130% 130% at 30% 20%, #4e78a9, #09172b);
+  --grad-card-dark: radial-gradient(130% 130% at 18% 10%, #4e78a9, #0e2038);
+  --wa-verde: #25d366;
+  /* layout */
+  --contenido: 1180px;
+  --pad-lateral: clamp(20px, 5vw, 48px);
+  /* radios */
+  --r-boton: 12px;
+  --r-pill: 999px;
+  --r-card: 16px;
+}
+
+/* ===== Tokens de tema (rol) — valores claros por defecto ===== */
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --nav-bg: rgba(255, 255, 255, 0.86);
+  --text: #20303f;
+  --text-strong: #09172b;
+  --link: #18365d;
+  --link-hover: #4e78a9;
+  --accent: #18365d;
   --seccion-alt: #f3f8fd;
   --borde: #e1eaf4;
   --borde-2: #e7eff7;
@@ -54,21 +80,55 @@ h3 {
   --texto-footer: #5e7a96;
   --chip: #eaf1f8;
   --chip-2: #dceaf7;
-  --wa-verde: #25d366;
-  /* degradados */
-  --grad-hero: radial-gradient(120% 130% at 8% 0%, #4e78a9 0%, #18365d 44%, #09172b 100%);
-  --grad-cta: radial-gradient(120% 150% at 85% 0%, #4e78a9, #18365d 45%, #09172b);
-  --grad-avatar: radial-gradient(130% 130% at 30% 20%, #4e78a9, #09172b);
-  --grad-card-dark: radial-gradient(130% 130% at 18% 10%, #4e78a9, #0e2038);
-  /* layout */
-  --contenido: 1180px;
-  --pad-lateral: clamp(20px, 5vw, 48px);
-  /* radios / sombras */
-  --r-boton: 12px;
-  --r-pill: 999px;
-  --r-card: 16px;
   --sombra-card: 0 24px 50px -30px rgba(9, 23, 43, 0.4);
   --sombra-cta-flotante: 0 16px 34px -12px rgba(9, 23, 43, 0.6);
+}
+
+/* Valores oscuros: reutilizados por (a) sistema en oscuro sin elección
+   explícita y (b) override manual [data-theme="dark"]. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #09172b;
+    --surface: #0e2038;
+    --nav-bg: rgba(9, 23, 43, 0.86);
+    --text: #d7e8f8;
+    --text-strong: #ffffff;
+    --link: #8cb3de;
+    --link-hover: #d7e8f8;
+    --accent: #8cb3de;
+    --seccion-alt: #0e2038;
+    --borde: rgba(140, 179, 222, 0.16);
+    --borde-2: rgba(140, 179, 222, 0.1);
+    --texto-cuerpo: #c6dcf2;
+    --texto-cuerpo-2: #a9c6e6;
+    --texto-tenue: #8cb3de;
+    --texto-footer: #5e7a96;
+    --chip: rgba(140, 179, 222, 0.12);
+    --chip-2: rgba(140, 179, 222, 0.16);
+    --sombra-card: 0 24px 50px -30px rgba(0, 0, 0, 0.6);
+    --sombra-cta-flotante: 0 16px 34px -12px rgba(0, 0, 0, 0.7);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #09172b;
+  --surface: #0e2038;
+  --nav-bg: rgba(9, 23, 43, 0.86);
+  --text: #d7e8f8;
+  --text-strong: #ffffff;
+  --link: #8cb3de;
+  --link-hover: #d7e8f8;
+  --accent: #8cb3de;
+  --seccion-alt: #0e2038;
+  --borde: rgba(140, 179, 222, 0.16);
+  --borde-2: rgba(140, 179, 222, 0.1);
+  --texto-cuerpo: #c6dcf2;
+  --texto-cuerpo-2: #a9c6e6;
+  --texto-tenue: #8cb3de;
+  --texto-footer: #5e7a96;
+  --chip: rgba(140, 179, 222, 0.12);
+  --chip-2: rgba(140, 179, 222, 0.16);
+  --sombra-card: 0 24px 50px -30px rgba(0, 0, 0, 0.6);
+  --sombra-cta-flotante: 0 16px 34px -12px rgba(0, 0, 0, 0.7);
 }
 
 /* ===== Utilidades comunes ===== */
