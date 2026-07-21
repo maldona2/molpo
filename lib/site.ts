@@ -20,9 +20,10 @@ export const site = {
     phoneDisplay: "+54 9 381 300 0120",
   },
   nav: [
-    { label: "Servicios", href: "#servicios" },
-    { label: "Cómo trabajo", href: "#proceso" },
-    { label: "Casos", href: "#casos" },
+    { label: "Servicios", href: "/#servicios" },
+    { label: "Cómo trabajo", href: "/#proceso" },
+    { label: "Metodología", href: "/como-trabajamos" },
+    { label: "Casos", href: "/#casos" },
   ],
   // Muestra/oculta el botón flotante de WhatsApp (sin JS de cliente).
   showFloatingWa: true,

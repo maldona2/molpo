@@ -10,7 +10,7 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: 22px;
   margin-top: 44px;
 }
@@ -22,14 +22,26 @@
   min-height: 260px;
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-card);
 }
 .dark {
   background: var(--grad-card-dark);
   color: #fff;
 }
+.dark:hover {
+  color: #fff;
+}
 .light {
   background: var(--seccion-alt);
   border: 1px solid var(--borde);
+  color: var(--text);
+}
+.light:hover {
+  color: var(--text);
 }
 .watermark {
   position: absolute;
@@ -104,4 +116,17 @@
 .light .tag {
   color: var(--accent);
   background: var(--chip-2);
+}
+.verCaso {
+  position: relative;
+  margin-top: 18px;
+  font-family: var(--font-founders), sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+}
+.dark .verCaso {
+  color: var(--azul-claro);
+}
+.light .verCaso {
+  color: var(--accent);
 }

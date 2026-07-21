@@ -22,6 +22,10 @@ export default function Proceso() {
             </li>
           ))}
         </ol>
+        <a href="/como-trabajamos" className={styles.masLink}>
+          Ver la metodología completa
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
   );

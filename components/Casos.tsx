@@ -1,4 +1,5 @@
-import { casos } from "@/content/data";
+import Link from "next/link";
+import { proyectos } from "@/content/portfolio";
 import styles from "./Casos.module.css";
 
 export default function Casos() {
@@ -9,28 +10,30 @@ export default function Casos() {
         Proyectos reales, en uso
       </h2>
       <div className={styles.grid}>
-        {casos.map((c) => {
-          const dark = c.variant === "dark";
+        {proyectos.map((p) => {
+          const dark = p.card.variant === "dark";
           return (
-            <article
-              key={c.cliente}
+            <Link
+              key={p.slug}
+              href={`/casos/${p.slug}/`}
               className={`${styles.card} ${dark ? styles.dark : styles.light}`}
             >
               <div
                 className={`${styles.watermark} ${dark ? styles.wmDark : styles.wmLight}`}
                 aria-hidden="true"
               />
-              <div className={styles.cliente}>{c.cliente}</div>
-              <h3 className={styles.cardTitle}>{c.titulo}</h3>
-              <p className={styles.cardText}>{c.texto}</p>
+              <div className={styles.cliente}>{p.cliente}</div>
+              <h3 className={styles.cardTitle}>{p.card.titulo}</h3>
+              <p className={styles.cardText}>{p.card.texto}</p>
               <div className={styles.tags}>
-                {c.tags.map((t) => (
+                {p.card.tags.map((t) => (
                   <span key={t} className={styles.tag}>
                     {t}
                   </span>
                 ))}
               </div>
-            </article>
+              <span className={styles.verCaso}>Ver caso completo →</span>
+            </Link>
           );
         })}
       </div>

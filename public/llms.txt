@@ -23,8 +23,9 @@ Contacto:
 
 ## Casos reales (en uso)
 
-- **Decortinas SAS** — Auditoría técnica y sistema de distribuidores. Diagnóstico verificado en código fuente de tres sistemas internos, con hoja de ruta priorizada, más el diseño del sistema de distribuidores.
-- **KOMUK** — Web mayorista y hub central. Web mayorista y un nuevo hub central que unifica la operación en un solo lugar, conectando lo que antes vivía disperso.
+- **KOMUK** — Plataforma B2B de regalos corporativos. Catálogo, cotizador con IA, motor de precios y backoffice sincronizados con múltiples proveedores. Caso completo: https://www.molpo.com/casos/komuk/
+- **Decortinas** — Cotización y gestión de pedidos para distribuidores de cortinas. Presupuestador con reglas de fabricación, tablero operativo y documentación en PDF. Caso completo: https://www.molpo.com/casos/decortinas/
+- **TR Fit** — Plataforma de entrenamiento personalizado para coaches y atletas. App móvil, panel web y API para rutinas, sesiones, progresión, alertas y membresías. Caso completo: https://www.molpo.com/casos/tr-fit/
 
 ## Para quién
 

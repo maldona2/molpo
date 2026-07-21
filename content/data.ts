@@ -44,21 +44,4 @@ export const pasos = [
   },
 ] as const;
 
-export const casos = [
-  {
-    cliente: "Decortinas SAS",
-    titulo: "Auditoría técnica y sistema de distribuidores",
-    texto:
-      "Diagnóstico verificado en código fuente de tres sistemas internos, con hoja de ruta priorizada, más el diseño del sistema de distribuidores.",
-    tags: ["Auditoría", "Sistema de distribuidores"],
-    variant: "dark" as const,
-  },
-  {
-    cliente: "KOMUK",
-    titulo: "Web mayorista y hub central",
-    texto:
-      "Web mayorista y un nuevo hub central que unifica la operación en un solo lugar, conectando lo que antes vivía disperso.",
-    tags: ["Web mayorista", "Hub central"],
-    variant: "light" as const,
-  },
-] as const;
+// Las cards de "Casos" ahora salen de content/portfolio.ts (fuente única del portfolio).

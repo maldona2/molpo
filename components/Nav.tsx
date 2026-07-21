@@ -6,7 +6,7 @@ export default function Nav() {
   return (
     <nav className={styles.nav} aria-label="Principal">
       <div className={`container ${styles.inner}`}>
-        <a href="#top" aria-label="molpo — inicio">
+        <a href="/" aria-label="molpo — inicio">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assets/molpo-negro.png" alt="molpo" className={styles.logo} width={68} height={24} />
         </a>

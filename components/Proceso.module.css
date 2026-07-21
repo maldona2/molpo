@@ -49,3 +49,20 @@
   color: var(--texto-cuerpo-2);
   margin: 8px 0 0;
 }
+.masLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 40px 0 0;
+  font-family: var(--font-founders), sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--link);
+}
+.masLink:hover {
+  color: var(--link-hover);
+  gap: 12px;
+}
+.masLink span {
+  transition: transform 0.2s ease;
+}
