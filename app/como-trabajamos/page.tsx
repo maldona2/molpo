@@ -2,27 +2,105 @@ import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import FloatingWa from "@/components/FloatingWa";
+import JsonLd from "@/components/JsonLd";
 import { site } from "@/lib/site";
 import styles from "./ComoTrabajamos.module.css";
 
+const pageTitle = "Cómo trabajamos";
+const pageDescription =
+  "Una metodología para construir software a medida que puede crecer sin duplicar datos, reglas ni problemas.";
+const pageUrl = `${site.url}/como-trabajamos/`;
+
 export const metadata: Metadata = {
-  title: "Cómo trabajamos",
-  description:
-    "Una metodología para construir software a medida que puede crecer sin duplicar datos, reglas ni problemas.",
-  alternates: { canonical: "/como-trabajamos" },
+  title: pageTitle,
+  description: pageDescription,
+  keywords: [
+    "metodología de desarrollo de software",
+    "arquitectura de software para pymes",
+    "desarrollo de software por etapas",
+    "integración de sistemas y datos",
+  ],
+  authors: [{ name: site.founder, url: site.url }],
+  alternates: {
+    canonical: "/como-trabajamos/",
+    languages: { "es-AR": "/como-trabajamos/" },
+  },
   openGraph: {
     type: "article",
-    url: `${site.url}/como-trabajamos`,
+    locale: site.locale,
+    url: pageUrl,
+    siteName: site.name,
     title: "Cómo trabajamos | molpo",
-    description:
-      "Cimientos compartidos y herramientas a medida: software que puede cambiar sin romper lo que ya funciona.",
+    description: pageDescription,
+    authors: [`${site.url}/#matias`],
+    section: "Metodología",
+    images: [
+      {
+        url: site.socialImage.openGraph,
+        width: site.socialImage.width,
+        height: site.socialImage.height,
+        alt: site.socialImage.alt,
+        type: "image/png",
+      },
+    ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cómo trabajamos | molpo",
+    description: pageDescription,
+    images: [
+      {
+        url: site.socialImage.twitter,
+        width: site.socialImage.width,
+        height: site.socialImage.height,
+        alt: site.socialImage.alt,
+      },
+    ],
+  },
+};
+
+const pageJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: "Software que puede cambiar sin romper lo que ya funciona",
+      name: pageTitle,
+      description: pageDescription,
+      url: pageUrl,
+      inLanguage: site.lang,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      author: { "@id": `${site.url}/#matias` },
+      publisher: { "@id": `${site.url}/#molpo` },
+      about: { "@id": `${site.url}/#molpo` },
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: `${pageTitle} | ${site.name}`,
+      description: pageDescription,
+      inLanguage: site.lang,
+      isPartOf: { "@id": `${site.url}/#website` },
+      mainEntity: { "@id": `${pageUrl}#article` },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumbs`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: `${site.url}/` },
+        { "@type": "ListItem", position: 2, name: pageTitle, item: pageUrl },
+      ],
+    },
+  ],
 };
 
 export default function ComoTrabajamos() {
   const wa = site.contact.whatsappUrl;
   return (
     <>
+      <JsonLd data={pageJsonLd} />
       <Nav />
       <main id="top">
         <header className={styles.hero}>

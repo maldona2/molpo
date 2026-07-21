@@ -7,13 +7,13 @@ export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: site.url,
+      url: `${site.url}/`,
       lastModified: new Date("2026-07-21"),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: `${site.url}/como-trabajamos`,
+      url: `${site.url}/como-trabajamos/`,
       lastModified: new Date("2026-07-21"),
       changeFrequency: "monthly",
       priority: 0.8,

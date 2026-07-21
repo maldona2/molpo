@@ -3,6 +3,8 @@
 export const site = {
   name: "molpo",
   legalName: "molpo",
+  title: "molpo — Desarrollo de software para pymes | Tucumán",
+  socialTitle: "molpo — Sistemas que sostienen tu empresa",
   founder: "Matías Maldonado",
   jobTitle: "Desarrollador de Software",
   url: "https://www.molpo.com",
@@ -12,6 +14,15 @@ export const site = {
   tagline: "Software construido sobre bases sólidas",
   description:
     "Desarrollo de software a medida, rescate de sistemas hechos con IA e integración de datos para pymes de Tucumán y toda Argentina.",
+  socialImage: {
+    openGraph: "/opengraph-image",
+    twitter: "/twitter-image",
+    width: 1200,
+    height: 630,
+    alt: "molpo — Desarrollo de software para pymes | Tucumán",
+  },
+  themeColor: "#18365D",
+  backgroundColor: "#FFFFFF",
   contact: {
     whatsappNumber: "+5493813000120",
     whatsappUrl: "https://wa.me/5493813000120",

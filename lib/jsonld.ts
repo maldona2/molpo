@@ -2,7 +2,11 @@
 import { site } from "./site";
 import { servicios } from "@/content/data";
 
-export function jsonLd() {
+export function serializeJsonLd(data: unknown) {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
+export function siteJsonLd() {
   const person = {
     "@type": "Person",
     "@id": `${site.url}/#matias`,
@@ -10,6 +14,7 @@ export function jsonLd() {
     jobTitle: site.jobTitle,
     worksFor: { "@id": `${site.url}/#molpo` },
     url: site.url,
+    knowsLanguage: "es",
   };
 
   const professionalService = {
@@ -19,6 +24,12 @@ export function jsonLd() {
     description: site.description,
     url: site.url,
     slogan: site.tagline,
+    logo: {
+      "@type": "ImageObject",
+      url: `${site.url}/icon.svg`,
+      width: 512,
+      height: 512,
+    },
     telephone: site.contact.whatsappNumber,
     email: site.contact.email,
     priceRange: "$$",
@@ -32,7 +43,14 @@ export function jsonLd() {
       addressCountry: "AR",
     },
     founder: { "@id": `${site.url}/#matias` },
-    sameAs: [site.contact.web],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: site.contact.whatsappNumber,
+      email: site.contact.email,
+      contactType: "sales",
+      areaServed: "AR",
+      availableLanguage: "Spanish",
+    },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Servicios de desarrollo de software",
@@ -53,23 +71,29 @@ export function jsonLd() {
     "@id": `${site.url}/#website`,
     url: site.url,
     name: site.name,
+    alternateName: site.title,
     inLanguage: site.lang,
     publisher: { "@id": `${site.url}/#molpo` },
-  };
-
-  const webPage = {
-    "@type": "WebPage",
-    "@id": `${site.url}/#webpage`,
-    url: site.url,
-    name: `${site.name} — ${site.jobTitle} para pymes`,
-    description: site.description,
-    inLanguage: site.lang,
-    isPartOf: { "@id": `${site.url}/#website` },
     about: { "@id": `${site.url}/#molpo` },
   };
 
   return {
     "@context": "https://schema.org",
-    "@graph": [professionalService, person, webSite, webPage],
+    "@graph": [professionalService, person, webSite],
+  };
+}
+
+export function homePageJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${site.url}/#webpage`,
+    url: `${site.url}/`,
+    name: site.title,
+    description: site.description,
+    inLanguage: site.lang,
+    isPartOf: { "@id": `${site.url}/#website` },
+    about: { "@id": `${site.url}/#molpo` },
+    mainEntity: { "@id": `${site.url}/#molpo` },
   };
 }

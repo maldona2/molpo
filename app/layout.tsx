@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
+import JsonLd from "@/components/JsonLd";
 import { site } from "@/lib/site";
-import { jsonLd } from "@/lib/jsonld";
+import { siteJsonLd } from "@/lib/jsonld";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,11 +25,12 @@ const founders = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "molpo — Desarrollo de software para pymes | Tucumán",
+    default: site.title,
     template: "%s | molpo",
   },
   description: site.description,
   applicationName: site.name,
+  referrer: "origin-when-cross-origin",
   authors: [{ name: site.founder, url: site.url }],
   creator: site.founder,
   publisher: site.name,
@@ -44,26 +46,56 @@ export const metadata: Metadata = {
     "molpo",
     "Matías Maldonado",
   ],
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    languages: { "es-AR": "/" },
+  },
   openGraph: {
     type: "website",
     locale: site.locale,
     url: site.url,
     siteName: site.name,
-    title: "molpo — Sistemas que sostienen tu empresa, no que la complican",
+    title: site.socialTitle,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "molpo — Desarrollo de software para pymes | Tucumán",
+    title: site.title,
     description: site.description,
+  },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: site.name,
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
   category: "technology",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: site.backgroundColor },
+    { media: "(prefers-color-scheme: dark)", color: "#09172B" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -76,10 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               '(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();',
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }}
-        />
+        <JsonLd data={siteJsonLd()} />
         {children}
       </body>
     </html>

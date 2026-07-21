@@ -4,6 +4,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import FloatingWa from "@/components/FloatingWa";
+import JsonLd from "@/components/JsonLd";
 import { site } from "@/lib/site";
 import { getProyecto, proyectos, type Bloque } from "@/content/portfolio";
 import styles from "./Caso.module.css";
@@ -32,12 +33,49 @@ export async function generateMetadata({
   return {
     title,
     description: proyecto.lead,
-    alternates: { canonical: `/casos/${proyecto.slug}/` },
+    keywords: [
+      `caso de éxito ${proyecto.cliente}`,
+      proyecto.titulo,
+      "desarrollo de software a medida",
+      "portfolio de desarrollo de software",
+    ],
+    authors: [{ name: site.founder, url: site.url }],
+    alternates: {
+      canonical: `/casos/${proyecto.slug}/`,
+      languages: { "es-AR": `/casos/${proyecto.slug}/` },
+    },
     openGraph: {
       type: "article",
+      locale: site.locale,
       url: casoUrl(proyecto.slug),
+      siteName: site.name,
       title: `${title} | molpo`,
       description: proyecto.lead,
+      authors: [`${site.url}/#matias`],
+      section: "Casos de éxito",
+      tags: [...proyecto.card.tags],
+      images: [
+        {
+          url: site.socialImage.openGraph,
+          width: site.socialImage.width,
+          height: site.socialImage.height,
+          alt: site.socialImage.alt,
+          type: "image/png",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | molpo`,
+      description: proyecto.lead,
+      images: [
+        {
+          url: site.socialImage.twitter,
+          width: site.socialImage.width,
+          height: site.socialImage.height,
+          alt: site.socialImage.alt,
+        },
+      ],
     },
   };
 }
@@ -85,16 +123,31 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
         "@type": "CreativeWork",
         "@id": `${casoUrl(proyecto.slug)}#caso`,
         name: `${proyecto.cliente}: ${proyecto.titulo}`,
+        headline: proyecto.titulo,
         description: proyecto.lead,
         url: casoUrl(proyecto.slug),
         inLanguage: site.lang,
+        genre: "Caso de estudio",
+        mainEntityOfPage: { "@id": `${casoUrl(proyecto.slug)}#webpage` },
         creator: { "@id": `${site.url}/#matias` },
+        author: { "@id": `${site.url}/#matias` },
         publisher: { "@id": `${site.url}/#molpo` },
       },
       {
+        "@type": "WebPage",
+        "@id": `${casoUrl(proyecto.slug)}#webpage`,
+        url: casoUrl(proyecto.slug),
+        name: `${proyecto.cliente}: ${proyecto.titulo} | ${site.name}`,
+        description: proyecto.lead,
+        inLanguage: site.lang,
+        isPartOf: { "@id": `${site.url}/#website` },
+        mainEntity: { "@id": `${casoUrl(proyecto.slug)}#caso` },
+      },
+      {
         "@type": "BreadcrumbList",
+        "@id": `${casoUrl(proyecto.slug)}#breadcrumbs`,
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Inicio", item: site.url },
+          { "@type": "ListItem", position: 1, name: "Inicio", item: `${site.url}/` },
           { "@type": "ListItem", position: 2, name: "Casos", item: `${site.url}/#casos` },
           {
             "@type": "ListItem",
@@ -109,10 +162,7 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <Nav />
       <main id="top">
         <header className={styles.hero}>
