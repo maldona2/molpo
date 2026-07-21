@@ -1,7 +1,7 @@
 .nav {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 200;
   background: var(--nav-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -29,6 +29,11 @@
 :global(:root[data-theme="dark"]) .logo {
   content: url("/assets/molpo-blanco.png");
 }
+.right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .links {
   display: flex;
   align-items: center;
@@ -53,4 +58,161 @@
 .cta:hover {
   color: #fff;
   background: #14304f;
+}
+.menuButton {
+  display: none;
+}
+.mobileMenu {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .nav[data-menu-open] {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .inner {
+    min-height: 64px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .links {
+    display: none;
+  }
+  .right {
+    gap: 10px;
+  }
+  .menuButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--borde);
+    border-radius: var(--r-pill);
+    color: var(--texto-cuerpo);
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .menuButton:hover {
+    color: var(--accent);
+    border-color: var(--azul-medio);
+    background: var(--chip);
+  }
+  .menuIcon {
+    position: relative;
+    display: block;
+    width: 18px;
+    height: 14px;
+  }
+  .menuIcon span {
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 1.5px;
+    border-radius: var(--r-pill);
+    background: currentColor;
+    transition: top 0.2s ease, transform 0.2s ease;
+  }
+  .menuIcon span:first-child {
+    top: 3px;
+  }
+  .menuIcon span:last-child {
+    top: 10px;
+  }
+  .menuButton[aria-expanded="true"] .menuIcon span:first-child {
+    top: 6px;
+    transform: rotate(45deg);
+  }
+  .menuButton[aria-expanded="true"] .menuIcon span:last-child {
+    top: 6px;
+    transform: rotate(-45deg);
+  }
+  .mobileMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: calc(100dvh - 65px);
+    min-height: calc(100svh - 65px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--surface);
+    animation: menuIn 0.22s ease-out both;
+  }
+  .mobileMenuInner {
+    min-height: 100%;
+    padding-top: clamp(28px, 7vh, 64px);
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+  }
+  .mobileLinks {
+    border-top: 1px solid var(--borde);
+  }
+  .mobileLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 64px;
+    padding: 14px 2px;
+    border-bottom: 1px solid var(--borde);
+    font-family: var(--font-founders), sans-serif;
+    font-weight: 500;
+    font-size: clamp(25px, 7vw, 34px);
+    line-height: 1;
+    color: var(--text-strong);
+    letter-spacing: -0.01em;
+  }
+  .mobileLink:hover {
+    color: var(--link-hover);
+  }
+  .arrow {
+    flex: 0 0 auto;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--azul-medio);
+  }
+  .mobileCta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 52px;
+    margin-top: auto;
+    padding: 14px 20px;
+    border-radius: var(--r-boton);
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;
+    background: var(--azul-primario);
+  }
+  .mobileCta:hover {
+    color: #fff;
+    background: #14304f;
+  }
+  .statusDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--wa-verde);
+    box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.24);
+  }
+}
+
+@keyframes menuIn {
+  from {
+    transform: translateY(-6px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
