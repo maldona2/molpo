@@ -5,7 +5,7 @@
 Contacto:
 - WhatsApp: +54 9 381 300 0120 (https://wa.me/5493813000120)
 - Email: molpo@gmail.com
-- Web: https://molpo.com.ar
+- Web: https://www.molpo.com
 - Zona: Tucumán, Argentina (trabaja para toda Argentina)
 
 ## Qué hace (servicios)
@@ -23,9 +23,9 @@ Contacto:
 
 ## Casos reales (en uso)
 
-- **KOMUK** — Plataforma B2B de regalos corporativos. Catálogo, cotizador con IA, motor de precios y backoffice sincronizados con múltiples proveedores. Caso completo: https://molpo.com.ar/casos/komuk/
-- **Decortinas** — Cotización y gestión de pedidos para distribuidores de cortinas. Presupuestador con reglas de fabricación, tablero operativo y documentación en PDF. Caso completo: https://molpo.com.ar/casos/decortinas/
-- **TR Fit** — Plataforma de entrenamiento personalizado para coaches y atletas. App móvil, panel web y API para rutinas, sesiones, progresión, alertas y membresías. Caso completo: https://molpo.com.ar/casos/tr-fit/
+- **KOMUK** — Plataforma B2B de regalos corporativos. Catálogo, cotizador con IA, motor de precios y backoffice sincronizados con múltiples proveedores. Caso completo: https://www.molpo.com/casos/komuk/
+- **Decortinas** — Cotización y gestión de pedidos para distribuidores de cortinas. Presupuestador con reglas de fabricación, tablero operativo y documentación en PDF. Caso completo: https://www.molpo.com/casos/decortinas/
+- **TR Fit** — Plataforma de entrenamiento personalizado para coaches y atletas. App móvil, panel web y API para rutinas, sesiones, progresión, alertas y membresías. Caso completo: https://www.molpo.com/casos/tr-fit/
 
 ## Para quién
 
