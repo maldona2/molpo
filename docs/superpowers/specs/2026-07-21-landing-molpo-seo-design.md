@@ -20,7 +20,7 @@ Fuente de diseño: `~/Downloads/design_handoff_landing_molpo/` (prototipo HTML `
 | Estilos | CSS Modules por componente + tokens en `:root` (globals.css). Diseño fluido con `clamp()` / `grid auto-fit minmax` / `flex-wrap`, sin media queries |
 | Tipografía | Founders Grotesk (títulos) self-hosted vía `next/font/local` (OTF→WOFF2); Inter (cuerpo) vía `next/font/google`. `display:swap`, preload |
 | SEO/GEO | Completo: Metadata API, JSON-LD, sitemap, robots, `llms.txt`, semántica/a11y, OG generada en build |
-| Base URL canónica | `https://www.molpo.com` |
+| Base URL canónica | `https://molpo.com.ar` |
 | Estado | Constante `showFloatingWa` (default `true`) en `lib/site.ts` — sin JS de cliente |
 
 > **Nota de licencia:** Founders Grotesk es una fuente comercial. Los OTF vienen en el handoff pero la licencia de uso en producción es responsabilidad del cliente/desarrollador. Si no se licencia, sustituto libre acordado en el handoff: **Space Grotesk** (cambio de una línea en la config de fuentes).
@@ -95,14 +95,14 @@ Radios/sombras:
 ## Interacciones
 
 - Nav links → scroll a anclas `#servicios`, `#proceso`, `#casos` (`scroll-behavior:smooth`, respeta reduced-motion).
-- CTAs WhatsApp → `https://wa.me/5493813000120`. Email → `mailto:molpo@gmail.com`. Web → `https://www.molpo.com`.
+- CTAs WhatsApp → `https://wa.me/5493813000120`. Email → `mailto:molpo@gmail.com`. Web → `https://molpo.com.ar`.
 - Cards servicio: hover eleva + sombrea (transición 0.2s).
 - Floating: `floatIn` (fade + slide-up, 0.4s).
 
 ## SEO + GEO (completo)
 
 **Metadata (Metadata API en layout.tsx):**
-- `metadataBase = https://www.molpo.com`, `alternates.canonical = '/'`
+- `metadataBase = https://molpo.com.ar`, `alternates.canonical = '/'`
 - title: "molpo — Desarrollo de software para pymes | Tucumán"
 - description: enfocada en propuesta de valor (sistemas a medida, rescate de sistemas con IA, integración de datos, Tucumán)
 - keywords relevantes, `robots: index,follow`

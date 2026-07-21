@@ -7,7 +7,7 @@ export const site = {
   socialTitle: "molpo — Sistemas que sostienen tu empresa",
   founder: "Matías Maldonado",
   jobTitle: "Desarrollador de Software",
-  url: "https://www.molpo.com",
+  url: "https://molpo.com.ar",
   locale: "es_AR",
   lang: "es-AR",
   region: "Tucumán, Argentina",
@@ -27,7 +27,7 @@ export const site = {
     whatsappNumber: "+5493813000120",
     whatsappUrl: "https://wa.me/5493813000120",
     email: "molpo@gmail.com",
-    web: "https://www.molpo.com",
+    web: "https://molpo.com.ar",
     phoneDisplay: "+54 9 381 300 0120",
   },
   nav: [

@@ -15,7 +15,7 @@ export default function Footer() {
             {site.contact.email}
           </a>
           <a href={site.contact.web} className={styles.link} rel="noopener">
-            www.molpo.com
+            molpo.com.ar
           </a>
         </div>
       </div>
