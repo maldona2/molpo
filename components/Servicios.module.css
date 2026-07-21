@@ -1,0 +1,51 @@
+.section {
+  padding-top: clamp(64px, 9vw, 110px);
+  padding-bottom: clamp(64px, 9vw, 110px);
+}
+.h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+  margin: 12px 0 0;
+  max-width: 20ch;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 44px;
+}
+.card {
+  border: 1px solid var(--borde);
+  border-radius: var(--r-card);
+  padding: 32px 30px;
+  background: #fff;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover {
+  box-shadow: var(--sombra-card);
+  transform: translateY(-4px);
+}
+.num {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-founders), sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--azul-primario);
+}
+.cardTitle {
+  font-size: 23px;
+  margin: 22px 0 0;
+}
+.cardText {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--texto-cuerpo-2);
+  margin: 12px 0 0;
+}

@@ -1,0 +1,107 @@
+.section {
+  padding-top: clamp(64px, 9vw, 110px);
+  padding-bottom: clamp(64px, 9vw, 110px);
+}
+.h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+  margin: 12px 0 0;
+  max-width: 20ch;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px;
+  margin-top: 44px;
+}
+.card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 38px 34px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+}
+.dark {
+  background: var(--grad-card-dark);
+  color: #fff;
+}
+.light {
+  background: var(--seccion-alt);
+  border: 1px solid var(--borde);
+}
+.watermark {
+  position: absolute;
+  right: -30px;
+  bottom: -30px;
+  width: 220px;
+  height: 180px;
+  pointer-events: none;
+}
+.wmDark {
+  opacity: 0.1;
+  background: url("/assets/simbolo-blanco.svg") no-repeat center / contain;
+}
+.wmLight {
+  opacity: 0.09;
+  background: url("/assets/simbolo-azul.svg") no-repeat center / contain;
+}
+.cliente {
+  position: relative;
+  font-family: var(--font-founders), sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.dark .cliente {
+  color: var(--azul-claro);
+}
+.light .cliente {
+  color: var(--azul-medio);
+}
+.cardTitle {
+  position: relative;
+  font-size: 27px;
+  margin: 14px 0 0;
+}
+.dark .cardTitle {
+  color: #fff;
+}
+.cardText {
+  position: relative;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 12px 0 0;
+}
+.dark .cardText {
+  color: var(--celeste-palido);
+}
+.light .cardText {
+  color: var(--texto-cuerpo-2);
+}
+.tags {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 22px;
+}
+.tag {
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+}
+.dark .tag {
+  color: var(--celeste-palido);
+  background: rgba(215, 232, 248, 0.14);
+}
+.light .tag {
+  color: var(--azul-primario);
+  background: var(--chip-2);
+}

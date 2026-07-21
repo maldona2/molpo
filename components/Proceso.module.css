@@ -1,0 +1,51 @@
+.wrap {
+  background: var(--seccion-alt);
+  border-top: 1px solid var(--borde-2);
+  border-bottom: 1px solid var(--borde-2);
+}
+.inner {
+  padding-top: clamp(64px, 9vw, 110px);
+  padding-bottom: clamp(64px, 9vw, 110px);
+}
+.h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.08;
+  margin: 12px 0 0;
+  max-width: 22ch;
+}
+.intro {
+  font-weight: 400;
+  font-size: clamp(16px, 1.8vw, 19px);
+  line-height: 1.55;
+  color: var(--texto-cuerpo-2);
+  margin: 16px 0 0;
+  max-width: 58ch;
+}
+.grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 22px;
+  margin: 46px 0 0;
+}
+.step {
+  margin: 0;
+}
+.stepNum {
+  font-family: var(--font-founders), sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--azul-claro);
+}
+.stepTitle {
+  font-size: 20px;
+  margin: 8px 0 0;
+}
+.stepText {
+  font-weight: 400;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--texto-cuerpo-2);
+  margin: 8px 0 0;
+}

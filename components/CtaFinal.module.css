@@ -1,0 +1,80 @@
+.wrap {
+  position: relative;
+  background: var(--grad-cta);
+  color: #fff;
+  overflow: hidden;
+}
+.watermark {
+  position: absolute;
+  left: -6%;
+  bottom: -40%;
+  width: min(520px, 60vw);
+  height: 150%;
+  opacity: 0.08;
+  background: url("/assets/simbolo-blanco.svg") no-repeat center / contain;
+  pointer-events: none;
+}
+.inner {
+  position: relative;
+  padding-top: clamp(64px, 9vw, 120px);
+  padding-bottom: clamp(64px, 9vw, 120px);
+  text-align: center;
+}
+.h2 {
+  color: #fff;
+  font-size: clamp(32px, 5vw, 60px);
+  line-height: 1.05;
+  margin: 0 auto;
+  max-width: 18ch;
+}
+.sub {
+  font-weight: 400;
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: 1.55;
+  color: var(--celeste-palido);
+  margin: 20px auto 0;
+  max-width: 50ch;
+}
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 36px;
+}
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--azul-profundo);
+  background: var(--azul-claro);
+  padding: 16px 30px;
+  border-radius: var(--r-boton);
+}
+.ctaPrimary:hover {
+  color: var(--azul-profundo);
+  background: #9cbfe6;
+}
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 17px;
+  color: #fff;
+  padding: 16px 26px;
+  border-radius: var(--r-boton);
+  border: 1px solid rgba(140, 179, 222, 0.5);
+}
+.ctaSecondary:hover {
+  color: #fff;
+  border-color: rgba(140, 179, 222, 0.9);
+}
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--wa-verde);
+  box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.28);
+}

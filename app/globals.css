@@ -1,0 +1,109 @@
+/* ===== Reset mínimo ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  color: #20303f;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+a {
+  color: #18365d;
+  text-decoration: none;
+}
+a:hover {
+  color: #4e78a9;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-founders), sans-serif;
+  color: #09172b;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* ===== Tokens de marca ===== */
+:root {
+  /* colores */
+  --azul-profundo: #09172b;
+  --azul-primario: #18365d;
+  --azul-medio: #4e78a9;
+  --azul-claro: #8cb3de;
+  --celeste-palido: #d7e8f8;
+  --blanco: #ffffff;
+  /* neutros */
+  --seccion-alt: #f3f8fd;
+  --borde: #e1eaf4;
+  --borde-2: #e7eff7;
+  --texto-cuerpo: #33475a;
+  --texto-cuerpo-2: #4a5d70;
+  --texto-tenue: #6b7c90;
+  --texto-footer: #5e7a96;
+  --chip: #eaf1f8;
+  --chip-2: #dceaf7;
+  --wa-verde: #25d366;
+  /* degradados */
+  --grad-hero: radial-gradient(120% 130% at 8% 0%, #4e78a9 0%, #18365d 44%, #09172b 100%);
+  --grad-cta: radial-gradient(120% 150% at 85% 0%, #4e78a9, #18365d 45%, #09172b);
+  --grad-avatar: radial-gradient(130% 130% at 30% 20%, #4e78a9, #09172b);
+  --grad-card-dark: radial-gradient(130% 130% at 18% 10%, #4e78a9, #0e2038);
+  /* layout */
+  --contenido: 1180px;
+  --pad-lateral: clamp(20px, 5vw, 48px);
+  /* radios / sombras */
+  --r-boton: 12px;
+  --r-pill: 999px;
+  --r-card: 16px;
+  --sombra-card: 0 24px 50px -30px rgba(9, 23, 43, 0.4);
+  --sombra-cta-flotante: 0 16px 34px -12px rgba(9, 23, 43, 0.6);
+}
+
+/* ===== Utilidades comunes ===== */
+.container {
+  max-width: var(--contenido);
+  margin: 0 auto;
+  padding-left: var(--pad-lateral);
+  padding-right: var(--pad-lateral);
+}
+.eyebrow {
+  font-family: var(--font-founders), sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--azul-medio);
+}
+
+/* Accesibilidad: foco visible en interactivos */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--azul-medio);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Respeta preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

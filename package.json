@@ -1,0 +1,24 @@
+{
+  "name": "molpo-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page de molpo — desarrollo de software para pymes (Tucumán)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "serve": "npx serve out"
+  },
+  "dependencies": {
+    "next": "15.4.6",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.14.0",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
+    "typescript": "5.9.2"
+  }
+}

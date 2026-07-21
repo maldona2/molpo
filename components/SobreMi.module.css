@@ -1,0 +1,49 @@
+.wrap {
+  background: var(--seccion-alt);
+  border-top: 1px solid var(--borde-2);
+}
+.inner {
+  padding-top: clamp(56px, 8vw, 96px);
+  padding-bottom: clamp(56px, 8vw, 96px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 44px;
+  align-items: center;
+}
+.h2 {
+  font-size: clamp(26px, 3.5vw, 40px);
+  line-height: 1.1;
+  margin: 12px 0 0;
+}
+.role {
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--texto-tenue);
+  margin: 6px 0 0;
+}
+.bio {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--texto-cuerpo);
+  margin: 20px 0 0;
+  max-width: 52ch;
+}
+.avatarWrap {
+  display: flex;
+  justify-content: center;
+}
+.avatar {
+  width: min(320px, 80%);
+  aspect-ratio: 1;
+  border-radius: 20px;
+  background: var(--grad-avatar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 30px 60px -34px rgba(9, 23, 43, 0.6);
+}
+.symbol {
+  width: 46%;
+  height: auto;
+}

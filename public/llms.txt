@@ -1,0 +1,31 @@
+# molpo
+
+> Desarrollo de software para pymes. molpo es el estudio unipersonal de Matías Maldonado, Desarrollador de Software con base en Tucumán, Argentina. Trabaja con pymes que ya dependen de su software todos los días y necesitan que deje de fallar. Tono: directo, sin humo, con evidencia.
+
+Contacto:
+- WhatsApp: +54 9 381 300 0120 (https://wa.me/5493813000120)
+- Email: molpo@gmail.com
+- Web: https://www.molpo.com
+- Zona: Tucumán, Argentina (trabaja para toda Argentina)
+
+## Qué hace (servicios)
+
+- **Desarrollo a medida**: Sistemas hechos para la operación real del cliente, no plantillas. Con estructura para crecer sin rehacer todo más adelante.
+- **Rescatar sistemas con IA**: Revisa, termina y deja en producción sistemas que se empezaron con IA y quedaron a medias, inseguros o difíciles de mantener.
+- **Integración de sistemas y datos**: Conecta sistemas y ordena datos para que la información deje de vivir copiada en varios lugares distintos.
+
+## Cómo trabaja (proceso — "Sin humo. Con evidencia.")
+
+1. **Diagnóstico honesto**: Entiende qué hay y qué falla, con evidencia a nivel de código y datos.
+2. **Bases sólidas**: Define estructura y datos antes de escribir código.
+3. **Construcción por etapas**: Algo funcionando y en uso en cada tramo, no una entrega única al final.
+4. **Acompañamiento**: Revisa, mantiene y despliega lo que el equipo del cliente sigue construyendo.
+
+## Casos reales (en uso)
+
+- **Decortinas SAS** — Auditoría técnica y sistema de distribuidores. Diagnóstico verificado en código fuente de tres sistemas internos, con hoja de ruta priorizada, más el diseño del sistema de distribuidores.
+- **KOMUK** — Web mayorista y hub central. Web mayorista y un nuevo hub central que unifica la operación en un solo lugar, conectando lo que antes vivía disperso.
+
+## Para quién
+
+Pymes que ya tienen sistemas internos y necesitan que dejen de fallar. Propuesta: entender el problema real, ordenar los datos y construir sobre bases que aguanten el crecimiento. Cerca del cliente, transparente, sin promesas que no se puedan sostener.

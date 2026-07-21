@@ -1,0 +1,38 @@
+.footer {
+  background: var(--azul-profundo);
+  color: var(--azul-claro);
+}
+.inner {
+  padding-top: 44px;
+  padding-bottom: 44px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  height: 26px;
+  width: auto;
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  font-size: 14px;
+}
+.link {
+  color: var(--celeste-palido);
+}
+.link:hover {
+  color: #fff;
+}
+.legalWrap {
+  border-top: 1px solid rgba(140, 179, 222, 0.16);
+}
+.legal {
+  padding-top: 18px;
+  padding-bottom: 18px;
+  font-size: 12.5px;
+  color: var(--texto-footer);
+}
