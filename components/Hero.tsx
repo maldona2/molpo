@@ -4,6 +4,9 @@ import styles from "./Hero.module.css";
 export default function Hero() {
   return (
     <header id="top" className={styles.hero}>
+      <div className={styles.beam} aria-hidden="true" />
+      <div className={styles.sweep} aria-hidden="true" />
+      <div className={styles.blob} aria-hidden="true" />
       <div className={styles.watermark} aria-hidden="true" />
       <div className={`container ${styles.inner}`}>
         <p className={styles.eyebrow}>Desarrollo de software · Tucumán</p>

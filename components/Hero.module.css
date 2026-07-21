@@ -1,8 +1,98 @@
 .hero {
   position: relative;
-  background: var(--grad-hero);
+  /* Base navy profundo — el foco de luz vive en las capas de arriba */
+  background: radial-gradient(125% 130% at 32% 42%, #1c3f68 0%, #12294a 40%, #09172b 100%);
   color: #fff;
   overflow: hidden;
+  isolation: isolate;
+}
+/* Capas de luz — colores de marca, mezcladas con "screen" para leerse como luz real */
+.beam,
+.sweep,
+.blob {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+/* Haz cónico: fuente de luz que emana de un punto y gira lento (ref. manual p.11) */
+.beam {
+  top: 42%;
+  left: 34%;
+  width: 170vmax;
+  height: 170vmax;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(140, 179, 222, 0.04) 26deg,
+    rgba(215, 232, 248, 0.26) 58deg,
+    rgba(140, 179, 222, 0.08) 92deg,
+    transparent 150deg,
+    transparent 236deg,
+    rgba(78, 120, 169, 0.14) 288deg,
+    transparent 340deg
+  );
+  filter: blur(30px);
+  animation: heroSpin 48s linear infinite;
+}
+/* Barrido diagonal: banda de luz suave que cruza la escena (ref. manual p.12-14) */
+.sweep {
+  inset: -30%;
+  background: linear-gradient(
+    118deg,
+    transparent 32%,
+    rgba(215, 232, 248, 0.16) 47%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(215, 232, 248, 0.14) 53%,
+    transparent 68%
+  );
+  filter: blur(24px);
+  animation: heroSweep 15s ease-in-out infinite alternate;
+}
+/* Poza de luz ambiente que respira, ancla la esquina inferior */
+.blob {
+  bottom: -30%;
+  right: -12%;
+  width: 55vw;
+  height: 55vw;
+  max-width: 720px;
+  max-height: 720px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(78, 120, 169, 0.4), transparent 64%);
+  filter: blur(60px);
+  animation: heroBreath 13s ease-in-out infinite alternate;
+}
+@keyframes heroSpin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@keyframes heroSweep {
+  from {
+    transform: translate3d(-14%, -6%, 0);
+  }
+  to {
+    transform: translate3d(14%, 6%, 0);
+  }
+}
+@keyframes heroBreath {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.75;
+  }
+  to {
+    transform: translate3d(-12%, -8%, 0) scale(1.22);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .beam,
+  .sweep,
+  .blob {
+    animation: none;
+  }
 }
 .watermark {
   position: absolute;
