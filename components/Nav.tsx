@@ -8,7 +8,7 @@ export default function Nav() {
       <div className={`container ${styles.inner}`}>
         <a href="#top" aria-label="molpo — inicio">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/molpo-azul.svg" alt="molpo" className={styles.logo} width={92} height={24} />
+          <img src="/assets/molpo-negro.png" alt="molpo" className={styles.logo} width={68} height={24} />
         </a>
         <div className={styles.links}>
           {site.nav.map((item) => (

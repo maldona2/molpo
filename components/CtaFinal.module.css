@@ -11,7 +11,7 @@
   width: min(520px, 60vw);
   height: 150%;
   opacity: 0.08;
-  background: url("/assets/simbolo-blanco.svg") no-repeat center / contain;
+  background: url("/assets/simbolo-blanco.png") no-repeat center / contain;
   pointer-events: none;
 }
 .inner {

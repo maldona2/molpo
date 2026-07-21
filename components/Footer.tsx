@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={`container ${styles.inner}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/molpo-celeste.svg" alt="molpo" className={styles.logo} width={100} height={26} />
+        <img src="/assets/molpo-blanco.png" alt="molpo" className={styles.logo} width={73} height={26} />
         <div className={styles.links}>
           <a href={site.contact.whatsappUrl} className={styles.link} rel="noopener">
             {site.contact.phoneDisplay}

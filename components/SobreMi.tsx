@@ -20,7 +20,7 @@ export default function SobreMi() {
         <div className={styles.avatarWrap}>
           <div className={styles.avatar}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/simbolo-blanco.svg" alt="" aria-hidden="true" className={styles.symbol} />
+            <img src="/assets/simbolo-blanco.png" alt="" aria-hidden="true" className={styles.symbol} />
           </div>
         </div>
       </div>

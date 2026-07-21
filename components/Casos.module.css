@@ -41,11 +41,11 @@
 }
 .wmDark {
   opacity: 0.1;
-  background: url("/assets/simbolo-blanco.svg") no-repeat center / contain;
+  background: url("/assets/simbolo-blanco.png") no-repeat center / contain;
 }
 .wmLight {
   opacity: 0.09;
-  background: url("/assets/simbolo-azul.svg") no-repeat center / contain;
+  background: url("/assets/simbolo-negro.png") no-repeat center / contain;
 }
 .cliente {
   position: relative;

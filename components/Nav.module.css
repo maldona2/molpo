@@ -23,11 +23,11 @@
 /* Logo claro en tema oscuro (sistema sin elección + override manual) */
 @media (prefers-color-scheme: dark) {
   :global(:root:not([data-theme])) .logo {
-    content: url("/assets/molpo-celeste.svg");
+    content: url("/assets/molpo-blanco.png");
   }
 }
 :global(:root[data-theme="dark"]) .logo {
-  content: url("/assets/molpo-celeste.svg");
+  content: url("/assets/molpo-blanco.png");
 }
 .links {
   display: flex;
