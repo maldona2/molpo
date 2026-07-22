@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import TrustStrip from "@/components/TrustStrip";
 import Servicios from "@/components/Servicios";
 import Proceso from "@/components/Proceso";
 import Casos from "@/components/Casos";
@@ -17,6 +18,7 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        <TrustStrip />
         <Servicios />
         <Proceso />
         <Casos />

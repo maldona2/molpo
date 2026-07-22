@@ -14,6 +14,7 @@ export type ContactPlacement =
   | "methodology_inline"
   | "methodology_end"
   | "case_end"
+  | "service_end"
   | "final_cta"
   | "footer";
 

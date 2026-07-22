@@ -117,6 +117,8 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
   if (!proyecto) notFound();
 
   const wa = site.contact.whatsappUrl;
+  const resultado = proyecto.secciones.find((seccion) => seccion.titulo === "Resultado");
+  const detalle = proyecto.secciones.filter((seccion) => seccion !== resultado);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -197,28 +199,83 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
 
         <article className={styles.article}>
           <div className={`container ${styles.prose}`}>
-            {proyecto.secciones.map((s) => (
+            {resultado ? (
+              <section className={styles.resultado} aria-labelledby="resultado-h">
+                <p className={styles.resultadoEyebrow}>Resultado</p>
+                <h2 id="resultado-h">Qué quedó funcionando</h2>
+                <Bloques bloques={resultado.bloques} />
+              </section>
+            ) : null}
+
+            {proyecto.evidencias?.length ? (
+              <section aria-labelledby="evidencia-h">
+                <h2 id="evidencia-h">El producto en uso</h2>
+                <div className={styles.evidenceGrid}>
+                  {proyecto.evidencias.map((evidencia) => (
+                    <figure key={evidencia.src} className={styles.evidence}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={evidencia.src}
+                        alt={evidencia.alt}
+                        width={evidencia.width}
+                        height={evidencia.height}
+                        loading="lazy"
+                      />
+                      <figcaption>{evidencia.caption}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {proyecto.metricas?.length ? (
+              <section aria-labelledby="metricas-h">
+                <h2 id="metricas-h">Resultados verificados</h2>
+                <div className={styles.metricsGrid}>
+                  {proyecto.metricas.map((metrica) => (
+                    <div key={`${metrica.value}-${metrica.label}`} className={styles.metric}>
+                      <strong>{metrica.value}</strong>
+                      <span>{metrica.label}</span>
+                      {metrica.sourceNote ? <small>{metrica.sourceNote}</small> : null}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {detalle.map((s) => (
               <section key={s.titulo}>
                 <h2>{s.titulo}</h2>
                 <Bloques bloques={s.bloques} />
               </section>
             ))}
 
-            <h2>Stack tecnológico</h2>
-            <div className={styles.stackGrid}>
-              {proyecto.stack.map((g) => (
-                <div key={g.area} className={styles.stackArea}>
-                  <div className={styles.stackAreaTitulo}>{g.area}</div>
-                  <div className={styles.stackChips}>
-                    {g.items.map((item) => (
-                      <span key={item} className={styles.stackChip}>
-                        {item}
-                      </span>
-                    ))}
+            {proyecto.testimonio ? (
+              <figure className={styles.testimonial}>
+                <blockquote>“{proyecto.testimonio.quote}”</blockquote>
+                <figcaption>
+                  {proyecto.testimonio.name} · {proyecto.testimonio.role}, {proyecto.testimonio.company}
+                </figcaption>
+              </figure>
+            ) : null}
+
+            <details className={styles.stackDetails}>
+              <summary>Ver stack tecnológico</summary>
+              <div className={styles.stackGrid}>
+                {proyecto.stack.map((g) => (
+                  <div key={g.area} className={styles.stackArea}>
+                    <div className={styles.stackAreaTitulo}>{g.area}</div>
+                    <div className={styles.stackChips}>
+                      {g.items.map((item) => (
+                        <span key={item} className={styles.stackChip}>
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </details>
 
             {proyecto.frase ? (
               <blockquote className={styles.quote}>

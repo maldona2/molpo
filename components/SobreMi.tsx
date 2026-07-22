@@ -11,10 +11,15 @@ export default function SobreMi() {
           </h2>
           <p className={styles.role}>Desarrollador de Software · molpo</p>
           <p className={styles.bio}>
-            Trabajo con pymes que ya tienen sistemas internos y necesitan que dejen de fallar. Mi
-            enfoque es simple: entender el problema real, ordenar los datos y construir sobre bases
-            que aguanten el crecimiento. Cerca del cliente, transparente y sin promesas que no se
-            puedan sostener.
+            molpo es mi estudio unipersonal. Trabajo directamente con pymes que ya tienen sistemas
+            internos y necesitan que dejen de fallar. Yo hago el diagnóstico, diseño la solución y
+            acompaño la construcción: no hay una cadena de intermediarios entre el problema y quien
+            toma las decisiones técnicas.
+          </p>
+          <p className={styles.bio}>
+            Mi enfoque es entender el proceso real, ordenar los datos y construir sobre bases que
+            aguanten el crecimiento. Cerca del cliente, transparente y sin promesas que no se puedan
+            sostener.
           </p>
         </div>
         <div className={styles.avatarWrap}>

@@ -15,11 +15,16 @@
   margin-top: 44px;
 }
 .card {
+  display: block;
+  color: var(--text);
   border: 1px solid var(--borde);
   border-radius: var(--r-card);
   padding: 32px 30px;
   background: var(--surface);
   transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover {
+  color: var(--text);
 }
 .card:hover {
   box-shadow: var(--sombra-card);
@@ -48,4 +53,11 @@
   line-height: 1.65;
   color: var(--texto-cuerpo-2);
   margin: 12px 0 0;
+}
+.cardLink {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--link);
+  font-size: 14px;
+  font-weight: 700;
 }

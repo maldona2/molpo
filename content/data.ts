@@ -3,18 +3,21 @@
 export const servicios = [
   {
     num: "01",
+    slug: "software-a-medida",
     titulo: "Desarrollo a medida",
     texto:
       "Sistemas hechos para tu operación real, no plantillas. Con la estructura para crecer sin tener que rehacer todo más adelante.",
   },
   {
     num: "02",
+    slug: "rescate-software-ia",
     titulo: "Rescatar sistemas con IA",
     texto:
       "¿Empezaste algo con IA y quedó a medias, inseguro o difícil de mantener? Lo reviso, lo termino y lo dejo funcionando en producción.",
   },
   {
     num: "03",
+    slug: "integracion-sistemas-datos",
     titulo: "Integración de sistemas y datos",
     texto:
       "Conecto tus sistemas y ordeno tus datos para que la información deje de vivir copiada en tres lugares distintos.",
