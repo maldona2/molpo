@@ -18,6 +18,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${site.url}/privacidad/`,
+      lastModified: new Date("2026-07-22"),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
     ...proyectos.map((p) => ({
       url: `${site.url}/casos/${p.slug}/`,
       lastModified: new Date("2026-07-21"),
