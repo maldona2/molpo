@@ -1,17 +1,24 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const origin = "https://molpo.com.ar";
-const routes = [
-  "/",
-  "/como-trabajamos/",
-  "/privacidad/",
-  "/casos/komuk/",
-  "/casos/decortinas/",
-  "/casos/tr-fit/",
-];
-
 const failures = [];
+
+async function getRoutes() {
+  const fixedRoutes = ["/", "/como-trabajamos/", "/privacidad/"];
+  try {
+    const entries = await readdir(resolve("out", "casos"), { withFileTypes: true });
+    const caseRoutes = entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => `/casos/${entry.name}/`)
+      .sort();
+    expect(caseRoutes.length > 0, "No se exportó ningún caso");
+    return [...fixedRoutes, ...caseRoutes];
+  } catch {
+    failures.push("Falta el directorio exportado: out/casos");
+    return fixedRoutes;
+  }
+}
 
 async function readOutput(path) {
   try {
@@ -30,6 +37,8 @@ function getAttribute(html, tagPattern, attribute) {
   const tag = html.match(tagPattern)?.[0];
   return tag?.match(new RegExp(`${attribute}=["']([^"']+)["']`, "i"))?.[1];
 }
+
+const routes = await getRoutes();
 
 for (const route of routes) {
   const outputPath = route === "/" ? "index.html" : `${route.slice(1)}index.html`;
