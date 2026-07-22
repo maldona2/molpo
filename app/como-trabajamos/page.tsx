@@ -3,6 +3,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import FloatingWa from "@/components/FloatingWa";
 import JsonLd from "@/components/JsonLd";
+import TrackedLink from "@/components/TrackedLink";
 import { site } from "@/lib/site";
 import styles from "./ComoTrabajamos.module.css";
 
@@ -141,10 +142,15 @@ export default function ComoTrabajamos() {
               común.
             </p>
             <div className={styles.ctaRow}>
-              <a href={wa} className={styles.cta} rel="noopener">
+              <TrackedLink
+                href={wa}
+                className={styles.cta}
+                rel="noopener"
+                tracking={{ name: "contact_click", method: "whatsapp", placement: "methodology_inline" }}
+              >
                 <span className={styles.dot} aria-hidden="true" />
                 Quiero conversar sobre mi empresa
-              </a>
+              </TrackedLink>
             </div>
 
             <h2>El problema de construir una aplicación para cada necesidad</h2>
@@ -365,10 +371,15 @@ export default function ComoTrabajamos() {
               </p>
             </blockquote>
             <div className={styles.ctaRow}>
-              <a href={wa} className={styles.cta} rel="noopener">
+              <TrackedLink
+                href={wa}
+                className={styles.cta}
+                rel="noopener"
+                tracking={{ name: "contact_click", method: "whatsapp", placement: "methodology_end" }}
+              >
                 <span className={styles.dot} aria-hidden="true" />
                 Contanos qué proceso querés mejorar
-              </a>
+              </TrackedLink>
             </div>
           </div>
         </article>

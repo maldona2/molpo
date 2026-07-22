@@ -173,13 +173,6 @@
   .mobileLink:hover {
     color: var(--link-hover);
   }
-  .arrow {
-    flex: 0 0 auto;
-    font-family: var(--font-inter), sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--azul-medio);
-  }
   .mobileCta {
     display: flex;
     align-items: center;

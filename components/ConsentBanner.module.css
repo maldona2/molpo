@@ -1,0 +1,92 @@
+.banner {
+  position: fixed;
+  z-index: 1000;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 32px);
+  width: min(560px, calc(100vw - 32px));
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-card);
+  box-shadow: 0 24px 64px -24px rgba(9, 23, 43, 0.62);
+}
+
+.content {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+.title {
+  margin-bottom: 8px;
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.copy,
+.current {
+  margin: 0;
+  color: var(--texto-cuerpo);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.details {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.primary,
+.secondary {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--azul-primario);
+  border-radius: var(--r-boton);
+  font: 600 14px/1 var(--font-inter), sans-serif;
+  cursor: pointer;
+}
+
+.primary {
+  color: #fff;
+  background: var(--azul-primario);
+}
+
+.secondary {
+  color: var(--link);
+  background: transparent;
+}
+
+.primary:hover {
+  background: #244d7e;
+}
+
+.secondary:hover {
+  background: var(--seccion-alt);
+}
+
+.current {
+  font-size: 12px;
+}
+
+@media (max-width: 520px) {
+  .content {
+    padding: 20px;
+  }
+
+  .actions,
+  .primary,
+  .secondary {
+    width: 100%;
+  }
+}

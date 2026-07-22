@@ -1,4 +1,5 @@
 import { site } from "@/lib/site";
+import TrackedLink from "./TrackedLink";
 import styles from "./Hero.module.css";
 
 export default function Hero() {
@@ -16,10 +17,15 @@ export default function Hero() {
           que ya dependen de su software todos los días.
         </p>
         <div className={styles.ctas}>
-          <a href={site.contact.whatsappUrl} className={styles.ctaPrimary} rel="noopener">
+          <TrackedLink
+            href={site.contact.whatsappUrl}
+            className={styles.ctaPrimary}
+            rel="noopener"
+            tracking={{ name: "contact_click", method: "whatsapp", placement: "hero" }}
+          >
             <span className={styles.dot} aria-hidden="true" />
             Escribime por WhatsApp
-          </a>
+          </TrackedLink>
           <a href="#proceso" className={styles.ctaSecondary}>
             Cómo trabajo
           </a>

@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import FloatingWa from "@/components/FloatingWa";
 import JsonLd from "@/components/JsonLd";
+import TrackedLink from "@/components/TrackedLink";
 import { site } from "@/lib/site";
 import { getProyecto, proyectos, type Bloque } from "@/content/portfolio";
 import styles from "./Caso.module.css";
@@ -176,9 +177,14 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
                   <div className={styles.fichaLabel}>{f.label}</div>
                   <div className={styles.fichaValor}>
                     {f.url ? (
-                      <a href={f.url} target="_blank" rel="noopener noreferrer">
+                      <TrackedLink
+                        href={f.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        tracking={{ name: "client_site_click", client: proyecto.cliente, caseSlug: proyecto.slug }}
+                      >
                         {f.valor}
-                      </a>
+                      </TrackedLink>
                     ) : (
                       f.valor
                     )}
@@ -221,10 +227,15 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
             ) : null}
 
             <div className={styles.ctaRow}>
-              <a href={wa} className={styles.cta} rel="noopener">
+              <TrackedLink
+                href={wa}
+                className={styles.cta}
+                rel="noopener"
+                tracking={{ name: "contact_click", method: "whatsapp", placement: "case_end" }}
+              >
                 <span className={styles.dot} aria-hidden="true" />
                 Quiero un sistema así para mi negocio
-              </a>
+              </TrackedLink>
             </div>
 
             <Link href="/#casos" className={styles.volver}>

@@ -691,6 +691,298 @@ export const proyectos: readonly Proyecto[] = [
     frase:
       "Plataforma full-stack para crear, ejecutar y supervisar planes de entrenamiento personalizados desde una app móvil y un panel web.",
   },
+  {
+    slug: "atriax",
+    cliente: "Atriax",
+    titulo: "SaaS para la gestión integral de consultorios médicos",
+    lead: "Plataforma multi-tenant que centraliza agenda, pacientes, historia clínica, tratamientos, cobranzas y comunicaciones en una experiencia web responsive.",
+    ficha: [
+      { label: "Rol", valor: "Desarrollo full-stack end-to-end" },
+      { label: "Tipo", valor: "Producto SaaS multi-tenant" },
+      { label: "Período", valor: "2026" },
+      { label: "Plataformas", valor: "Aplicación web responsive y API REST" },
+    ],
+    card: {
+      titulo: "Gestión integral de consultorios médicos",
+      texto:
+        "Agenda, pacientes, historia clínica, cobranzas y comunicaciones en un SaaS multi-tenant diseñado para escritorio y móvil.",
+      tags: ["SaaS multi-tenant", "Salud y gestión"],
+      variant: "light",
+    },
+    secciones: [
+      {
+        titulo: "El proyecto",
+        bloques: [
+          {
+            tipo: "p",
+            texto:
+              "Desarrollé Atriax, una plataforma SaaS que centraliza la operación diaria de profesionales de la salud. La aplicación integra agenda, pacientes, historia clínica, tratamientos, documentación de sesiones, cobranzas y comunicaciones automáticas en una única experiencia web, adaptable tanto a escritorio como a dispositivos móviles.",
+          },
+          {
+            tipo: "p",
+            texto:
+              "El proyecto abarcó todo el ciclo de producto: definición de flujos, diseño de interfaz, modelado de datos, desarrollo frontend y backend, integraciones con servicios externos, automatización de tareas y pruebas.",
+          },
+        ],
+      },
+      {
+        titulo: "El desafío",
+        bloques: [
+          {
+            tipo: "p",
+            texto:
+              "La gestión de un consultorio suele quedar distribuida entre calendarios, planillas, mensajes de WhatsApp, correos y registros clínicos separados. Esto genera trabajo duplicado, dificulta el seguimiento de cada paciente y reduce la visibilidad sobre turnos, tratamientos y pagos pendientes.",
+          },
+          {
+            tipo: "p",
+            texto:
+              "El objetivo fue convertir esos procesos dispersos en un producto coherente, seguro y fácil de usar durante la jornada de un profesional. La solución debía resolver tanto las tareas clínicas como las administrativas, mantener aislada la información de cada cliente y seguir funcionando correctamente ante fallas de servicios externos.",
+          },
+        ],
+      },
+      {
+        titulo: "La solución",
+        bloques: [
+          {
+            tipo: "p",
+            texto: "Atriax organiza el trabajo alrededor de tres áreas principales:",
+          },
+          {
+            tipo: "lista",
+            items: [
+              "Agenda: turnos en vista de lista o calendario semanal, estados de asistencia y pago, tratamientos asociados, documentación de la sesión y sincronización con Google Calendar.",
+              "Pacientes: ficha unificada con datos de contacto, antecedentes, medicación, alergias, sesiones, tratamientos activos y registro fotográfico.",
+              "Gestión: indicadores diarios, seguimiento de ciclos de tratamiento, cobranzas, planes de pago, historial de movimientos y administración de clientes desde un panel de superadministrador.",
+            ],
+          },
+          {
+            tipo: "p",
+            texto:
+              "La interfaz fue diseñada con un enfoque responsive. En escritorio utiliza paneles maestro-detalle para acelerar la navegación y, en pantallas pequeñas, transforma esos mismos flujos en vistas de pantalla completa optimizadas para uso táctil.",
+          },
+        ],
+      },
+      {
+        titulo: "Funcionalidades principales",
+        bloques: [
+          {
+            tipo: "sub",
+            titulo: "Dashboard operativo",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "La pantalla de inicio resume la jornada del profesional: turnos del día, estados de confirmación, ingresos registrados, deuda pendiente y alertas de seguimiento. El sistema calcula cuándo un paciente debería retomar un tratamiento según su etapa inicial o de mantenimiento y evita alertas innecesarias cuando ya existe un próximo turno.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Agenda y turnos",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "La agenda permite crear, editar, confirmar, completar o cancelar turnos; filtrarlos por fecha y estado; asociar tratamientos y registrar el estado de pago desde la reserva. También permite crear un paciente sin abandonar el flujo de asignación del turno y documentar la atención realizada.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Historia clínica y tratamientos",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "Cada paciente dispone de una ficha con condiciones médicas, medicación, alergias, notas, sesiones y evolución de tratamientos. Los protocolos admiten frecuencias iniciales y de mantenimiento, cantidad de sesiones y costos. Las fotografías clínicas se almacenan de forma privada en Amazon S3 mediante URLs temporales firmadas.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Cobranzas y seguimiento financiero",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "El módulo financiero registra pagos, medios de cobro, deuda por paciente, antigüedad de saldos y planes en cuotas. Los importes se almacenan como enteros en centavos para evitar errores de precisión. El panel administrativo también permite controlar el pago mensual de infraestructura de cada cliente.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Comunicaciones automáticas",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "La aplicación envía confirmaciones y recordatorios por email y WhatsApp. Los pacientes pueden confirmar o cancelar un turno desde el mensaje, y el profesional recibe la actualización correspondiente. Los recordatorios se procesan en segundo plano, evitan duplicados, respetan bajas de comunicación y registran el resultado de cada envío.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Asistente con lenguaje natural",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "El asistente de los planes avanzados interpreta solicitudes en lenguaje natural y las traduce en operaciones sobre turnos, pacientes, sesiones y tratamientos. Conserva contexto entre mensajes, solicita datos faltantes, resuelve ambigüedades y exige confirmación antes de ejecutar acciones destructivas.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Gestión SaaS",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "La arquitectura multi-tenant mantiene cada consultorio en un espacio de datos aislado. Incluye registro con verificación de email, recuperación segura de contraseña, roles de profesional y superadministrador, planes de uso y una integración de suscripciones con Mercado Pago.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Cómo lo desarrollé",
+        bloques: [
+          {
+            tipo: "p",
+            texto:
+              "Diseñé el sistema como una aplicación full-stack en TypeScript. El frontend se construyó con React y componentes accesibles de shadcn/ui sobre Radix UI. La API se implementó con Node.js y Express, separando las rutas HTTP de la lógica de negocio mediante una capa de servicios. PostgreSQL actúa como fuente de verdad y Drizzle ORM aporta consultas y migraciones tipadas.",
+          },
+          {
+            tipo: "lista",
+            items: [
+              "React y Vite para la aplicación web responsive.",
+              "API REST con Express para exponer los casos de uso del producto.",
+              "Servicios de dominio para concentrar reglas clínicas, administrativas y financieras.",
+              "PostgreSQL y Drizzle ORM como capa de persistencia tipada.",
+              "Workers, colas y tareas programadas para procesos asíncronos.",
+              "Integraciones con Google Calendar, WhatsApp, Resend, Amazon S3, Mercado Pago y OpenAI.",
+            ],
+          },
+          {
+            tipo: "p",
+            texto:
+              "La sincronización con Google Calendar utiliza una cola persistente, prioridades, reintentos con espera exponencial y monitoreo de errores. Los recordatorios, reinicios de límites y limpieza de archivos pendientes se ejecutan mediante trabajos programados para no bloquear la experiencia del usuario.",
+          },
+        ],
+      },
+      {
+        titulo: "Decisiones técnicas destacadas",
+        bloques: [
+          {
+            tipo: "sub",
+            titulo: "Aislamiento entre consultorios",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "El modelo incorpora un identificador de tenant, los servicios filtran cada operación por ese tenant y los roles controlan el acceso. Así se evita el cruce de información entre clientes.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Calendarios tolerantes a fallas",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "La integración con Google Calendar combina OAuth 2.0, tokens cifrados, una cola persistente y reintentos con backoff. Una falla temporal del proveedor no detiene la gestión de turnos.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Archivos clínicos privados",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "La carga y lectura se realiza directamente mediante URLs firmadas de S3, con rutas separadas por tenant y limpieza de cargas incompletas. Esto reduce tanto la exposición de archivos como la carga sobre la API.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Comunicaciones desacopladas",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "Los emails y las plantillas de WhatsApp se procesan fuera de las operaciones críticas, con registro de entregas y control de duplicados. Un fallo de mensajería no impide crear o actualizar un turno.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Consistencia financiera",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "Los importes se guardan en centavos, los estados de pago están tipados y cada movimiento conserva su historial. El modelo evita errores de redondeo y facilita la auditoría.",
+              },
+            ],
+          },
+          {
+            tipo: "sub",
+            titulo: "Flujos complejos adaptados a móviles",
+            bloques: [
+              {
+                tipo: "p",
+                texto:
+                  "La navegación maestro-detalle de escritorio se transforma en overlays de pantalla completa en dispositivos pequeños. Los mismos procesos pueden completarse desde el consultorio sin depender de una computadora.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Seguridad y calidad",
+        bloques: [
+          {
+            tipo: "lista",
+            items: [
+              "Autenticación con JWT y contraseñas protegidas con bcrypt.",
+              "Autorización basada en roles para rutas profesionales y administrativas.",
+              "Verificación de email y recuperación de contraseña con tokens de un solo uso, expiración y almacenamiento mediante hash.",
+              "Tokens de Google Calendar cifrados antes de persistirlos.",
+              "Validación de entradas con Zod y manejo centralizado de errores.",
+              "Pruebas unitarias, de integración y basadas en propiedades con Jest, Vitest, Testing Library, Supertest y fast-check.",
+              "Entornos reproducibles con Docker Compose, migraciones versionadas, ESLint y Prettier.",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Resultado",
+        bloques: [
+          {
+            tipo: "p",
+            texto:
+              "El resultado es un producto funcional que reúne procesos clínicos, administrativos y financieros en una sola plataforma. Más allá de implementar pantallas y endpoints, el desarrollo exigió modelar reglas reales de negocio, coordinar integraciones asíncronas, proteger información sensible y sostener una experiencia consistente en escritorio y móvil.",
+          },
+          {
+            tipo: "p",
+            texto:
+              "El proyecto consolidó una arquitectura SaaS multi-tenant preparada para dominios complejos, automatización, observabilidad y pruebas, sin perder de vista los flujos cotidianos del profesional y sus pacientes.",
+          },
+        ],
+      },
+    ],
+    stack: [
+      { area: "Frontend", items: ["React 19", "TypeScript", "Vite", "React Router", "Tailwind CSS", "shadcn/ui", "Radix UI", "React Hook Form", "Zod", "TanStack Table", "Recharts", "Axios", "date-fns"] },
+      { area: "Backend", items: ["Node.js", "Express", "PostgreSQL", "Drizzle ORM", "JWT", "bcrypt", "Zod", "Pino", "node-cron"] },
+      { area: "Integraciones", items: ["Google Calendar", "WhatsApp Cloud API", "Resend", "Amazon S3", "Mercado Pago", "OpenAI API"] },
+      { area: "Calidad e infraestructura", items: ["Jest", "Vitest", "Testing Library", "Supertest", "fast-check", "Docker", "Docker Compose", "ESLint", "Prettier"] },
+    ],
+    frase:
+      "Un SaaS multi-tenant que reúne la gestión clínica, administrativa y financiera del consultorio sin fragmentar la experiencia del profesional.",
+  },
 ] as const;
 
 export function getProyecto(slug: string) {

@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "check:seo": "node scripts/check-seo.mjs",
     "serve": "npx serve out"
   },
   "dependencies": {
