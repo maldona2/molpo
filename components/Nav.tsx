@@ -107,9 +107,6 @@ export default function Nav() {
                   onClick={closeMenu}
                 >
                   <span>{item.label}</span>
-                  <span className={styles.arrow} aria-hidden="true">
-                    ↗
-                  </span>
                 </a>
               ))}
             </div>
