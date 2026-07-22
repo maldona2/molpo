@@ -13,6 +13,7 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
   variable: "--font-inter",
   display: "swap",
+  preload: false,
 });
 
 const founders = localFont({
@@ -22,6 +23,7 @@ const founders = localFont({
   ],
   variable: "--font-founders",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -104,7 +106,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
 
   return (
-    <html lang={site.lang} className={`${inter.variable} ${founders.variable}`}>
+    <html
+      lang={site.lang}
+      className={`${inter.variable} ${founders.variable}`}
+      suppressHydrationWarning
+    >
       <body style={{ fontFamily: "var(--font-inter), sans-serif" }}>
         <script
           dangerouslySetInnerHTML={{

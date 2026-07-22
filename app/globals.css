@@ -76,8 +76,9 @@ h3 {
   --borde-2: #e7eff7;
   --texto-cuerpo: #33475a;
   --texto-cuerpo-2: #4a5d70;
-  --texto-tenue: #6b7c90;
-  --texto-footer: #5e7a96;
+  --texto-tenue: #5f7185;
+  --texto-footer: #7695b4;
+  --focus-ring: #18365d;
   --chip: #eaf1f8;
   --chip-2: #dceaf7;
   --sombra-card: 0 24px 50px -30px rgba(9, 23, 43, 0.4);
@@ -102,7 +103,8 @@ h3 {
     --texto-cuerpo: #c6dcf2;
     --texto-cuerpo-2: #a9c6e6;
     --texto-tenue: #8cb3de;
-    --texto-footer: #5e7a96;
+    --texto-footer: #7695b4;
+    --focus-ring: #8cb3de;
     --chip: rgba(140, 179, 222, 0.12);
     --chip-2: rgba(140, 179, 222, 0.16);
     --sombra-card: 0 24px 50px -30px rgba(0, 0, 0, 0.6);
@@ -124,7 +126,8 @@ h3 {
   --texto-cuerpo: #c6dcf2;
   --texto-cuerpo-2: #a9c6e6;
   --texto-tenue: #8cb3de;
-  --texto-footer: #5e7a96;
+  --texto-footer: #7695b4;
+  --focus-ring: #8cb3de;
   --chip: rgba(140, 179, 222, 0.12);
   --chip-2: rgba(140, 179, 222, 0.16);
   --sombra-card: 0 24px 50px -30px rgba(0, 0, 0, 0.6);
@@ -151,7 +154,7 @@ h3 {
 /* Accesibilidad: foco visible en interactivos */
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--azul-medio);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
   border-radius: 4px;
 }

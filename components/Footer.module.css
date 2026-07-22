@@ -22,6 +22,9 @@
   font-size: 14px;
 }
 .link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   color: var(--celeste-palido);
 }
 .link:hover {
@@ -49,7 +52,7 @@
 }
 .legalLinks a,
 .preferenceButton {
-  min-height: 32px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   color: var(--celeste-palido);
