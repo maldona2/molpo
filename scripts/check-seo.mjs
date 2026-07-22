@@ -7,15 +7,21 @@ const failures = [];
 async function getRoutes() {
   const fixedRoutes = ["/", "/como-trabajamos/", "/privacidad/"];
   try {
-    const entries = await readdir(resolve("out", "casos"), { withFileTypes: true });
-    const caseRoutes = entries
+    const caseEntries = await readdir(resolve("out", "casos"), { withFileTypes: true });
+    const serviceEntries = await readdir(resolve("out", "servicios"), { withFileTypes: true });
+    const caseRoutes = caseEntries
       .filter((entry) => entry.isDirectory())
       .map((entry) => `/casos/${entry.name}/`)
       .sort();
+    const serviceRoutes = serviceEntries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => `/servicios/${entry.name}/`)
+      .sort();
     expect(caseRoutes.length > 0, "No se exportó ningún caso");
-    return [...fixedRoutes, ...caseRoutes];
+    expect(serviceRoutes.length === 3, `Deben exportarse 3 servicios y se exportaron ${serviceRoutes.length}`);
+    return [...fixedRoutes, ...caseRoutes, ...serviceRoutes];
   } catch {
-    failures.push("Falta el directorio exportado: out/casos");
+    failures.push("Falta el directorio exportado de casos o servicios");
     return fixedRoutes;
   }
 }

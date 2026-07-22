@@ -11,8 +11,9 @@ export default function CtaFinal() {
           Hablemos de tu sistema.
         </h2>
         <p className={styles.sub}>
-          Contame qué tenés hoy y qué te gustaría que hiciera. Sin compromiso: si no te puedo ayudar,
-          te lo digo.
+          Contame qué sistema tenés, qué está fallando y qué impacto genera. Te respondo personalmente
+          para entender el contexto y decirte cuál sería el próximo paso. Si no te puedo ayudar, te lo
+          digo.
         </p>
         <div className={styles.ctas}>
           <TrackedLink

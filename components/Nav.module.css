@@ -20,6 +20,12 @@
   height: 24px;
   width: auto;
 }
+.inner > a {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
 /* Logo claro en tema oscuro (sistema sin elección + override manual) */
 @media (prefers-color-scheme: dark) {
   :global(:root:not([data-theme])) .logo {
@@ -40,6 +46,9 @@
   gap: clamp(14px, 3vw, 32px);
 }
 .link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   font-weight: 500;
   font-size: 14px;
   color: var(--texto-cuerpo);
@@ -48,6 +57,9 @@
   color: var(--azul-medio);
 }
 .cta {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   font-weight: 600;
   font-size: 14px;
   color: #fff;
@@ -88,8 +100,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 1px solid var(--borde);
     border-radius: var(--r-pill);

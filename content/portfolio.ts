@@ -12,6 +12,27 @@ export type Seccion = {
   bloques: readonly Bloque[];
 };
 
+export type Evidencia = {
+  src: string;
+  alt: string;
+  caption: string;
+  width: number;
+  height: number;
+};
+
+export type Metrica = {
+  value: string;
+  label: string;
+  sourceNote?: string;
+};
+
+export type Testimonio = {
+  quote: string;
+  name: string;
+  role: string;
+  company: string;
+};
+
 export type Proyecto = {
   slug: string;
   cliente: string;
@@ -27,6 +48,9 @@ export type Proyecto = {
   secciones: readonly Seccion[];
   stack: readonly { area: string; items: readonly string[] }[];
   frase?: string;
+  evidencias?: readonly Evidencia[];
+  metricas?: readonly Metrica[];
+  testimonio?: Testimonio;
 };
 
 export const proyectos: readonly Proyecto[] = [
