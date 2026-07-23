@@ -1,4 +1,3 @@
-import { proyectos } from "@/content/portfolio";
 import styles from "./TrustStrip.module.css";
 
 export default function TrustStrip() {
@@ -6,8 +5,8 @@ export default function TrustStrip() {
     <section className={styles.wrap} aria-label="Cómo se respalda el trabajo de molpo">
       <div className={`container ${styles.grid}`}>
         <div className={styles.item}>
-          <strong className={styles.value}>{proyectos.length}</strong>
-          <span className={styles.label}>casos documentados</span>
+          <strong className={styles.value}>De punta a punta</strong>
+          <span className={styles.label}>del diseño a producción</span>
         </div>
         <div className={styles.item}>
           <strong className={styles.value}>Trato directo</strong>
