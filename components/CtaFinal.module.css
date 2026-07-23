@@ -54,6 +54,21 @@
   background: var(--azul-claro);
   color: var(--azul-profundo);
 }
+/* Tarjeta de éxito sobre el gradiente oscuro */
+.formWrap [role="status"] {
+  background: rgba(9, 23, 43, 0.55);
+  border-color: rgba(140, 179, 222, 0.4);
+}
+.formWrap [role="status"] span {
+  background: rgba(215, 232, 248, 0.14);
+  color: var(--azul-claro);
+}
+.formWrap [role="status"] p {
+  color: var(--celeste-palido);
+}
+.formWrap [role="status"] p:first-child {
+  color: #fff;
+}
 .altMail {
   margin: 22px 0 0;
   color: var(--celeste-palido);

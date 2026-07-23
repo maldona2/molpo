@@ -15,7 +15,7 @@ type Status = "idle" | "sending" | "ok" | "error";
 export default function ContactForm({ placement, compact }: Props) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const successRef = useRef<HTMLParagraphElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (status === "ok") successRef.current?.focus();
@@ -49,9 +49,28 @@ export default function ContactForm({ placement, compact }: Props) {
 
   if (status === "ok") {
     return (
-      <p className={styles.success} role="status" tabIndex={-1} ref={successRef}>
-        Mensaje enviado. Te respondo personalmente a la brevedad.
-      </p>
+      <div className={styles.success} role="status" tabIndex={-1} ref={successRef}>
+        <span className={styles.successIcon} aria-hidden="true">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </span>
+        <div className={styles.successBody}>
+          <p className={styles.successTitle}>Mensaje enviado</p>
+          <p className={styles.successText}>
+            Te respondo personalmente a la brevedad a tu email.
+          </p>
+        </div>
+      </div>
     );
   }
 
