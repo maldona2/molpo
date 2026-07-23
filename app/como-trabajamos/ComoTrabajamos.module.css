@@ -119,10 +119,3 @@
   color: var(--azul-profundo);
   background: #9cbfe6;
 }
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--wa-verde);
-  box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.28);
-}

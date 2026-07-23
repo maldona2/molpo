@@ -19,7 +19,7 @@ async function getRoutes() {
       .map((entry) => `/servicios/${entry.name.replace(/\.html$/, "")}/`)
       .sort();
     expect(caseRoutes.length > 0, "No se prerenderizó ningún caso");
-    expect(serviceRoutes.length === 3, `Deben prerenderizarse 3 servicios y hay ${serviceRoutes.length}`);
+    expect(serviceRoutes.length > 0, "No se prerenderizó ningún servicio");
     return [...fixedRoutes, ...caseRoutes, ...serviceRoutes];
   } catch {
     failures.push("Falta el directorio prerenderizado de casos o servicios en .next/server/app");

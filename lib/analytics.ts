@@ -6,20 +6,7 @@ export type AnalyticsConsent = "granted" | "denied";
 
 export type ContactMethod = "whatsapp" | "email" | "form";
 
-export type ContactPlacement =
-  | "nav_desktop"
-  | "nav_mobile"
-  | "hero"
-  | "hero_nav"
-  | "floating"
-  | "methodology_inline"
-  | "methodology_end"
-  | "case_end"
-  | "service_end"
-  | "final_cta"
-  | "contact_page"
-  | "home_form"
-  | "footer";
+export type ContactPlacement = "contact_page" | "home_form" | "final_cta" | "footer";
 
 export type TrackingEvent =
   | {

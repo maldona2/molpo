@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { site } from "@/lib/site";
 import { trackEvent, type ContactPlacement } from "@/lib/analytics";
 import styles from "./ContactForm.module.css";
@@ -15,6 +15,11 @@ type Status = "idle" | "sending" | "ok" | "error";
 export default function ContactForm({ placement, compact }: Props) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const successRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (status === "ok") successRef.current?.focus();
+  }, [status]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,7 +49,7 @@ export default function ContactForm({ placement, compact }: Props) {
 
   if (status === "ok") {
     return (
-      <p className={styles.success} role="status">
+      <p className={styles.success} role="status" tabIndex={-1} ref={successRef}>
         Mensaje enviado. Te respondo personalmente a la brevedad.
       </p>
     );

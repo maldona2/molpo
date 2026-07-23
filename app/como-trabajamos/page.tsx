@@ -140,7 +140,6 @@ export default function ComoTrabajamos() {
             </p>
             <div className={styles.ctaRow}>
               <a href={site.contact.contactPath} className={styles.cta}>
-                <span className={styles.dot} aria-hidden="true" />
                 Quiero conversar sobre mi empresa
               </a>
             </div>
@@ -364,7 +363,6 @@ export default function ComoTrabajamos() {
             </blockquote>
             <div className={styles.ctaRow}>
               <a href={site.contact.contactPath} className={styles.cta}>
-                <span className={styles.dot} aria-hidden="true" />
                 Contanos qué proceso querés mejorar
               </a>
             </div>

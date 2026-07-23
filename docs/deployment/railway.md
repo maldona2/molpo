@@ -3,7 +3,7 @@
 ## Build y arranque
 
 - Build: `pnpm build`
-- Start command: `npm start`
+- Start command: `pnpm start`
 - Variable opcional: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...`
 
 La variable de GA4 se incorpora durante el build. Cambiarla requiere un nuevo
@@ -39,12 +39,15 @@ al usuario.
 
 ## Headers
 
-`serve.json` incorpora una CSP en modo `Report-Only`, Referrer Policy,
-Permissions Policy, protección MIME y bloqueo de iframes. La CSP permite sólo
-los orígenes necesarios para el sitio y GA4.
+Los headers de seguridad viven en `next.config.ts` (función `headers()`), no
+en un archivo estático: `next start` no lee `serve.json` (eso solo aplicaba a
+`npx serve`, ya no se usa). Ahí se define una CSP en modo `Report-Only`,
+Referrer Policy, Permissions Policy, protección MIME y bloqueo de iframes. La
+CSP permite sólo los orígenes necesarios para el sitio y GA4.
 
 Después de navegar todas las páginas con GA4 aceptado y rechazado, revisar que
-no existan recursos legítimos bloqueados. Recién entonces:
+no existan recursos legítimos bloqueados. Recién entonces, editando
+`next.config.ts`:
 
 1. cambiar `Content-Security-Policy-Report-Only` por
    `Content-Security-Policy`;

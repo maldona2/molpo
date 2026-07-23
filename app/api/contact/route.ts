@@ -30,7 +30,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  // Último hop: lo agrega el proxy de Railway, no lo controla el cliente.
+  const ip = request.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() ?? "local";
   if (rateLimited(ip)) {
     return NextResponse.json({ error: "Demasiados envíos, probá más tarde" }, { status: 429 });
   }

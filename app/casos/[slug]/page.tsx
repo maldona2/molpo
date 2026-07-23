@@ -283,7 +283,6 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
 
             <div className={styles.ctaRow}>
               <a href={site.contact.contactPath} className={styles.cta}>
-                <span className={styles.dot} aria-hidden="true" />
                 Quiero un sistema así para mi negocio
               </a>
             </div>
