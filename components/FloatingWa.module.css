@@ -10,7 +10,8 @@
 }
 .fab {
   position: fixed;
-  right: 22px;
+  /* En pantallas anchas se alinea con el borde derecho del grid de contenido */
+  right: max(22px, calc((100vw - var(--contenido)) / 2 + var(--pad-lateral)));
   bottom: 22px;
   z-index: 100;
   display: inline-flex;

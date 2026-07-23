@@ -1,4 +1,3 @@
-import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import TrustStrip from "@/components/TrustStrip";
 import Servicios from "@/components/Servicios";
@@ -15,7 +14,6 @@ export default function Home() {
   return (
     <>
       <JsonLd data={homePageJsonLd()} />
-      <Nav />
       <main>
         <Hero />
         <TrustStrip />

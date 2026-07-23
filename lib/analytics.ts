@@ -10,6 +10,7 @@ export type ContactPlacement =
   | "nav_desktop"
   | "nav_mobile"
   | "hero"
+  | "hero_nav"
   | "floating"
   | "methodology_inline"
   | "methodology_end"
