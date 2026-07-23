@@ -6,7 +6,7 @@ const appDir = resolve(".next", "server", "app");
 const failures = [];
 
 async function getRoutes() {
-  const fixedRoutes = ["/", "/como-trabajamos/", "/privacidad/"];
+  const fixedRoutes = ["/", "/como-trabajamos/", "/contacto/", "/privacidad/"];
   try {
     const caseEntries = await readdir(resolve(appDir, "casos"), { withFileTypes: true });
     const serviceEntries = await readdir(resolve(appDir, "servicios"), { withFileTypes: true });

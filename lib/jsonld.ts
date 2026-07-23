@@ -97,3 +97,16 @@ export function homePageJsonLd() {
     mainEntity: { "@id": `${site.url}/#molpo` },
   };
 }
+
+export function contactPageJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${site.url}/contacto/#page`,
+    url: `${site.url}/contacto/`,
+    name: "Contacto | molpo",
+    description:
+      "Formulario de contacto y email directo para hablar de tu sistema con molpo.",
+    mainEntity: { "@id": `${site.url}/#molpo` },
+  };
+}
