@@ -5,8 +5,10 @@
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+.env
 .env.local
 .env*.local
+/media
 npm-debug.log*
 .gstack/
 .local/
