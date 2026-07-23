@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import FloatingWa from "@/components/FloatingWa";
 import { site } from "@/lib/site";
 import styles from "./Privacidad.module.css";
 
@@ -151,7 +150,6 @@ export default function PrivacidadPage() {
         </article>
       </main>
       <Footer />
-      <FloatingWa />
     </>
   );
 }

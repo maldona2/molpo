@@ -45,8 +45,8 @@ export function siteJsonLd() {
     founder: { "@id": `${site.url}/#matias` },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: site.contact.whatsappNumber,
       email: site.contact.email,
+      telephone: site.contact.whatsappNumber,
       contactType: "sales",
       areaServed: "AR",
       availableLanguage: "Spanish",

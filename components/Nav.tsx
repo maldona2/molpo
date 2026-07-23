@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { site } from "@/lib/site";
 import ThemeToggle from "./ThemeToggle";
-import TrackedLink from "./TrackedLink";
 import styles from "./Nav.module.css";
 
 export default function Nav() {
@@ -73,14 +72,9 @@ export default function Nav() {
                 {item.label}
               </a>
             ))}
-            <TrackedLink
-              href={site.contact.whatsappUrl}
-              className={styles.cta}
-              rel="noopener"
-              tracking={{ name: "contact_click", method: "whatsapp", placement: "nav_desktop" }}
-            >
-              WhatsApp
-            </TrackedLink>
+            <a href={site.contact.contactPath} className={styles.cta}>
+              Contacto
+            </a>
           </div>
           <ThemeToggle />
           <button
@@ -116,16 +110,9 @@ export default function Nav() {
                 </a>
               ))}
             </div>
-            <TrackedLink
-              href={site.contact.whatsappUrl}
-              className={styles.mobileCta}
-              rel="noopener"
-              onClick={closeMenu}
-              tracking={{ name: "contact_click", method: "whatsapp", placement: "nav_mobile" }}
-            >
-              <span className={styles.statusDot} aria-hidden="true" />
-              Hablemos por WhatsApp
-            </TrackedLink>
+            <a href={site.contact.contactPath} className={styles.mobileCta} onClick={closeMenu}>
+              Contacto
+            </a>
           </div>
         </div>
       ) : null}

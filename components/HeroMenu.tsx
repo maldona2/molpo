@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { site } from "@/lib/site";
-import TrackedLink from "./TrackedLink";
 import styles from "./Hero.module.css";
 
 export default function HeroMenu() {
@@ -34,15 +33,9 @@ export default function HeroMenu() {
               {item.label}
             </a>
           ))}
-          <TrackedLink
-            href={site.contact.whatsappUrl}
-            className={styles.mobileContact}
-            rel="noopener"
-            onClick={close}
-            tracking={{ name: "contact_click", method: "whatsapp", placement: "hero_nav" }}
-          >
+          <a href={site.contact.contactPath} className={styles.mobileContact} onClick={close}>
             Contacto
-          </TrackedLink>
+          </a>
         </div>
       ) : null}
     </>

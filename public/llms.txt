@@ -3,9 +3,9 @@
 > Desarrollo de software para pymes. molpo es el estudio unipersonal de Matías Maldonado, Desarrollador de Software con base en Tucumán, Argentina. Trabaja con pymes que ya dependen de su software todos los días y necesitan que deje de fallar. Tono: directo, sin humo, con evidencia.
 
 Contacto:
-- WhatsApp: +54 9 381 300 0120 (https://wa.me/5493813000120)
 - Email: info@molpo.ar
-- Web: https://molpo.ar
+- Formulario: https://molpo.ar/contacto/
+- Teléfono: +54 9 381 300 0120
 - Zona: Tucumán, Argentina (trabaja para toda Argentina)
 
 ## Qué hace (servicios)

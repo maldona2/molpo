@@ -38,6 +38,4 @@ export const site = {
     { label: "Metodología", href: "/como-trabajamos" },
     { label: "Casos", href: "/#casos" },
   ],
-  // Muestra/oculta el botón flotante de WhatsApp (sin JS de cliente).
-  showFloatingWa: true,
 } as const;

@@ -1,7 +1,6 @@
 import { site } from "@/lib/site";
 import HeroMenu from "./HeroMenu";
 import ThemeToggle from "./ThemeToggle";
-import TrackedLink from "./TrackedLink";
 import styles from "./Hero.module.css";
 
 export default function Hero() {
@@ -24,14 +23,9 @@ export default function Hero() {
           </nav>
           <div className={styles.topActions}>
             <ThemeToggle className={styles.themeToggle} />
-            <TrackedLink
-              href={site.contact.whatsappUrl}
-              className={styles.contactBtn}
-              rel="noopener"
-              tracking={{ name: "contact_click", method: "whatsapp", placement: "hero_nav" }}
-            >
+            <a href={site.contact.contactPath} className={styles.contactBtn}>
               Contacto
-            </TrackedLink>
+            </a>
             <HeroMenu />
           </div>
         </div>
@@ -54,12 +48,7 @@ export default function Hero() {
           <div className={`${styles.ring} ${styles.ring3}`} aria-hidden="true" />
           <div className={`${styles.ring} ${styles.ring4}`} aria-hidden="true" />
           <div className={styles.orbitDot} aria-hidden="true" />
-          <TrackedLink
-            href={site.contact.whatsappUrl}
-            className={styles.orbitCta}
-            rel="noopener"
-            tracking={{ name: "contact_click", method: "whatsapp", placement: "hero" }}
-          >
+          <a href={site.contact.contactPath} className={styles.orbitCta}>
             Empecemos hoy
             <span className={styles.arrowCircle} aria-hidden="true">
               <svg
@@ -76,7 +65,7 @@ export default function Hero() {
                 <polyline points="12 5 19 12 12 19" />
               </svg>
             </span>
-          </TrackedLink>
+          </a>
         </div>
       </div>
     </header>

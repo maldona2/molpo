@@ -35,46 +35,31 @@
   margin: 20px auto 0;
   max-width: 50ch;
 }
-.ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center;
-  margin-top: 36px;
+.formWrap {
+  max-width: 640px;
+  margin: 34px auto 0;
+  text-align: left;
 }
-.ctaPrimary {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 600;
-  font-size: 17px;
-  color: var(--azul-profundo);
+/* Inputs sobre el gradiente oscuro del CTA */
+.formWrap input,
+.formWrap textarea {
+  background: rgba(9, 23, 43, 0.55);
+  border-color: rgba(140, 179, 222, 0.4);
+  color: #fff;
+}
+.formWrap label {
+  color: var(--celeste-palido);
+}
+.formWrap button {
   background: var(--azul-claro);
-  padding: 16px 30px;
-  border-radius: var(--r-boton);
-}
-.ctaPrimary:hover {
   color: var(--azul-profundo);
-  background: #9cbfe6;
 }
-.ctaSecondary {
-  display: inline-flex;
-  align-items: center;
-  font-weight: 600;
-  font-size: 17px;
+.altMail {
+  margin: 22px 0 0;
+  color: var(--celeste-palido);
+  font-size: 15px;
+}
+.altMail a {
   color: #fff;
-  padding: 16px 26px;
-  border-radius: var(--r-boton);
-  border: 1px solid rgba(140, 179, 222, 0.5);
-}
-.ctaSecondary:hover {
-  color: #fff;
-  border-color: rgba(140, 179, 222, 0.9);
-}
-.dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--wa-verde);
-  box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.28);
+  text-decoration: underline;
 }
