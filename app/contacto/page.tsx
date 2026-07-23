@@ -3,6 +3,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import JsonLd from "@/components/JsonLd";
+import TrackedLink from "@/components/TrackedLink";
 import { site } from "@/lib/site";
 import { contactPageJsonLd } from "@/lib/jsonld";
 import styles from "./Contacto.module.css";
@@ -56,10 +57,22 @@ export default function ContactoPage() {
               <h2 className={styles.altTitle}>Otras vías</h2>
               <p className={styles.altItem}>
                 Email directo:{" "}
-                <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+                <TrackedLink
+                  href={`mailto:${site.contact.email}`}
+                  tracking={{ name: "contact_click", method: "email", placement: "contact_page" }}
+                >
+                  {site.contact.email}
+                </TrackedLink>
               </p>
               <p className={styles.altItemSecundario}>
-                Teléfono: <a href={site.contact.whatsappUrl} rel="noopener">{site.contact.phoneDisplay}</a>
+                Teléfono:{" "}
+                <TrackedLink
+                  href={site.contact.whatsappUrl}
+                  rel="noopener"
+                  tracking={{ name: "contact_click", method: "whatsapp", placement: "contact_page" }}
+                >
+                  {site.contact.phoneDisplay}
+                </TrackedLink>
               </p>
             </aside>
           </div>
