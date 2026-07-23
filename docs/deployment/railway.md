@@ -1,18 +1,29 @@
 # Publicación de molpo en Railway
 
-## Build y medición
+## Build y arranque
 
 - Build: `pnpm build`
-- Directorio estático: `out`
+- Start command: `npm start`
 - Variable opcional: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...`
 
 La variable de GA4 se incorpora durante el build. Cambiarla requiere un nuevo
 deploy. Sin esa variable, no se muestra consentimiento y Google Analytics no se
 carga.
 
-Si Railway ejecuta `serve` para publicar `out`, el archivo `public/serve.json`
-se copia al export y agrega los headers de seguridad. Validar el comando real de
-inicio en Railway antes del deploy.
+El servidor arranca con Next.js en modo producción (no static export). Las rutas
+dinámicas y la API `/api/contact` están disponibles.
+
+## Variables de entorno
+
+| Variable | Propósito | Ejemplo |
+|----------|-----------|---------|
+| `ZOHO_SMTP_USER` | Usuario SMTP de Zoho Mail | `info@molpo.ar` |
+| `ZOHO_SMTP_PASS` | Contraseña de aplicación de Zoho | `app-password-de-zoho` |
+| `CONTACT_TO` | Email de destino para formulario | `info@molpo.ar` |
+
+El app password se genera en Zoho Mail → Settings → Security → App Passwords.
+Sin estas variables, el formulario responde con 503 y muestra un fallback mailto
+al usuario.
 
 ## Dominios
 
