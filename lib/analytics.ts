@@ -4,7 +4,7 @@ export const OPEN_CONSENT_PREFERENCES_EVENT = "molpo:open-consent-preferences";
 
 export type AnalyticsConsent = "granted" | "denied";
 
-export type ContactMethod = "whatsapp" | "email";
+export type ContactMethod = "whatsapp" | "email" | "form";
 
 export type ContactPlacement =
   | "nav_desktop"
@@ -17,6 +17,8 @@ export type ContactPlacement =
   | "case_end"
   | "service_end"
   | "final_cta"
+  | "contact_page"
+  | "home_form"
   | "footer";
 
 export type TrackingEvent =

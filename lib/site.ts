@@ -27,6 +27,7 @@ export const site = {
     whatsappNumber: "+5493813000120",
     whatsappUrl: "https://wa.me/5493813000120",
     email: "info@molpo.ar",
+    contactPath: "/contacto/",
     web: "https://molpo.ar",
     webDisplay: "molpo.ar",
     phoneDisplay: "+54 9 381 300 0120",
