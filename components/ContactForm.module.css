@@ -55,10 +55,53 @@
   opacity: 0.6;
   cursor: default;
 }
+/* Confirmación de envío: tarjeta con check, título y detalle */
 .success {
-  font-weight: 500;
-  color: var(--texto-cuerpo);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px 24px;
+  border: 1px solid var(--borde);
+  border-radius: var(--r-card);
+  background: var(--seccion-alt);
+  outline: none;
+  animation: successIn 0.35s ease both;
+}
+.successIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--chip-2);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.successBody {
+  min-width: 0;
+}
+.successTitle {
   margin: 0;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--text-strong);
+}
+.successText {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--texto-cuerpo-2);
+}
+@keyframes successIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .error {
   font-size: 14px;
