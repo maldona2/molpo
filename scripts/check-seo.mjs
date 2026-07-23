@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-const origin = "https://molpo.com.ar";
+const origin = "https://molpo.ar";
 const failures = [];
 
 async function getRoutes() {
@@ -59,7 +59,8 @@ for (const route of routes) {
   expect(canonical === expectedUrl, `${route}: canonical esperado ${expectedUrl}, recibido ${canonical ?? "ninguno"}`);
   expect(openGraphUrl === expectedUrl, `${route}: og:url esperado ${expectedUrl}, recibido ${openGraphUrl ?? "ninguno"}`);
   expect(!/https?:\/\/(?:www\.)?molpo\.com(?!\.ar)/i.test(html), `${route}: contiene una URL del dominio molpo.com`);
-  expect(!/https?:\/\/(?!molpo\.com\.ar)(?:[^/"'\s]+)/i.test(canonical ?? ""), `${route}: canonical usa un host inesperado`);
+  expect(!/https?:\/\/(?:www\.)?molpo\.com\.ar/i.test(html), `${route}: contiene una URL del dominio anterior molpo.com.ar`);
+  expect(!/https?:\/\/(?!molpo\.ar)(?:[^/"'\s]+)/i.test(canonical ?? ""), `${route}: canonical usa un host inesperado`);
 }
 
 const robots = await readOutput("robots.txt");
