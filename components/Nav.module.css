@@ -204,13 +204,6 @@
     color: #fff;
     background: #14304f;
   }
-  .statusDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--wa-verde);
-    box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.24);
-  }
 }
 
 @keyframes menuIn {

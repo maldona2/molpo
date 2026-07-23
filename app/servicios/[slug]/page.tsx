@@ -3,9 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import FloatingWa from "@/components/FloatingWa";
 import JsonLd from "@/components/JsonLd";
-import TrackedLink from "@/components/TrackedLink";
 import { getProyecto } from "@/content/portfolio";
 import { getServicioDetalle, serviciosDetalle } from "@/content/services";
 import { site } from "@/lib/site";
@@ -213,14 +211,9 @@ export default async function ServicioPage({ params }: { params: Promise<Params>
               <p className="eyebrow">Primer paso</p>
               <h2 id="service-cta-h">Podemos empezar por una conversación concreta.</h2>
               <p>{servicio.cta}</p>
-              <TrackedLink
-                href={site.contact.whatsappUrl}
-                className={styles.ctaLink}
-                rel="noopener"
-                tracking={{ name: "contact_click", method: "whatsapp", placement: "service_end" }}
-              >
-                Escribime por WhatsApp
-              </TrackedLink>
+              <a href={site.contact.contactPath} className={styles.ctaLink}>
+                Escribime
+              </a>
             </section>
           </article>
 
@@ -244,7 +237,6 @@ export default async function ServicioPage({ params }: { params: Promise<Params>
         </div>
       </main>
       <Footer />
-      <FloatingWa />
     </>
   );
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import FloatingWa from "@/components/FloatingWa";
 import { site } from "@/lib/site";
 import styles from "./Privacidad.module.css";
 
@@ -41,7 +40,7 @@ export default function PrivacidadPage() {
             <p className={`eyebrow ${styles.eyebrowLight}`}>Información clara</p>
             <h1 className={styles.h1}>Política de privacidad</h1>
             <p className={styles.lead}>
-              Qué información se trata al visitar molpo.com.ar o iniciar una conversación.
+              Qué información se trata al visitar molpo.ar o iniciar una conversación.
             </p>
             <p className={styles.updated}>Última actualización: 22 de julio de 2026.</p>
           </div>
@@ -151,7 +150,6 @@ export default function PrivacidadPage() {
         </article>
       </main>
       <Footer />
-      <FloatingWa />
     </>
   );
 }

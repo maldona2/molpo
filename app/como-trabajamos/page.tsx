@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import FloatingWa from "@/components/FloatingWa";
 import JsonLd from "@/components/JsonLd";
-import TrackedLink from "@/components/TrackedLink";
 import { site } from "@/lib/site";
 import styles from "./ComoTrabajamos.module.css";
 
@@ -98,7 +96,6 @@ const pageJsonLd = {
 };
 
 export default function ComoTrabajamos() {
-  const wa = site.contact.whatsappUrl;
   return (
     <>
       <JsonLd data={pageJsonLd} />
@@ -142,15 +139,9 @@ export default function ComoTrabajamos() {
               común.
             </p>
             <div className={styles.ctaRow}>
-              <TrackedLink
-                href={wa}
-                className={styles.cta}
-                rel="noopener"
-                tracking={{ name: "contact_click", method: "whatsapp", placement: "methodology_inline" }}
-              >
-                <span className={styles.dot} aria-hidden="true" />
+              <a href={site.contact.contactPath} className={styles.cta}>
                 Quiero conversar sobre mi empresa
-              </TrackedLink>
+              </a>
             </div>
 
             <h2>El problema de construir una aplicación para cada necesidad</h2>
@@ -371,21 +362,14 @@ export default function ComoTrabajamos() {
               </p>
             </blockquote>
             <div className={styles.ctaRow}>
-              <TrackedLink
-                href={wa}
-                className={styles.cta}
-                rel="noopener"
-                tracking={{ name: "contact_click", method: "whatsapp", placement: "methodology_end" }}
-              >
-                <span className={styles.dot} aria-hidden="true" />
+              <a href={site.contact.contactPath} className={styles.cta}>
                 Contanos qué proceso querés mejorar
-              </TrackedLink>
+              </a>
             </div>
           </div>
         </article>
       </main>
       <Footer />
-      <FloatingWa />
     </>
   );
 }

@@ -11,7 +11,7 @@ function resolvedTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
 
@@ -34,7 +34,7 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
-      className={styles.toggle}
+      className={className ? `${styles.toggle} ${className}` : styles.toggle}
       onClick={toggle}
       aria-label={label}
       title={label}

@@ -1,0 +1,56 @@
+.hero {
+  background: var(--grad-hero);
+  color: #fff;
+}
+.heroInner {
+  padding-top: clamp(72px, 10vw, 130px);
+  padding-bottom: clamp(40px, 6vw, 72px);
+}
+.eyebrow {
+  color: var(--azul-claro);
+}
+.h1 {
+  color: #fff;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1.05;
+  margin: 14px 0 0;
+}
+.lead {
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.55;
+  color: var(--celeste-palido);
+  margin: 18px 0 0;
+  max-width: 56ch;
+}
+.body {
+  padding: clamp(48px, 7vw, 90px) 0;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(240px, 1fr);
+  gap: clamp(32px, 5vw, 64px);
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.alternativas {
+  border: 1px solid var(--borde);
+  border-radius: var(--r-card);
+  padding: 26px 24px;
+}
+.altTitle {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.altItem {
+  margin: 0 0 8px;
+  color: var(--texto-cuerpo);
+}
+.altItemSecundario {
+  margin: 0;
+  font-size: 14px;
+  color: var(--texto-tenue);
+}

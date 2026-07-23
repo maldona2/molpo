@@ -1,0 +1,76 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--texto-cuerpo);
+}
+.field input,
+.field textarea {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+  padding: 12px 14px;
+  resize: vertical;
+}
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+/* Honeypot fuera de la vista, sin display:none para no delatar el truco */
+.web {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.submit {
+  align-self: flex-start;
+  font: inherit;
+  font-weight: 600;
+  color: var(--blanco);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--r-boton);
+  padding: 14px 28px;
+  cursor: pointer;
+}
+.submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.success {
+  font-weight: 500;
+  color: var(--texto-cuerpo);
+  margin: 0;
+}
+.error {
+  font-size: 14px;
+  color: #b4231f;
+  margin: 0;
+}
+:root[data-theme="dark"] .error {
+  color: #ff9d99;
+}
+.compact {
+  gap: 14px;
+}
+.compact .submit {
+  padding: 12px 24px;
+}

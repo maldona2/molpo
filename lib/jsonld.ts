@@ -45,8 +45,8 @@ export function siteJsonLd() {
     founder: { "@id": `${site.url}/#matias` },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: site.contact.whatsappNumber,
       email: site.contact.email,
+      telephone: site.contact.whatsappNumber,
       contactType: "sales",
       areaServed: "AR",
       availableLanguage: "Spanish",
@@ -94,6 +94,19 @@ export function homePageJsonLd() {
     inLanguage: site.lang,
     isPartOf: { "@id": `${site.url}/#website` },
     about: { "@id": `${site.url}/#molpo` },
+    mainEntity: { "@id": `${site.url}/#molpo` },
+  };
+}
+
+export function contactPageJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${site.url}/contacto/#page`,
+    url: `${site.url}/contacto/`,
+    name: "Contacto | molpo",
+    description:
+      "Formulario de contacto y email directo para hablar de tu sistema con molpo.",
     mainEntity: { "@id": `${site.url}/#molpo` },
   };
 }

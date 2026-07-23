@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import FloatingWa from "@/components/FloatingWa";
 import JsonLd from "@/components/JsonLd";
 import TrackedLink from "@/components/TrackedLink";
 import { site } from "@/lib/site";
@@ -116,7 +115,6 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
   const proyecto = getProyecto(slug);
   if (!proyecto) notFound();
 
-  const wa = site.contact.whatsappUrl;
   const resultado = proyecto.secciones.find((seccion) => seccion.titulo === "Resultado");
   const detalle = proyecto.secciones.filter((seccion) => seccion !== resultado);
   const jsonLd = {
@@ -284,15 +282,9 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
             ) : null}
 
             <div className={styles.ctaRow}>
-              <TrackedLink
-                href={wa}
-                className={styles.cta}
-                rel="noopener"
-                tracking={{ name: "contact_click", method: "whatsapp", placement: "case_end" }}
-              >
-                <span className={styles.dot} aria-hidden="true" />
+              <a href={site.contact.contactPath} className={styles.cta}>
                 Quiero un sistema así para mi negocio
-              </TrackedLink>
+              </a>
             </div>
 
             <Link href="/#casos" className={styles.volver}>
@@ -302,7 +294,6 @@ export default async function CasoPage({ params }: { params: Promise<Params> }) 
         </article>
       </main>
       <Footer />
-      <FloatingWa />
     </>
   );
 }

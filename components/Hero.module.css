@@ -1,194 +1,487 @@
+/* Hero orbital — marco oscuro + tarjeta con anillos concéntricos (handoff hifi) */
 .hero {
-  position: relative;
-  /* Base navy profundo — el foco de luz vive en las capas de arriba */
-  background: radial-gradient(125% 130% at 32% 42%, #1c3f68 0%, #12294a 40%, #09172b 100%);
-  color: #fff;
-  overflow: hidden;
-  isolation: isolate;
+  /* Marco sigue el tema: blanco en light, azul profundo en dark */
+  background: var(--bg);
+  padding: clamp(10px, 2vw, 20px);
 }
-/* Capas de luz — colores de marca, mezcladas con "screen" para leerse como luz real */
-.beam,
-.sweep,
+.card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* Tarjeta a pantalla completa: 100dvh menos el marco oscuro */
+  height: calc(100dvh - clamp(20px, 4vw, 40px));
+  border-radius: clamp(20px, 2.6vw, 34px);
+  background: radial-gradient(130% 120% at 50% -10%, #3e6796 0%, #1b3c63 34%, #0c1e36 66%, #081120 100%);
+  color: #fff;
+  box-shadow:
+    0 40px 90px -50px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(180, 210, 240, 0.12);
+  padding-bottom: clamp(12px, 2dvh, 40px);
+}
+/* ===== Fondo mesh animado — blobs radiales que derivan lento ===== */
+.mesh {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
 .blob {
   position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  mix-blend-mode: screen;
+  width: 90vmax;
+  height: 90vmax;
+  border-radius: 50%;
   will-change: transform;
 }
-/* Haz cónico: fuente de luz que emana de un punto y gira lento (ref. manual p.11) */
-.beam {
-  top: 42%;
-  left: 34%;
-  width: 170vmax;
-  height: 170vmax;
-  transform: translate(-50%, -50%);
-  background: conic-gradient(
-    from 0deg at 50% 50%,
-    transparent 0deg,
-    rgba(140, 179, 222, 0.04) 26deg,
-    rgba(215, 232, 248, 0.26) 58deg,
-    rgba(140, 179, 222, 0.08) 92deg,
-    transparent 150deg,
-    transparent 236deg,
-    rgba(78, 120, 169, 0.14) 288deg,
-    transparent 340deg
-  );
-  filter: blur(30px);
-  animation: heroSpin 48s linear infinite;
+.blobLight {
+  left: -30%;
+  top: -30%;
+  background: radial-gradient(circle at 50% 50%, rgba(205, 226, 248, 0.85) 0%, rgba(205, 226, 248, 0) 60%);
+  animation: driftA 26s ease-in-out infinite alternate;
 }
-/* Barrido diagonal: banda de luz suave que cruza la escena (ref. manual p.12-14) */
-.sweep {
-  inset: -30%;
-  background: linear-gradient(
-    118deg,
-    transparent 32%,
-    rgba(215, 232, 248, 0.16) 47%,
-    rgba(255, 255, 255, 0.07) 50%,
-    rgba(215, 232, 248, 0.14) 53%,
-    transparent 68%
-  );
-  filter: blur(24px);
-  animation: heroSweep 15s ease-in-out infinite alternate;
+.blobDark {
+  right: -35%;
+  top: -20%;
+  background: radial-gradient(circle at 50% 50%, rgba(8, 17, 32, 0.9) 0%, rgba(8, 17, 32, 0) 58%);
+  animation: driftB 32s ease-in-out infinite alternate;
 }
-/* Poza de luz ambiente que respira, ancla la esquina inferior */
-.blob {
-  bottom: -30%;
-  right: -12%;
-  width: 55vw;
-  height: 55vw;
-  max-width: 720px;
-  max-height: 720px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(78, 120, 169, 0.4), transparent 64%);
-  filter: blur(60px);
-  animation: heroBreath 13s ease-in-out infinite alternate;
+.blobDeep {
+  left: 10%;
+  bottom: -55%;
+  background: radial-gradient(circle at 50% 50%, rgba(10, 24, 46, 0.85) 0%, rgba(10, 24, 46, 0) 58%);
+  animation: driftC 38s ease-in-out infinite alternate;
 }
-@keyframes heroSpin {
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+@keyframes driftA {
+  from { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(28%, 22%) scale(1.15); }
+  to   { transform: translate(55%, 8%) scale(0.9); }
 }
-@keyframes heroSweep {
-  from {
-    transform: translate3d(-14%, -6%, 0);
-  }
-  to {
-    transform: translate3d(14%, 6%, 0);
-  }
+@keyframes driftB {
+  from { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-30%, 25%) scale(1.2); }
+  to   { transform: translate(-12%, 45%) scale(0.95); }
 }
-@keyframes heroBreath {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: 0.75;
-  }
-  to {
-    transform: translate3d(-12%, -8%, 0) scale(1.22);
-    opacity: 1;
-  }
+@keyframes driftC {
+  from { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(25%, -18%) scale(1.1); }
+  to   { transform: translate(-20%, -8%) scale(1.25); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .beam,
-  .sweep,
   .blob {
     animation: none;
   }
 }
-.watermark {
+
+/* Resplandor superior */
+.glow {
   position: absolute;
-  right: -8%;
-  top: -10%;
-  width: min(640px, 70vw);
-  height: 120%;
-  opacity: 0.09;
-  background: url("/assets/simbolo-blanco.png") no-repeat center / contain;
+  left: 50%;
+  top: -24%;
+  width: 70%;
+  height: 60%;
+  transform: translateX(-50%);
+  background: radial-gradient(60% 60% at 50% 50%, rgba(200, 224, 250, 0.32), rgba(200, 224, 250, 0) 70%);
   pointer-events: none;
 }
-.inner {
+
+/* ===== Top bar ===== */
+.topBar {
   position: relative;
-  padding-top: clamp(60px, 9vw, 120px);
-  padding-bottom: clamp(72px, 9vw, 120px);
+  /* Encima del headline: el panel del menú mobile vive en este stacking context */
+  z-index: 4;
+  /* Grid 1fr auto 1fr: nav píldora centrado exacto en el mismo eje que el headline y el CTA */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  /* Alineado al grid de contenido del sitio (mismo container que las secciones) */
+  width: 100%;
+  max-width: var(--contenido);
+  margin: 0 auto;
+  padding: clamp(14px, 3dvh, 32px) var(--pad-lateral);
+}
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+  grid-column: 1;
+  justify-self: start;
+}
+.logo {
+  height: 26px;
+  width: auto;
+}
+.pillNav {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: rgba(215, 232, 248, 0.1);
+  border: 1px solid rgba(180, 210, 240, 0.16);
+  border-radius: var(--r-pill);
+  backdrop-filter: blur(8px);
+  max-width: 100%;
+  overflow-x: auto;
+}
+.pillLink {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  color: #b9d2ed;
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.pillLink:hover {
+  color: #fff;
+  background: rgba(215, 232, 248, 0.16);
+}
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  grid-column: 3;
+  justify-self: end;
+}
+/* Hero siempre oscuro: el toggle usa colores claros fijos, sin depender del tema.
+   Doble clase: gana al estilo base de ThemeToggle sin depender del orden de carga CSS. */
+.themeToggle.themeToggle {
+  color: #c6dcf2;
+  border-color: rgba(180, 210, 240, 0.16);
+}
+.themeToggle.themeToggle:hover {
+  color: #fff;
+  border-color: rgba(180, 210, 240, 0.4);
+  background: rgba(215, 232, 248, 0.08);
+}
+.contactBtn {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+  color: #0c1e36;
+  background: linear-gradient(180deg, #cfe1f5, #8cb3de);
+  padding: 11px 22px;
+  border-radius: var(--r-pill);
+  box-shadow: 0 10px 24px -12px rgba(140, 179, 222, 0.9);
+  white-space: nowrap;
+}
+.contactBtn:hover {
+  color: #0c1e36;
+  background: linear-gradient(180deg, #ddeaf8, #9cbfe6);
+}
+/* ===== Menú mobile ===== */
+.menuButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(180, 210, 240, 0.16);
+  background: rgba(215, 232, 248, 0.1);
+  cursor: pointer;
+}
+.menuIcon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 18px;
+}
+.menuIcon span {
+  height: 2px;
+  border-radius: 2px;
+  background: #eaf3ff;
+}
+.mobileMenu {
+  position: absolute;
+  top: calc(100% - 6px);
+  right: var(--pad-lateral);
+  left: var(--pad-lateral);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(8, 17, 32, 0.96);
+  border: 1px solid rgba(180, 210, 240, 0.18);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+.mobileLink {
+  font-weight: 500;
+  font-size: 16px;
+  color: #d7e8f8;
+  padding: 13px 16px;
+  border-radius: 12px;
+}
+.mobileLink:hover {
+  color: #fff;
+  background: rgba(215, 232, 248, 0.1);
+}
+.mobileContact {
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+  color: #0c1e36;
+  background: linear-gradient(180deg, #cfe1f5, #8cb3de);
+  padding: 13px 16px;
+  border-radius: var(--r-pill);
+}
+.mobileContact:hover {
+  color: #0c1e36;
+}
+/* En mobile: nav píldora y Contacto se ocultan, aparece la hamburguesa */
+@media (max-width: 760px) {
+  .pillNav,
+  .contactBtn {
+    display: none;
+  }
+  .menuButton {
+    display: inline-flex;
+  }
+}
+
+/* ===== Headline ===== */
+.headline {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: clamp(12px, 3.2dvh, 40px) clamp(20px, 4vw, 40px) 0;
 }
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   margin: 0;
   font-family: var(--font-founders), sans-serif;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--azul-claro);
-  background: rgba(215, 232, 248, 0.1);
-  padding: 9px 16px;
+  color: #9ec0e6;
+  background: rgba(215, 232, 248, 0.08);
+  border: 1px solid rgba(180, 210, 240, 0.16);
+  /* letter-spacing agrega 0.2em fantasma tras el último carácter: se compensa a la derecha.
+     Vertical: las mayúsculas no usan el descender de la fuente → el texto queda ~3px alto;
+     se compensa con más padding arriba y menos abajo. */
+  padding: 11px calc(15px - 0.2em) 5px 15px;
   border-radius: var(--r-pill);
+  animation: heroRise 0.6s ease both;
 }
 .h1 {
   color: #fff;
-  font-size: clamp(38px, 6vw, 74px);
-  line-height: 1.02;
-  margin: 26px 0 0;
-  max-width: 16ch;
+  /* Cap por dvh: en pantallas bajas el título cede antes que desbordar */
+  font-size: min(clamp(38px, 6.4vw, 82px), 9.5dvh);
+  line-height: 1;
+  margin: clamp(12px, 2.4dvh, 22px) 0 0;
+  text-shadow: 0 2px 30px rgba(140, 179, 222, 0.3);
+  animation: heroRise 0.6s ease 0.05s both;
 }
 .sub {
   font-weight: 400;
-  font-size: clamp(17px, 2.1vw, 22px);
+  font-size: clamp(16px, 1.9vw, 20px);
   line-height: 1.5;
-  color: var(--celeste-palido);
-  margin: 24px 0 0;
-  max-width: 56ch;
+  color: #c6dbf2;
+  margin: clamp(10px, 2.2dvh, 20px) auto 0;
+  max-width: 52ch;
+  animation: heroRise 0.6s ease 0.1s both;
 }
-.ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 38px;
+
+/* ===== Órbita + CTA ===== */
+.orbit {
+  position: relative;
+  z-index: 2;
+  /* Crece para llenar lo que sobra del dvh; puede achicarse en pantallas bajas */
+  flex: 1;
+  min-height: clamp(170px, 22dvh, 360px);
+  margin-top: clamp(-4px, -0.5vw, 0px);
 }
-.ctaPrimary {
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  border-radius: var(--r-pill);
+  animation: ringPulse 7s ease-in-out infinite;
+}
+.ring2 {
+  width: min(500px, 54%);
+  aspect-ratio: 1.66 / 1;
+  border: 1px solid rgba(180, 210, 240, 0.2);
+  box-shadow: inset 0 38px 52px -40px rgba(220, 236, 252, 0.6);
+  animation-delay: 0.3s;
+}
+.ring3 {
+  width: min(390px, 42%);
+  aspect-ratio: 1.6 / 1;
+  border: 1px solid rgba(190, 215, 242, 0.28);
+  box-shadow: inset 0 32px 44px -34px rgba(224, 238, 252, 0.72);
+  animation-delay: 0.6s;
+}
+.ring4 {
+  width: min(290px, 32%);
+  aspect-ratio: 1.62 / 1;
+  border: 1px solid rgba(200, 222, 246, 0.34);
+  box-shadow: inset 0 26px 36px -28px rgba(230, 242, 254, 0.85);
+  animation-delay: 0.9s;
+}
+.orbitDot {
+  position: absolute;
+  left: 50%;
+  top: calc(52% - clamp(72px, 9vw, 104px));
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #eaf3ff;
+  animation: dotGlow 3.2s ease-in-out infinite;
+}
+/* En mobile los % de los anillos quedan más chicos que el CTA: tamaños fijos,
+   la tarjeta (overflow:hidden) recorta los arcos que sobran */
+@media (max-width: 640px) {
+  .orbit {
+    min-height: 300px;
+  }
+  .ring2 {
+    width: 460px;
+  }
+  .ring3 {
+    width: 370px;
+  }
+  .ring4 {
+    width: 290px;
+  }
+  .orbitDot {
+    top: calc(52% - 88px);
+  }
+}
+.orbitCta {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
   gap: 12px;
   font-weight: 600;
-  font-size: 17px;
-  color: var(--azul-profundo);
-  background: var(--azul-claro);
-  padding: 16px 28px;
-  border-radius: var(--r-boton);
+  font-size: clamp(15px, 1.6vw, 18px);
+  color: #fff;
+  background: radial-gradient(120% 160% at 50% 0%, #12294a, #050d1c);
+  padding: clamp(13px, 1.5vw, 17px) clamp(22px, 2.8vw, 34px);
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(180, 210, 240, 0.22);
+  box-shadow:
+    0 24px 60px -26px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(200, 224, 250, 0.28);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  white-space: nowrap;
 }
-.ctaPrimary:hover {
-  color: var(--azul-profundo);
-  background: #9cbfe6;
+.orbitCta:hover {
+  color: #fff;
+  transform: translate(-50%, -50%) scale(1.03);
+  box-shadow:
+    0 30px 70px -24px rgba(0, 0, 0, 0.95),
+    inset 0 1px 0 rgba(200, 224, 250, 0.4);
 }
-.ctaSecondary {
+.arrowCircle {
   display: inline-flex;
   align-items: center;
-  font-weight: 600;
-  font-size: 17px;
-  color: #fff;
-  padding: 16px 26px;
-  border-radius: var(--r-boton);
-  border: 1px solid rgba(140, 179, 222, 0.5);
-}
-.ctaSecondary:hover {
-  color: #fff;
-  border-color: rgba(140, 179, 222, 0.9);
-}
-.dot {
-  width: 11px;
-  height: 11px;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--wa-verde);
-  box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.28);
+  background: rgba(215, 232, 248, 0.14);
 }
-.closing {
-  margin-top: 46px;
-  padding-top: 22px;
-  border-top: 1px solid rgba(140, 179, 222, 0.22);
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--azul-claro);
-  max-width: 54ch;
+.arrowCircle svg {
+  width: 15px;
+  height: 15px;
+}
+/* Border beam: haz de luz que recorre el borde (conic-gradient + mask, sin dependencias) */
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.orbitCta::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0deg 300deg,
+    rgba(140, 179, 222, 0.9) 335deg,
+    #eaf3ff 355deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: beamSpin 5s linear infinite;
+}
+@keyframes beamSpin {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+/* ===== Keyframes ===== */
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ringPulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.012);
+  }
+}
+@keyframes dotGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(140, 179, 222, 0.5),
+      0 0 22px 4px rgba(140, 179, 222, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(140, 179, 222, 0),
+      0 0 30px 8px rgba(140, 179, 222, 0.75);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow,
+  .h1,
+  .sub,
+  .ring,
+  .orbitDot,
+  .orbitCta::before {
+    animation: none;
+  }
+  .orbitCta {
+    transition: none;
+  }
 }
