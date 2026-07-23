@@ -23,7 +23,7 @@ export default function Hero() {
             ))}
           </nav>
           <div className={styles.topActions}>
-            <ThemeToggle />
+            <ThemeToggle className={styles.themeToggle} />
             <TrackedLink
               href={site.contact.whatsappUrl}
               className={styles.contactBtn}

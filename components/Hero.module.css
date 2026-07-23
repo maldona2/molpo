@@ -90,6 +90,17 @@
   grid-column: 3;
   justify-self: end;
 }
+/* Hero siempre oscuro: el toggle usa colores claros fijos, sin depender del tema.
+   Doble clase: gana al estilo base de ThemeToggle sin depender del orden de carga CSS. */
+.themeToggle.themeToggle {
+  color: #c6dcf2;
+  border-color: rgba(180, 210, 240, 0.16);
+}
+.themeToggle.themeToggle:hover {
+  color: #fff;
+  border-color: rgba(180, 210, 240, 0.4);
+  background: rgba(215, 232, 248, 0.08);
+}
 .contactBtn {
   font-weight: 600;
   font-size: 14px;
@@ -190,7 +201,6 @@
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
   margin: 0;
   font-family: var(--font-founders), sans-serif;
   font-weight: 500;
@@ -201,7 +211,10 @@
   color: #9ec0e6;
   background: rgba(215, 232, 248, 0.08);
   border: 1px solid rgba(180, 210, 240, 0.16);
-  padding: 8px 15px;
+  /* letter-spacing agrega 0.2em fantasma tras el último carácter: se compensa a la derecha.
+     Vertical: las mayúsculas no usan el descender de la fuente → el texto queda ~3px alto;
+     se compensa con más padding arriba y menos abajo. */
+  padding: 11px calc(15px - 0.2em) 5px 15px;
   border-radius: var(--r-pill);
   animation: heroRise 0.6s ease both;
 }
