@@ -7,6 +7,11 @@ export default function Hero() {
   return (
     <header id="top" className={styles.hero}>
       <div className={styles.card}>
+        <div className={styles.mesh} aria-hidden="true">
+          <span className={`${styles.blob} ${styles.blobLight}`} />
+          <span className={`${styles.blob} ${styles.blobDark}`} />
+          <span className={`${styles.blob} ${styles.blobDeep}`} />
+        </div>
         <div className={styles.glow} aria-hidden="true" />
 
         <div className={styles.topBar}>

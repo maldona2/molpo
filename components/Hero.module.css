@@ -19,6 +19,59 @@
     inset 0 1px 0 rgba(180, 210, 240, 0.12);
   padding-bottom: clamp(12px, 2dvh, 40px);
 }
+/* ===== Fondo mesh animado — blobs radiales que derivan lento ===== */
+.mesh {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.blob {
+  position: absolute;
+  width: 90vmax;
+  height: 90vmax;
+  border-radius: 50%;
+  will-change: transform;
+}
+.blobLight {
+  left: -30%;
+  top: -30%;
+  background: radial-gradient(circle at 50% 50%, rgba(205, 226, 248, 0.85) 0%, rgba(205, 226, 248, 0) 60%);
+  animation: driftA 26s ease-in-out infinite alternate;
+}
+.blobDark {
+  right: -35%;
+  top: -20%;
+  background: radial-gradient(circle at 50% 50%, rgba(8, 17, 32, 0.9) 0%, rgba(8, 17, 32, 0) 58%);
+  animation: driftB 32s ease-in-out infinite alternate;
+}
+.blobDeep {
+  left: 10%;
+  bottom: -55%;
+  background: radial-gradient(circle at 50% 50%, rgba(10, 24, 46, 0.85) 0%, rgba(10, 24, 46, 0) 58%);
+  animation: driftC 38s ease-in-out infinite alternate;
+}
+@keyframes driftA {
+  from { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(28%, 22%) scale(1.15); }
+  to   { transform: translate(55%, 8%) scale(0.9); }
+}
+@keyframes driftB {
+  from { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-30%, 25%) scale(1.2); }
+  to   { transform: translate(-12%, 45%) scale(0.95); }
+}
+@keyframes driftC {
+  from { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(25%, -18%) scale(1.1); }
+  to   { transform: translate(-20%, -8%) scale(1.25); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blob {
+    animation: none;
+  }
+}
+
 /* Resplandor superior */
 .glow {
   position: absolute;
