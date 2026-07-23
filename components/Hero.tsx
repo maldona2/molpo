@@ -8,7 +8,6 @@ export default function Hero() {
       <div className={styles.beam} aria-hidden="true" />
       <div className={styles.sweep} aria-hidden="true" />
       <div className={styles.blob} aria-hidden="true" />
-      <div className={styles.watermark} aria-hidden="true" />
       <div className={`container ${styles.inner}`}>
         <p className={styles.eyebrow}>Desarrollo de software · Tucumán</p>
         <h1 className={styles.h1}>Sistemas que sostienen tu empresa, no que la complican.</h1>

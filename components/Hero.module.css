@@ -94,16 +94,6 @@
     animation: none;
   }
 }
-.watermark {
-  position: absolute;
-  right: -8%;
-  top: -10%;
-  width: min(640px, 70vw);
-  height: 120%;
-  opacity: 0.09;
-  background: url("/assets/simbolo-blanco.png") no-repeat center / contain;
-  pointer-events: none;
-}
 .inner {
   position: relative;
   padding-top: clamp(60px, 9vw, 120px);
