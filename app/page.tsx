@@ -1,4 +1,6 @@
 import Hero from "@/components/Hero";
+import HeroCurtain from "@/components/HeroCurtain";
+import StackDeck from "@/components/StackDeck";
 import TrustStrip from "@/components/TrustStrip";
 import Servicios from "@/components/Servicios";
 import Proceso from "@/components/Proceso";
@@ -14,15 +16,23 @@ export default function Home() {
     <>
       <JsonLd data={homePageJsonLd()} />
       <main>
-        <Hero />
-        <TrustStrip />
-        <Servicios />
-        <Proceso />
-        <Casos />
-        <SobreMi />
-        <CtaFinal />
+        <HeroCurtain>
+          <Hero />
+        </HeroCurtain>
+        <StackDeck>
+          <div>
+            <TrustStrip />
+            <Servicios />
+          </div>
+          <Proceso />
+          <Casos />
+          <SobreMi />
+          <div>
+            <CtaFinal />
+            <Footer />
+          </div>
+        </StackDeck>
       </main>
-      <Footer />
     </>
   );
 }

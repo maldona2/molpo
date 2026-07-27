@@ -1,0 +1,63 @@
+/* Deck de pantallas: cada sección es una card con el mismo marco redondeado
+   del hero. En desktop las cards se apilan: cada una queda pegada (sticky)
+   mientras la siguiente sube y la cubre; la cubierta se encoge y retrocede
+   sutilmente (--cover 0→1, seteado por StackDeck). En mobile degradan a
+   hojas apiladas sin sticky para no recortar contenido. */
+.deck {
+  position: relative;
+  /* Por encima del hero-cortina (z 0) */
+  z-index: 1;
+}
+.card {
+  position: relative;
+  border-radius: clamp(20px, 2.6vw, 34px) clamp(20px, 2.6vw, 34px) 0 0;
+  overflow: clip;
+  /* Fondo sólido: la card es una pantalla opaca; sin esto las secciones
+     transparentes dejarían ver el hero detrás. */
+  background: var(--bg);
+  box-shadow: 0 -30px 70px -32px rgba(4, 10, 20, 0.55);
+}
+/* Solapa cada card con la anterior lo justo para que las esquinas
+   redondeadas muestren la card previa y no un hueco. */
+.card + .card {
+  margin-top: calc(clamp(20px, 2.6vw, 34px) * -1);
+}
+
+/* Reveal: el contenido de cada card entra con fade + rise al aparecer */
+.revealer {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.in .revealer {
+  opacity: 1;
+  transform: none;
+}
+
+/* Apilado sticky solo en pantallas grandes */
+@media (min-width: 900px) {
+  .card {
+    position: sticky;
+    /* top exacto lo ajusta StackDeck por JS: min(0, viewport - altura)
+       para que las cards más altas que el viewport se lean completas
+       antes de quedar pegadas. */
+    top: 0;
+    transform: translateY(calc(var(--cover, 0) * -12px)) scale(calc(1 - var(--cover, 0) * 0.045));
+    transform-origin: 50% 0;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    position: relative;
+    top: auto;
+    transform: none;
+  }
+  .revealer {
+    opacity: 1;
+    transform: none;
+  }
+}

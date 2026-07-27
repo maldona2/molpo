@@ -1,0 +1,20 @@
+/* Cortina: el hero queda clavado de fondo mientras el resto del sitio
+   sube por encima. --curtain (0→1) lo setea HeroCurtain según el scroll
+   del primer viewport: el hero se aleja (escala) y se atenúa, dando
+   profundidad tipo parallax. */
+.curtain {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  transform: scale(calc(1 - var(--curtain, 0) * 0.06));
+  transform-origin: 50% 24%;
+  filter: brightness(calc(1 - var(--curtain, 0) * 0.45));
+  will-change: transform, filter;
+}
+@media (prefers-reduced-motion: reduce) {
+  .curtain {
+    position: static;
+    transform: none;
+    filter: none;
+  }
+}
