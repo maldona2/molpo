@@ -2,16 +2,19 @@
 .hero {
   /* Marco sigue el tema: blanco en light, azul profundo en dark */
   background: var(--bg);
-  padding: clamp(10px, 2vw, 20px);
+  /* --reveal: 0 = marco visible (estado inicial) · 1 = pantalla abierta full-viewport.
+     Lo controla HeroReveal según el scroll. Con fallback 0 se ve idéntico sin JS. */
+  padding: calc(clamp(10px, 2vw, 20px) * (1 - var(--reveal, 0)));
 }
 .card {
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  /* Tarjeta a pantalla completa: 100dvh menos el marco oscuro */
-  height: calc(100dvh - clamp(20px, 4vw, 40px));
-  border-radius: clamp(20px, 2.6vw, 34px);
+  /* Tarjeta a pantalla completa: 100dvh menos el marco oscuro.
+     Al abrir (--reveal→1) el marco se reduce a 0 y la card ocupa todo el viewport. */
+  height: calc(100dvh - clamp(20px, 4vw, 40px) * (1 - var(--reveal, 0)));
+  border-radius: calc(clamp(20px, 2.6vw, 34px) * (1 - var(--reveal, 0)));
   background: radial-gradient(130% 120% at 50% -10%, #3e6796 0%, #1b3c63 34%, #0c1e36 66%, #081120 100%);
   color: #fff;
   box-shadow:

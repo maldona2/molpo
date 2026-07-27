@@ -1,4 +1,4 @@
-import Hero from "@/components/Hero";
+import HeroReveal from "@/components/HeroReveal";
 import TrustStrip from "@/components/TrustStrip";
 import Servicios from "@/components/Servicios";
 import Proceso from "@/components/Proceso";
@@ -14,7 +14,7 @@ export default function Home() {
     <>
       <JsonLd data={homePageJsonLd()} />
       <main>
-        <Hero />
+        <HeroReveal />
         <TrustStrip />
         <Servicios />
         <Proceso />

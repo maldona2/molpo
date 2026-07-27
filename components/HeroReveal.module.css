@@ -1,0 +1,33 @@
+/* Track de scroll: da recorrido extra para "entrar a la pantalla".
+   El hero queda sticky y se abre a medida que se scrollea este bloque. */
+.track {
+  position: relative;
+  /* 100dvh del hero + recorrido de apertura. Más alto = apertura más gradual. */
+  height: 200dvh;
+}
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  /* La card crece hasta full-viewport; nada debe asomar fuera durante la apertura. */
+  overflow: clip;
+}
+
+/* Sin animación: colapsa el track y muestra el hero en su estado cerrado normal. */
+.reduce {
+  height: auto;
+}
+.reduce .sticky {
+  position: static;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    height: auto;
+  }
+  .sticky {
+    position: static;
+    height: auto;
+  }
+}
