@@ -2,8 +2,8 @@
    El hero queda sticky y se abre a medida que se scrollea este bloque. */
 .track {
   position: relative;
-  /* 100dvh del hero + recorrido de apertura. Más alto = apertura más gradual. */
-  height: 200dvh;
+  /* 100dvh del hero + recorrido del zoom. Más alto = zoom más gradual. */
+  height: 260dvh;
 }
 .sticky {
   position: sticky;
