@@ -170,3 +170,14 @@ button:focus-visible {
     transition-duration: 0.001ms !important;
   }
 }
+
+@media print {
+  body[data-proposal-admin="true"] {
+    color-scheme: light;
+    background: #fff !important;
+  }
+
+  body[data-proposal-admin="true"] > section {
+    display: none !important;
+  }
+}
