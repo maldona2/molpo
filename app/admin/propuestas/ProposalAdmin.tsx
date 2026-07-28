@@ -5,6 +5,7 @@ import {
   type ChangeEvent,
   type ReactNode,
   useEffect,
+  useId,
   useRef,
   useState,
 } from "react";
@@ -181,6 +182,87 @@ function isBlockStart(lines: string[], index: number) {
   );
 }
 
+function MermaidDiagram({ source }: { source: string }) {
+  const reactId = useId();
+  const diagramId = `mermaid-${reactId.replace(/:/g, "")}`;
+  const [svg, setSvg] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    setSvg("");
+    setError("");
+
+    async function renderDiagram() {
+      try {
+        const { default: mermaid } = await import("mermaid");
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          theme: "base",
+          fontFamily: "Inter, Arial, sans-serif",
+          flowchart: {
+            htmlLabels: true,
+            useMaxWidth: true,
+            curve: "basis",
+          },
+          themeVariables: {
+            primaryColor: "#eff5fb",
+            primaryTextColor: "#102a4e",
+            primaryBorderColor: "#8cb3de",
+            lineColor: "#4e78a9",
+            secondaryColor: "#d7e8f8",
+            tertiaryColor: "#f7faff",
+            clusterBkg: "#f7faff",
+            clusterBorder: "#b9cbe0",
+            edgeLabelBackground: "#ffffff",
+            fontSize: "12px",
+          },
+        });
+
+        const rendered = await mermaid.render(diagramId, source);
+        if (active) setSvg(rendered.svg);
+      } catch (renderError) {
+        if (!active) return;
+        const message =
+          renderError instanceof Error ? renderError.message : "No se pudo generar el diagrama.";
+        setError(message.split("\n")[0]);
+      }
+    }
+
+    void renderDiagram();
+    return () => {
+      active = false;
+    };
+  }, [diagramId, source]);
+
+  if (error) {
+    return (
+      <div className={styles.mermaidError} data-mermaid-status="error" role="alert">
+        <strong>No se pudo interpretar el diagrama Mermaid.</strong>
+        <span>{error}</span>
+      </div>
+    );
+  }
+
+  if (!svg) {
+    return (
+      <div className={styles.mermaidLoading} data-mermaid-status="loading" aria-live="polite">
+        Generando diagrama…
+      </div>
+    );
+  }
+
+  return (
+    <figure
+      className={styles.mermaidDiagram}
+      data-mermaid-status="ready"
+      aria-label="Diagrama Mermaid"
+      dangerouslySetInnerHTML={{ __html: svg }}
+    />
+  );
+}
+
 function MarkdownDocument({ source }: { source: string }) {
   const lines = source.replace(/\r\n/g, "\n").split("\n");
   const blocks: ReactNode[] = [];
@@ -228,11 +310,16 @@ function MarkdownDocument({ source }: { source: string }) {
         index += 1;
       }
       index += 1;
-      blocks.push(
-        <pre key={`code-${index}`} data-language={language || undefined}>
-          <code>{code.join("\n")}</code>
-        </pre>,
-      );
+      const codeSource = code.join("\n");
+      if (language.toLowerCase() === "mermaid") {
+        blocks.push(<MermaidDiagram key={`mermaid-${index}`} source={codeSource} />);
+      } else {
+        blocks.push(
+          <pre key={`code-${index}`} data-language={language || undefined}>
+            <code>{codeSource}</code>
+          </pre>,
+        );
+      }
       continue;
     }
 
@@ -407,6 +494,7 @@ export default function ProposalAdmin() {
   const [saved, setSaved] = useState(true);
   const [pasteOpen, setPasteOpen] = useState(false);
   const [pastedMarkdown, setPastedMarkdown] = useState("");
+  const [preparingPdf, setPreparingPdf] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function requestAccess() {
@@ -491,6 +579,19 @@ export default function ProposalAdmin() {
     URL.revokeObjectURL(url);
   }
 
+  async function printProposal() {
+    setPreparingPdf(true);
+    const timeoutAt = Date.now() + 5000;
+    while (
+      document.querySelector('[data-mermaid-status="loading"]') &&
+      Date.now() < timeoutAt
+    ) {
+      await new Promise((resolve) => window.setTimeout(resolve, 100));
+    }
+    setPreparingPdf(false);
+    window.print();
+  }
+
   function resetDraft() {
     if (!window.confirm("¿Querés reemplazar el borrador actual por la plantilla inicial?")) return;
     setDraft(DEFAULT_DRAFT);
@@ -535,8 +636,13 @@ export default function ProposalAdmin() {
           <button type="button" className={styles.secondaryButton} onClick={downloadMarkdown}>
             Descargar MD
           </button>
-          <button type="button" className={styles.primaryButton} onClick={() => window.print()}>
-            Generar PDF
+          <button
+            type="button"
+            className={styles.primaryButton}
+            disabled={preparingPdf}
+            onClick={() => void printProposal()}
+          >
+            {preparingPdf ? "Preparando…" : "Generar PDF"}
           </button>
           <button type="button" className={styles.iconButton} onClick={signOut}>
             Salir

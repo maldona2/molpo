@@ -78,6 +78,11 @@
   background: #0f294b;
 }
 
+.primaryButton:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
 .secondaryButton {
   color: #18365d;
   background: #e8f0f8;
@@ -563,6 +568,53 @@
   padding: 0;
   color: inherit;
   background: transparent;
+}
+
+.mermaidDiagram {
+  width: 100%;
+  margin: 6mm 0 8mm;
+  padding: 5mm;
+  overflow: hidden;
+  border: 0.25mm solid #cfdeed;
+  border-radius: 3mm;
+  background: #fff;
+  break-inside: avoid;
+}
+
+.mermaidDiagram svg {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 220mm;
+  margin: 0 auto;
+}
+
+.mermaidLoading,
+.mermaidError {
+  margin: 6mm 0;
+  padding: 5mm;
+  border-radius: 3mm;
+  break-inside: avoid;
+}
+
+.mermaidLoading {
+  color: #52657d;
+  background: #eff5fb;
+  text-align: center;
+}
+
+.mermaidError {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
+  color: #7d2d24;
+  border-left: 1mm solid #c25445;
+  background: #fff0ed;
+}
+
+.mermaidError span {
+  font-size: 9px;
 }
 
 .document hr {
