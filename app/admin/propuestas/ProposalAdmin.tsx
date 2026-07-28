@@ -355,7 +355,6 @@ function MarkdownDocument({ source }: { source: string }) {
 function Cover({ meta }: { meta: ProposalMeta }) {
   return (
     <section className={styles.cover}>
-      <div className={styles.coverGlow} aria-hidden="true" />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/assets/molpo-blanco.png" alt="molpo" className={styles.coverLogo} />
       <p className={styles.coverType}>{meta.tipo}</p>

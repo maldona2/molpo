@@ -290,35 +290,7 @@
   margin-bottom: 28px;
   padding: 20mm 19mm 11mm;
   color: #fff;
-  background:
-    radial-gradient(105% 72% at 5% 6%, rgba(86, 137, 190, 0.95) 0%, rgba(17, 48, 85, 0.98) 42%, transparent 43%),
-    linear-gradient(112deg, #07172c 0%, #0a1d37 43%, #82acd8 69%, #d9e9f8 100%);
-}
-
-.cover::before {
-  position: absolute;
-  z-index: -1;
-  content: "";
-  width: 125%;
-  height: 68%;
-  left: -36%;
-  bottom: -22%;
-  border-radius: 50%;
-  background: #06162b;
-  filter: blur(7px);
-  transform: rotate(18deg);
-}
-
-.coverGlow {
-  position: absolute;
-  z-index: -1;
-  width: 50%;
-  height: 120%;
-  right: 9%;
-  top: -11%;
-  background: rgba(228, 240, 251, 0.72);
-  filter: blur(38px);
-  transform: rotate(-9deg);
+  background: #d9e9f8 url("/assets/portada-propuestas.png") center / 100% 100% no-repeat;
 }
 
 .coverLogo {
