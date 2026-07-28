@@ -405,6 +405,8 @@ export default function ProposalAdmin() {
   const [accessChecked, setAccessChecked] = useState(false);
   const [draft, setDraft] = useState<ProposalDraft>(DEFAULT_DRAFT);
   const [saved, setSaved] = useState(true);
+  const [pasteOpen, setPasteOpen] = useState(false);
+  const [pastedMarkdown, setPastedMarkdown] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function requestAccess() {
@@ -461,6 +463,16 @@ export default function ProposalAdmin() {
     const source = await file.text();
     setDraft(parseFrontmatter(source));
     event.target.value = "";
+  }
+
+  function applyPastedMarkdown() {
+    if (!pastedMarkdown.trim()) {
+      window.alert("Pegá un documento Markdown antes de aplicarlo.");
+      return;
+    }
+    setDraft(parseFrontmatter(pastedMarkdown));
+    setPastedMarkdown("");
+    setPasteOpen(false);
   }
 
   function downloadMarkdown() {
@@ -552,14 +564,60 @@ export default function ProposalAdmin() {
               onChange={importMarkdown}
               hidden
             />
-            <div>
-              <strong>Importar Markdown</strong>
-              <span>Se aceptan archivos .md con frontmatter.</span>
+            <div className={styles.uploadCopy}>
+              <strong>Cargar Markdown</strong>
+              <span>Importá un .md o pegá el documento completo.</span>
             </div>
-            <button type="button" onClick={() => fileInputRef.current?.click()}>
-              Elegir archivo
-            </button>
+            <div className={styles.importActions}>
+              <button type="button" onClick={() => fileInputRef.current?.click()}>
+                Elegir archivo
+              </button>
+              <button
+                type="button"
+                aria-expanded={pasteOpen}
+                aria-controls="paste-markdown-panel"
+                onClick={() => setPasteOpen((open) => !open)}
+              >
+                Pegar Markdown
+              </button>
+            </div>
           </div>
+
+          {pasteOpen ? (
+            <div id="paste-markdown-panel" className={styles.pasteBox}>
+              <label htmlFor="pasted-markdown">Pegá el documento completo</label>
+              <textarea
+                id="pasted-markdown"
+                autoFocus
+                rows={10}
+                value={pastedMarkdown}
+                placeholder={`---
+cliente: "Empresa"
+titulo: "Propuesta técnica"
+---
+
+# Objetivo
+
+Contenido de la propuesta...`}
+                onChange={(event) => setPastedMarkdown(event.target.value)}
+              />
+              <div className={styles.pasteActions}>
+                <button
+                  type="button"
+                  className={styles.textButton}
+                  onClick={() => {
+                    setPasteOpen(false);
+                    setPastedMarkdown("");
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button type="button" className={styles.primaryButton} onClick={applyPastedMarkdown}>
+                  Aplicar Markdown
+                </button>
+              </div>
+            </div>
+          ) : null}
 
           <section className={styles.formSection}>
             <div className={styles.sectionTitle}>

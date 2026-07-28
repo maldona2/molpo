@@ -140,7 +140,7 @@
   background: #f7faff;
 }
 
-.uploadBox > div {
+.uploadCopy {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -157,10 +157,69 @@
   font-size: 11px;
 }
 
-.uploadBox button {
+.importActions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.uploadBox button,
+.pasteBox button {
   flex: 0 0 auto;
   color: #18365d;
   background: #e3edf8;
+}
+
+.pasteBox {
+  margin-top: 10px;
+  padding: 16px;
+  border: 1px solid #d7e0ea;
+  border-radius: 14px;
+  background: #f7faff;
+}
+
+.pasteBox > label {
+  display: block;
+  margin-bottom: 8px;
+  color: #52657d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.pasteBox textarea {
+  width: 100%;
+  min-height: 210px;
+  padding: 12px;
+  border: 1px solid #cbd9e8;
+  border-radius: 9px;
+  outline: none;
+  color: #162a45;
+  background: #fff;
+  font: 400 12px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  resize: vertical;
+}
+
+.pasteBox textarea:focus {
+  border-color: #4e78a9;
+  box-shadow: 0 0 0 3px rgba(78, 120, 169, 0.13);
+}
+
+.pasteActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.pasteActions .textButton {
+  background: transparent;
+}
+
+.pasteActions .primaryButton {
+  color: #fff;
+  background: #18365d;
 }
 
 .formSection {
@@ -648,6 +707,18 @@
   .fieldGrid {
     grid-template-columns: 1fr;
     gap: 0;
+  }
+
+  .uploadBox {
+    flex-wrap: wrap;
+  }
+
+  .importActions {
+    width: 100%;
+  }
+
+  .importActions button {
+    flex: 1;
   }
 
   .previewPanel {
