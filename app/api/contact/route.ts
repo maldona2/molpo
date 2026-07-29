@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { validateContact } from "@/lib/contact";
+
+const RESEND_API_URL = "https://api.resend.com/emails";
+const CONTACT_FROM = "molpo web <info@molpo.ar>";
 
 // ponytail: rate limit in-memory, alcanza para single-instance en Railway;
 // pasar a store compartido si algún día hay más de una instancia.
@@ -21,9 +23,8 @@ function rateLimited(ip: string): boolean {
 }
 
 export async function POST(request: Request) {
-  const user = process.env.ZOHO_SMTP_USER;
-  const pass = process.env.ZOHO_SMTP_PASS;
-  if (!user || !pass) {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
     return NextResponse.json(
       { error: "El envío de mail no está configurado" },
       { status: 503 },
@@ -54,30 +55,40 @@ export async function POST(request: Request) {
   }
 
   const { nombre, email, empresa, mensaje } = result.value;
-  const transporter = nodemailer.createTransport({
-    host: "smtp.zoho.com",
-    port: 465,
-    secure: true,
-    auth: { user, pass },
-  });
-
   try {
-    await transporter.sendMail({
-      from: `"molpo web" <${user}>`,
-      to: process.env.CONTACT_TO ?? "info@molpo.ar",
-      replyTo: `"${nombre}" <${email}>`,
-      subject: `Contacto web: ${nombre}`,
-      text: [
-        `Nombre: ${nombre}`,
-        `Email: ${email}`,
-        empresa ? `Empresa: ${empresa}` : null,
-        "",
-        mensaje,
-      ]
-        .filter((line) => line !== null)
-        .join("\n"),
+    const response = await fetch(RESEND_API_URL, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${resendApiKey}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        from: CONTACT_FROM,
+        to: [process.env.CONTACT_TO ?? "info@molpo.ar"],
+        reply_to: `${nombre} <${email}>`,
+        subject: `Contacto web: ${nombre}`,
+        text: [
+          `Nombre: ${nombre}`,
+          `Email: ${email}`,
+          empresa ? `Empresa: ${empresa}` : null,
+          "",
+          mensaje,
+        ]
+          .filter((line) => line !== null)
+          .join("\n"),
+      }),
+      signal: AbortSignal.timeout(10_000),
     });
-  } catch {
+
+    if (!response.ok) {
+      console.error("Resend rechazó el envío", {
+        status: response.status,
+        response: await response.text(),
+      });
+      return NextResponse.json({ error: "No se pudo enviar el mail" }, { status: 502 });
+    }
+  } catch (error) {
+    console.error("No se pudo conectar con Resend", error);
     return NextResponse.json({ error: "No se pudo enviar el mail" }, { status: 502 });
   }
 

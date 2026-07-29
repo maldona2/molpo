@@ -17,13 +17,14 @@ dinámicas y la API `/api/contact` están disponibles.
 
 | Variable | Propósito | Ejemplo |
 |----------|-----------|---------|
-| `ZOHO_SMTP_USER` | Usuario SMTP de Zoho Mail | `info@molpo.ar` |
-| `ZOHO_SMTP_PASS` | Contraseña de aplicación de Zoho | `app-password-de-zoho` |
+| `RESEND_API_KEY` | API key para enviar el formulario mediante Resend | `re_...` |
 | `CONTACT_TO` | Email de destino para formulario | `info@molpo.ar` |
 
-El app password se genera en Zoho Mail → Settings → Security → App Passwords.
-Sin estas variables, el formulario responde con 503 y muestra un fallback mailto
-al usuario.
+`molpo.ar` debe estar verificado en Resend. El formulario envía desde
+`molpo web <info@molpo.ar>` mediante la API HTTPS de Resend; la recepción de
+respuestas continúa en el proveedor configurado por los registros MX del dominio.
+Sin `RESEND_API_KEY`, el formulario responde con 503 y muestra un fallback mailto
+al usuario. `CONTACT_TO` es opcional y usa `info@molpo.ar` por defecto.
 
 ## Dominios
 
