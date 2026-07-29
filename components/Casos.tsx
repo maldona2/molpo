@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { proyectos } from "@/content/portfolio";
+import Reveal from "./Reveal";
 import styles from "./Casos.module.css";
 
 export default function Casos() {
   return (
     <section id="casos" className={`container ${styles.section}`} aria-labelledby="casos-h">
-      <p className="eyebrow">Casos</p>
-      <h2 id="casos-h" className={styles.h2}>
-        Proyectos reales, en uso
-      </h2>
-      <div className={styles.grid}>
+      <Reveal>
+        <p className="eyebrow">Casos</p>
+        <h2 id="casos-h" className={styles.h2}>
+          Proyectos reales, en uso
+        </h2>
+      </Reveal>
+      <Reveal stagger className={styles.grid}>
         {proyectos.map((p) => {
           const dark = p.card.variant === "dark";
           return (
@@ -36,7 +39,7 @@ export default function Casos() {
             </Link>
           );
         })}
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -1,13 +1,14 @@
 import { site } from "@/lib/site";
 import ContactForm from "./ContactForm";
 import TrackedLink from "./TrackedLink";
+import Reveal from "./Reveal";
 import styles from "./CtaFinal.module.css";
 
 export default function CtaFinal() {
   return (
     <section className={styles.wrap} aria-labelledby="cta-h">
       <div className={styles.watermark} aria-hidden="true" />
-      <div className={`container ${styles.inner}`}>
+      <Reveal variant="scale" className={`container ${styles.inner}`}>
         <h2 id="cta-h" className={styles.h2}>
           Hablemos de tu sistema.
         </h2>
@@ -28,7 +29,7 @@ export default function CtaFinal() {
             {site.contact.email}
           </TrackedLink>
         </p>
-      </div>
+      </Reveal>
     </section>
   );
 }

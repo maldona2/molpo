@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { servicios } from "@/content/data";
+import Reveal from "./Reveal";
 import styles from "./Servicios.module.css";
 
 export default function Servicios() {
   return (
     <section id="servicios" className={`container ${styles.section}`} aria-labelledby="servicios-h">
-      <p className="eyebrow">Servicios</p>
-      <h2 id="servicios-h" className={styles.h2}>
-        En qué te puedo ayudar
-      </h2>
-      <div className={styles.grid}>
+      <Reveal>
+        <p className="eyebrow">Servicios</p>
+        <h2 id="servicios-h" className={styles.h2}>
+          En qué te puedo ayudar
+        </h2>
+      </Reveal>
+      <Reveal stagger className={styles.grid}>
         {servicios.map((s) => (
           <Link key={s.num} href={`/servicios/${s.slug}/`} className={styles.card}>
             <div className={styles.num} aria-hidden="true">
@@ -20,7 +23,7 @@ export default function Servicios() {
             <span className={styles.cardLink}>Ver servicio →</span>
           </Link>
         ))}
-      </div>
+      </Reveal>
     </section>
   );
 }

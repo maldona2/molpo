@@ -1,10 +1,11 @@
+import Reveal from "./Reveal";
 import styles from "./SobreMi.module.css";
 
 export default function SobreMi() {
   return (
     <section className={styles.wrap} aria-labelledby="sobremi-h">
       <div className={`container ${styles.inner}`}>
-        <div>
+        <Reveal variant="left">
           <p className="eyebrow">Sobre mí</p>
           <h2 id="sobremi-h" className={styles.h2}>
             Matías Maldonado
@@ -21,13 +22,13 @@ export default function SobreMi() {
             aguanten el crecimiento. Cerca del cliente, transparente y sin promesas que no se puedan
             sostener.
           </p>
-        </div>
-        <div className={styles.avatarWrap}>
+        </Reveal>
+        <Reveal variant="right" delay={120} className={styles.avatarWrap}>
           <div className={styles.avatar}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/simbolo-blanco.png" alt="" aria-hidden="true" className={styles.symbol} />
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
