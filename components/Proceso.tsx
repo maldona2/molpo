@@ -1,5 +1,6 @@
 import { pasos } from "@/content/data";
 import Reveal from "./Reveal";
+import AnimatedHeading from "./AnimatedHeading";
 import styles from "./Proceso.module.css";
 
 export default function Proceso() {
@@ -8,9 +9,9 @@ export default function Proceso() {
       <div className={`container ${styles.inner}`}>
         <Reveal>
           <p className="eyebrow">Cómo trabajo</p>
-          <h2 id="proceso-h" className={styles.h2}>
-            Sin humo. Con evidencia.
-          </h2>
+        </Reveal>
+        <AnimatedHeading as="h2" id="proceso-h" className={styles.h2} text={"Sin humo.\nCon evidencia."} />
+        <Reveal delay={120}>
           <p className={styles.intro}>
             Si algo no te sirve, te lo digo. Prefiero un diagnóstico honesto y una base ordenada
             antes que prometer una demo linda.

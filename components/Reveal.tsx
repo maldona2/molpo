@@ -1,14 +1,15 @@
 "use client";
 
-import { createElement, useEffect, useRef, useState, type ReactNode } from "react";
-import styles from "./Reveal.module.css";
+import { Children, createElement, isValidElement, type ReactNode } from "react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 
-type Variant = "up" | "left" | "right" | "scale";
+type Variant = "up" | "left" | "right" | "scale" | "blur";
+type Tag = "div" | "section" | "ol" | "ul" | "li" | "header" | "span";
 
 type RevealProps = {
   children: ReactNode;
   /** HTML tag to render. Defaults to "div". */
-  as?: "div" | "section" | "ol" | "ul" | "li" | "header" | "span";
+  as?: Tag;
   className?: string;
   /** Direction/style of the entrance. Ignored when `stagger` is set. */
   variant?: Variant;
@@ -16,9 +17,38 @@ type RevealProps = {
   delay?: number;
   /** Animate direct children in sequence instead of the element itself. */
   stagger?: boolean;
-  /** Extra element-specific props (e.g. aria-*, id). */
   [key: string]: unknown;
 };
+
+const SPRING = { type: "spring", stiffness: 130, damping: 20, mass: 0.75 } as const;
+
+const hidden: Record<Variant, Record<string, number | string>> = {
+  up: { opacity: 0, y: 44, filter: "blur(8px)" },
+  left: { opacity: 0, x: -64, filter: "blur(8px)" },
+  right: { opacity: 0, x: 64, filter: "blur(8px)" },
+  scale: { opacity: 0, scale: 0.94, filter: "blur(8px)" },
+  blur: { opacity: 0, y: 22, filter: "blur(16px)" },
+};
+const shown = { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" };
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.11, delayChildren: 0.04 } },
+};
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 36, filter: "blur(8px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: SPRING },
+};
+
+// Cache motion-wrapped versions of custom components (e.g. next/link) so we
+// don't recreate them on every render.
+const motionCache = new Map<unknown, unknown>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toMotion(type: any): any {
+  if (typeof type === "string") return (motion as any)[type] ?? motion.div;
+  if (!motionCache.has(type)) motionCache.set(type, motion.create(type));
+  return motionCache.get(type);
+}
 
 export default function Reveal({
   children,
@@ -29,47 +59,49 @@ export default function Reveal({
   stagger = false,
   ...rest
 }: RevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const reduce = useReducedMotion();
 
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
+  if (reduce) {
+    return createElement(as, { className, ...rest }, children);
+  }
 
-    // Respect reduced-motion: reveal immediately, skip observing.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const MotionTag = (motion as any)[as] ?? motion.div;
+  const viewport = { once: true, amount: 0.2 } as const;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.disconnect();
-            break;
-          }
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" },
+  if (stagger) {
+    const swapped = Children.map(children, (child) => {
+      if (!isValidElement(child)) return child;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const M = toMotion((child as any).type);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return createElement(M, { ...(child as any).props, variants: itemVariants });
+    });
+
+    return (
+      <MotionTag
+        className={className}
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        {...rest}
+      >
+        {swapped}
+      </MotionTag>
     );
+  }
 
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  const base = stagger ? styles.stagger : `${styles.reveal} ${styles[variant]}`;
-  const combined = [base, visible ? styles.visible : "", className].filter(Boolean).join(" ");
-
-  return createElement(
-    as,
-    {
-      ref,
-      className: combined,
-      style: delay ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties) : undefined,
-      ...rest,
-    },
-    children,
+  return (
+    <MotionTag
+      className={className}
+      initial={hidden[variant]}
+      whileInView={shown}
+      viewport={viewport}
+      transition={{ ...SPRING, delay: delay / 1000 }}
+      {...rest}
+    >
+      {children}
+    </MotionTag>
   );
 }

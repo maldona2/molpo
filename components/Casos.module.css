@@ -27,11 +27,36 @@
   min-height: 260px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: box-shadow 0.25s ease;
 }
 .card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--sombra-card);
+}
+/* Pointer-tracked spotlight sheen */
+.spotlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.spotLight {
+  background: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 14%, transparent),
+    transparent 62%
+  );
+}
+.spotDark {
+  background: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(215, 232, 248, 0.16),
+    transparent 62%
+  );
+}
+.card:hover .spotlight {
+  opacity: 1;
 }
 .dark {
   background: var(--grad-card-dark);
