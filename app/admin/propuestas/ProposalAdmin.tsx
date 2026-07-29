@@ -29,6 +29,11 @@ type ProposalDraft = {
   markdown: string;
 };
 
+type AttachedPdf = {
+  file: File;
+  pageCount: number;
+};
+
 const DEFAULT_DRAFT: ProposalDraft = {
   meta: {
     cliente: "Empresa · Persona de contacto",
@@ -441,7 +446,7 @@ function MarkdownDocument({ source }: { source: string }) {
 
 function Cover({ meta }: { meta: ProposalMeta }) {
   return (
-    <section className={styles.cover}>
+    <section id="proposal-cover" className={styles.cover}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/assets/molpo-blanco.png" alt="molpo" className={styles.coverLogo} />
       <p className={styles.coverType}>{meta.tipo}</p>
@@ -495,7 +500,11 @@ export default function ProposalAdmin() {
   const [pasteOpen, setPasteOpen] = useState(false);
   const [pastedMarkdown, setPastedMarkdown] = useState("");
   const [preparingPdf, setPreparingPdf] = useState(false);
+  const [attachedPdf, setAttachedPdf] = useState<AttachedPdf | null>(null);
+  const [pdfAttachmentError, setPdfAttachmentError] = useState("");
+  const [combiningPdf, setCombiningPdf] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
 
   function requestAccess() {
     const password = window.prompt("Contraseña de administrador");
@@ -590,6 +599,116 @@ export default function ProposalAdmin() {
     }
     setPreparingPdf(false);
     window.print();
+  }
+
+  async function attachPdf(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setPdfAttachmentError("");
+    setAttachedPdf(null);
+
+    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+      setPdfAttachmentError("Seleccioná un archivo PDF válido.");
+      return;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      setPdfAttachmentError("El PDF supera el límite de 50 MB.");
+      return;
+    }
+
+    try {
+      const { PDFDocument } = await import("pdf-lib");
+      const source = await PDFDocument.load(await file.arrayBuffer());
+      setAttachedPdf({ file, pageCount: source.getPageCount() });
+    } catch {
+      setPdfAttachmentError("No se pudo leer el PDF. Puede estar dañado o protegido.");
+    }
+  }
+
+  async function combineAttachedPdf() {
+    if (!attachedPdf) return;
+    const cover = document.getElementById("proposal-cover");
+    if (!(cover instanceof HTMLElement)) {
+      setPdfAttachmentError("No se encontró la portada para generar el PDF.");
+      return;
+    }
+
+    setCombiningPdf(true);
+    setPdfAttachmentError("");
+
+    try {
+      await document.fonts.ready;
+      const [{ toPng }, { PDFDocument }] = await Promise.all([
+        import("html-to-image"),
+        import("pdf-lib"),
+      ]);
+
+      const coverPng = await toPng(cover, {
+        cacheBust: true,
+        pixelRatio: 2,
+        width: 794,
+        height: 1123,
+        skipAutoScale: true,
+        style: {
+          width: "210mm",
+          maxWidth: "none",
+          height: "297mm",
+          minHeight: "297mm",
+          margin: "0",
+          boxShadow: "none",
+        },
+      });
+
+      const source = await PDFDocument.load(await attachedPdf.file.arrayBuffer());
+      const result = await PDFDocument.create();
+      const coverImage = await result.embedPng(coverPng);
+      const coverPage = result.addPage([595, 842]);
+      coverPage.drawImage(coverImage, {
+        x: 0,
+        y: 0,
+        width: coverPage.getWidth(),
+        height: coverPage.getHeight(),
+      });
+
+      const remainingPageIndexes = Array.from(
+        { length: Math.max(0, source.getPageCount() - 1) },
+        (_, index) => index + 1,
+      );
+      if (remainingPageIndexes.length) {
+        const copiedPages = await result.copyPages(source, remainingPageIndexes);
+        copiedPages.forEach((page) => result.addPage(page));
+      }
+
+      result.setTitle(draft.meta.titulo);
+      result.setAuthor("Matías Maldonado · molpo");
+      result.setSubject(draft.meta.descripcion);
+      result.setCreator("molpo · Generador de propuestas");
+      result.setProducer("molpo");
+      result.setCreationDate(new Date());
+      result.setModificationDate(new Date());
+
+      const bytes = await result.save({ useObjectStreams: true });
+      const buffer = bytes.buffer.slice(
+        bytes.byteOffset,
+        bytes.byteOffset + bytes.byteLength,
+      ) as ArrayBuffer;
+      const blob = new Blob([buffer], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const originalName = attachedPdf.file.name.replace(/\.pdf$/i, "");
+      link.href = url;
+      link.download = `${originalName}-portada-molpo.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setPdfAttachmentError(
+        "No se pudo combinar el PDF. Probá con otro archivo o revisá que no esté protegido.",
+      );
+    } finally {
+      setCombiningPdf(false);
+    }
   }
 
   function resetDraft() {
@@ -795,6 +914,84 @@ Contenido de la propuesta...`}
             </label>
             <p className={styles.help}>
               Admite títulos, listas, tablas, citas, links, negritas y bloques de código.
+            </p>
+          </section>
+
+          <section className={styles.formSection}>
+            <div className={styles.sectionTitle}>
+              <span>03</span>
+              <h2>Reemplazar portada de un PDF</h2>
+            </div>
+            <p className={styles.sectionCopy}>
+              Adjuntá un PDF existente. Se descartará su primera página y se conservarán
+              las demás sin modificar.
+            </p>
+            <input
+              ref={pdfInputRef}
+              type="file"
+              accept=".pdf,application/pdf"
+              onChange={attachPdf}
+              hidden
+            />
+
+            {attachedPdf ? (
+              <div className={styles.pdfFile}>
+                <div className={styles.pdfIcon} aria-hidden="true">
+                  PDF
+                </div>
+                <div className={styles.pdfInfo}>
+                  <strong>{attachedPdf.file.name}</strong>
+                  <span>
+                    {attachedPdf.pageCount}{" "}
+                    {attachedPdf.pageCount === 1 ? "página" : "páginas"} ·{" "}
+                    {(attachedPdf.file.size / 1024 / 1024).toFixed(1)} MB
+                  </span>
+                  <small>
+                    Resultado: portada molpo +{" "}
+                    {Math.max(0, attachedPdf.pageCount - 1)} páginas originales.
+                  </small>
+                </div>
+                <button
+                  type="button"
+                  className={styles.textButton}
+                  onClick={() => {
+                    setAttachedPdf(null);
+                    setPdfAttachmentError("");
+                  }}
+                >
+                  Quitar
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className={styles.pdfPicker}
+                onClick={() => pdfInputRef.current?.click()}
+              >
+                <strong>Seleccionar PDF existente</strong>
+                <span>Hasta 50 MB · El archivo se procesa en este navegador</span>
+              </button>
+            )}
+
+            {pdfAttachmentError ? (
+              <p className={styles.pdfError} role="alert">
+                {pdfAttachmentError}
+              </p>
+            ) : null}
+
+            {attachedPdf ? (
+              <button
+                type="button"
+                className={`${styles.primaryButton} ${styles.combineButton}`}
+                disabled={combiningPdf}
+                onClick={() => void combineAttachedPdf()}
+              >
+                {combiningPdf ? "Combinando…" : "Generar PDF combinado"}
+              </button>
+            ) : null}
+
+            <p className={styles.privacyNote}>
+              Privado: el PDF no se sube ni se guarda en ningún servidor.
             </p>
           </section>
         </aside>
