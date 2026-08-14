@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["./*"],
+      "next/link": ["./.design-sync/shims/next-link.tsx"],
+      "/assets/*": ["./public/assets/*"],
+      "/fonts/*": ["./public/fonts/*"],
+      "/icons/*": ["./public/icons/*"]
+    }
+  }
+}

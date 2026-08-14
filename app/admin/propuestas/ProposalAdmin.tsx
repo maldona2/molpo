@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { splitInline } from "@/lib/markdown";
 import styles from "./Propuestas.module.css";
 
 const TEMPORARY_PASSWORD = "molpo-admin-2026";
@@ -133,32 +134,27 @@ function safeHref(value: string) {
 }
 
 function inlineMarkdown(text: string, keyPrefix: string): ReactNode[] {
-  const tokenPattern = /(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\)|\*[^*]+\*)/g;
-
-  return text
-    .split(tokenPattern)
-    .filter(Boolean)
-    .map((part, index) => {
-      const key = `${keyPrefix}-${index}`;
-      if (part.startsWith("**") && part.endsWith("**")) {
-        return <strong key={key}>{part.slice(2, -2)}</strong>;
-      }
-      if (part.startsWith("`") && part.endsWith("`")) {
-        return <code key={key}>{part.slice(1, -1)}</code>;
-      }
-      const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-      if (link) {
-        return (
-          <a key={key} href={safeHref(link[2])} rel="noreferrer">
-            {link[1]}
-          </a>
-        );
-      }
-      if (part.startsWith("*") && part.endsWith("*")) {
-        return <em key={key}>{part.slice(1, -1)}</em>;
-      }
-      return <Fragment key={key}>{part}</Fragment>;
-    });
+  return splitInline(text).map((part, index) => {
+    const key = `${keyPrefix}-${index}`;
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={key}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={key}>{part.slice(1, -1)}</code>;
+    }
+    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (link) {
+      return (
+        <a key={key} href={safeHref(link[2])} rel="noreferrer">
+          {link[1]}
+        </a>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={key}>{part.slice(1, -1)}</em>;
+    }
+    return <Fragment key={key}>{part}</Fragment>;
+  });
 }
 
 function isTableDivider(line: string) {
@@ -181,8 +177,8 @@ function isBlockStart(lines: string[], index: number) {
     /^>\s?/.test(line) ||
     /^```/.test(line) ||
     /^([-*_])\1{2,}\s*$/.test(line.trim()) ||
-    /^[-+*]\s+/.test(line) ||
-    /^\d+\.\s+/.test(line) ||
+    /^\s*[-+*]\s+/.test(line) ||
+    /^\s*\d+\.\s+/.test(line) ||
     (line.includes("|") && isTableDivider(next))
   );
 }
@@ -386,11 +382,11 @@ function MarkdownDocument({ source }: { source: string }) {
       continue;
     }
 
-    const unordered = line.match(/^[-+*]\s+(.+)$/);
+    const unordered = line.match(/^\s*[-+*]\s+(.+)$/);
     if (unordered) {
       const items: string[] = [];
       while (index < lines.length) {
-        const item = lines[index].match(/^[-+*]\s+(.+)$/);
+        const item = lines[index].match(/^\s*[-+*]\s+(.+)$/);
         if (!item) break;
         items.push(item[1]);
         index += 1;
@@ -407,11 +403,11 @@ function MarkdownDocument({ source }: { source: string }) {
       continue;
     }
 
-    const ordered = line.match(/^\d+\.\s+(.+)$/);
+    const ordered = line.match(/^\s*\d+\.\s+(.+)$/);
     if (ordered) {
       const items: string[] = [];
       while (index < lines.length) {
-        const item = lines[index].match(/^\d+\.\s+(.+)$/);
+        const item = lines[index].match(/^\s*\d+\.\s+(.+)$/);
         if (!item) break;
         items.push(item[1]);
         index += 1;

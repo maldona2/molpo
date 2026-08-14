@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* next/font injects these variables at runtime in the app; the design system
+   has no Next runtime, so bind them to the real families here. */
+:root {
+  --font-founders: "Founders Grotesk";
+  --font-inter: "Inter";
+}
+
+/* app/layout.tsx sets the body font inline; there is no layout here. */
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* design-sync only: the components reference /assets/* as runtime URLs served
+   by Next's public/ dir. Outside the app that path 404s, so re-point each one
+   at the real file — esbuild inlines these as data URIs into _ds_bundle.css,
+   which ships to every rendered design via the styles.css import closure. */
+img[src="/assets/molpo-blanco.svg"] {
+  content: url("../public/assets/molpo-blanco.svg");
+}
+img[src="/assets/molpo-blanco.png"] {
+  content: url("../public/assets/molpo-blanco.png");
+}
+img[src="/assets/molpo-negro.png"] {
+  content: url("../public/assets/molpo-negro.png");
+}
+img[src="/assets/simbolo-blanco.png"] {
+  content: url("../public/assets/simbolo-blanco.png");
+}

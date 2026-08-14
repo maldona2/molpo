@@ -1,0 +1,45 @@
+{
+  "projectId": "f24f521e-baac-4663-bb9c-3f4945e48f74",
+  "shape": "package",
+  "pkg": "molpo-landing",
+  "globalName": "Molpo",
+  "srcDir": "components",
+  "tsconfig": ".design-sync/tsconfig.json",
+  "cssEntry": "app/globals.css",
+  "componentSrcMap": {
+    "Hero": "components/Hero.tsx",
+    "Nav": "components/Nav.tsx",
+    "Servicios": "components/Servicios.tsx",
+    "Casos": "components/Casos.tsx",
+    "Proceso": "components/Proceso.tsx",
+    "SobreMi": "components/SobreMi.tsx",
+    "CtaFinal": "components/CtaFinal.tsx",
+    "TrustStrip": "components/TrustStrip.tsx",
+    "Footer": "components/Footer.tsx",
+    "ContactForm": "components/ContactForm.tsx",
+    "ThemeToggle": "components/ThemeToggle.tsx",
+    "Analytics": null,
+    "JsonLd": null,
+    "TrackedLink": null,
+    "ConsentBanner": null,
+    "ConsentPreferencesButton": null,
+    "HeroMenu": null
+  },
+  "extraFonts": [
+    ".design-sync/fonts.css"
+  ],
+  "dtsPropsFor": {
+    "Hero": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "Nav": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "Servicios": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "Casos": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "Proceso": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "SobreMi": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "CtaFinal": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "TrustStrip": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "Footer": "/* no props \u2014 renders a fixed section from lib/site.ts + content/ */",
+    "ContactForm": "placement: \"contact_page\" | \"home_form\" | \"final_cta\" | \"footer\"; compact?: boolean;",
+    "ThemeToggle": "className?: string;"
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

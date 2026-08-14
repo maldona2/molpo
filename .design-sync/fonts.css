@@ -1,0 +1,16 @@
+/* design-sync only: the app loads these through next/font/local at runtime,
+   so nothing in the shipped CSS declares them. Declare them here. */
+@font-face {
+  font-family: "Founders Grotesk";
+  src: url("../public/fonts/FoundersGrotesk-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Founders Grotesk";
+  src: url("../public/fonts/FoundersGrotesk-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
