@@ -9,7 +9,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { splitInline } from "@/lib/markdown";
+import {
+  LIST_ITEM,
+  type MarkdownList,
+  collectList,
+  isBlockStart,
+  isTableDivider,
+  splitInline,
+} from "@/lib/markdown";
 import styles from "./Propuestas.module.css";
 
 const TEMPORARY_PASSWORD = "molpo-admin-2026";
@@ -157,30 +164,12 @@ function inlineMarkdown(text: string, keyPrefix: string): ReactNode[] {
   });
 }
 
-function isTableDivider(line: string) {
-  return /^\s*\|?[\s:|-]+\|[\s:|-]+\|?\s*$/.test(line);
-}
-
 function tableCells(line: string) {
   return line
     .trim()
     .replace(/^\||\|$/g, "")
     .split("|")
     .map((cell) => cell.trim());
-}
-
-function isBlockStart(lines: string[], index: number) {
-  const line = lines[index] ?? "";
-  const next = lines[index + 1] ?? "";
-  return (
-    /^#{1,3}\s/.test(line) ||
-    /^>\s?/.test(line) ||
-    /^```/.test(line) ||
-    /^([-*_])\1{2,}\s*$/.test(line.trim()) ||
-    /^\s*[-+*]\s+/.test(line) ||
-    /^\s*\d+\.\s+/.test(line) ||
-    (line.includes("|") && isTableDivider(next))
-  );
 }
 
 function MermaidDiagram({ source }: { source: string }) {
@@ -261,6 +250,26 @@ function MermaidDiagram({ source }: { source: string }) {
       aria-label="Diagrama Mermaid"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
+  );
+}
+
+function ListBlock({ list, keyPrefix }: { list: MarkdownList; keyPrefix: string }) {
+  const Tag = list.ordered ? "ol" : "ul";
+  return (
+    <Tag>
+      {list.items.map((item, itemIndex) => (
+        <li key={`${keyPrefix}-${itemIndex}`}>
+          {inlineMarkdown(item.text, `${keyPrefix}-${itemIndex}`)}
+          {item.children.map((child, childIndex) => (
+            <ListBlock
+              key={`${keyPrefix}-${itemIndex}-${childIndex}`}
+              list={child}
+              keyPrefix={`${keyPrefix}-${itemIndex}-${childIndex}`}
+            />
+          ))}
+        </li>
+      ))}
+    </Tag>
   );
 }
 
@@ -382,45 +391,10 @@ function MarkdownDocument({ source }: { source: string }) {
       continue;
     }
 
-    const unordered = line.match(/^\s*[-+*]\s+(.+)$/);
-    if (unordered) {
-      const items: string[] = [];
-      while (index < lines.length) {
-        const item = lines[index].match(/^\s*[-+*]\s+(.+)$/);
-        if (!item) break;
-        items.push(item[1]);
-        index += 1;
-      }
-      blocks.push(
-        <ul key={`list-${index}`}>
-          {items.map((item, itemIndex) => (
-            <li key={`item-${itemIndex}`}>
-              {inlineMarkdown(item, `list-${index}-${itemIndex}`)}
-            </li>
-          ))}
-        </ul>,
-      );
-      continue;
-    }
-
-    const ordered = line.match(/^\s*\d+\.\s+(.+)$/);
-    if (ordered) {
-      const items: string[] = [];
-      while (index < lines.length) {
-        const item = lines[index].match(/^\s*\d+\.\s+(.+)$/);
-        if (!item) break;
-        items.push(item[1]);
-        index += 1;
-      }
-      blocks.push(
-        <ol key={`ordered-${index}`}>
-          {items.map((item, itemIndex) => (
-            <li key={`ordered-item-${itemIndex}`}>
-              {inlineMarkdown(item, `ordered-${index}-${itemIndex}`)}
-            </li>
-          ))}
-        </ol>,
-      );
+    if (LIST_ITEM.test(line)) {
+      const { list, index: next } = collectList(lines, index);
+      index = next;
+      blocks.push(<ListBlock key={`list-${index}`} list={list} keyPrefix={`list-${index}`} />);
       continue;
     }
 

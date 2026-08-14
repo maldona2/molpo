@@ -646,6 +646,15 @@
   margin: 1mm 0;
 }
 
+.document li > ul,
+.document li > ol {
+  margin: 1mm 0 0;
+}
+
+.document li > ul {
+  list-style: circle;
+}
+
 .document blockquote {
   margin: 5mm 0;
   padding: 5mm 6mm;
