@@ -18,7 +18,10 @@ dinámicas y la API `/api/contact` están disponibles.
 | Variable | Propósito | Ejemplo |
 |----------|-----------|---------|
 | `RESEND_API_KEY` | API key para enviar el formulario mediante Resend | `re_...` |
-| `CONTACT_TO` | Email de destino para formulario | `info@molpo.ar` |
+| `CONTACT_TO` | Email de destino para formulario y avisos de soporte | `info@molpo.ar` |
+| `DATABASE_URL` | Postgres del módulo de soporte (ver `soporte.md`) | `postgres://...` |
+| `SOPORTE_CLIENTES` | Tokens de acceso de clientes al soporte | `a1b2c3:Acme SA` |
+| `SOPORTE_ADMIN_TOKEN` | Token del panel de soporte | cadena aleatoria |
 
 `molpo.ar` debe estar verificado en Resend. El formulario envía desde
 `molpo web <info@molpo.ar>` mediante la API HTTPS de Resend; la recepción de
