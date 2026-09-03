@@ -1,6 +1,7 @@
 // Validación y tipos del módulo de feedback. Sin acceso a base: lo testeable
 // vive acá, las consultas en lib/feedback-db.ts. El cliente entra con el mismo
-// token de soporte (SOPORTE_CLIENTES), así no hay un segundo padrón que mantener.
+// token que usa para soporte (tabla `clientes`), así no hay un segundo padrón
+// que mantener.
 
 export const TRABAJOS = ["auditoria", "desarrollo", "soporte"] as const;
 export const PUNTAJES = [1, 2, 3, 4, 5] as const;
