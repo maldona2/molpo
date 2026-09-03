@@ -42,6 +42,7 @@ export default async function AdminSoportePage({ params, searchParams }: Props) 
             {ETIQUETAS[e]} ({todos.filter((t) => t.estado === e).length})
           </a>
         ))}
+        <a href={`/admin/feedback/${token}/`}>Ver feedback →</a>
       </nav>
       {error ? (
         <p className={styles.error} role="alert">

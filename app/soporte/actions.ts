@@ -89,6 +89,10 @@ export async function actualizarTicket(formData: FormData) {
         `El pedido #${ticket.id} "${ticket.titulo}" pasó a ${ETIQUETAS[estado]}.`,
         ticket.respuesta ? `\n${ticket.respuesta}` : null,
         tokenCliente ? `\nVer todos tus pedidos: ${site.url}/soporte/${tokenCliente}/` : null,
+        // Sólo cuando el trabajo terminó: pedir feedback en un ticket abierto molesta.
+        tokenCliente && (estado === "resuelto" || estado === "cerrado")
+          ? `¿Cómo salió? Contame acá: ${site.url}/feedback/${tokenCliente}/?trabajo=soporte`
+          : null,
         "",
         "molpo",
       ]

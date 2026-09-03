@@ -1,20 +1,9 @@
 import "server-only";
-import postgres from "postgres";
+import type postgres from "postgres";
+import { sql } from "@/lib/db";
 import type { Estado, Ticket, TicketInput } from "@/lib/tickets";
 
-// ponytail: conexión única y `create table if not exists` en el primer uso.
-// Alcanza para una tabla; si aparece una segunda, pasar a migraciones de verdad.
-const globalForSql = globalThis as unknown as {
-  sql?: postgres.Sql;
-  schemaReady?: Promise<void>;
-};
-
-function sql(): postgres.Sql {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("Falta DATABASE_URL: el módulo de soporte necesita Postgres");
-  globalForSql.sql ??= postgres(url, { ssl: "prefer" });
-  return globalForSql.sql;
-}
+const globalForSql = globalThis as unknown as { schemaReady?: Promise<void> };
 
 async function db(): Promise<postgres.Sql> {
   const client = sql();

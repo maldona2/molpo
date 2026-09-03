@@ -135,6 +135,10 @@ export default async function SoportePage({ params, searchParams }: Props) {
                 <li>Qué usuario y qué pantalla estabas usando.</li>
                 <li>Si pasa siempre o una vez cada tanto.</li>
               </ul>
+              <p className={styles.ayudaCierre}>
+                ¿Terminamos una auditoría o un desarrollo?{" "}
+                <a href={`/feedback/${token}/`}>Dejame tu feedback</a>.
+              </p>
             </aside>
           </div>
         </section>

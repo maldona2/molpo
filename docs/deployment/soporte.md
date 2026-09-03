@@ -6,8 +6,8 @@ estado de cada pedido. Sin login: el token del link es la credencial.
 - Cliente: `https://molpo.ar/soporte/<TOKEN_CLIENTE>/`
 - Admin: `https://molpo.ar/admin/soporte/<TOKEN_ADMIN>/`
 
-Un token desconocido devuelve 404. `/soporte/` y `/admin/` están fuera de
-robots.txt y con `noindex`.
+Un token desconocido devuelve 404. `/soporte/`, `/feedback/` y `/admin/` están
+fuera de robots.txt y con `noindex`.
 
 ## Variables de entorno
 
@@ -46,3 +46,21 @@ Sin `RESEND_API_KEY` todo se guarda igual: sólo no salen los avisos.
 - Sin adjuntos ni hilo de comentarios: el ida y vuelta sigue por mail.
 - El email del cliente se guarda por ticket, no por cliente: si no lo carga,
   no recibe avisos de ese pedido.
+
+## Feedback de cierre
+
+Mismo token, sin variables nuevas: al terminar una auditoría o un desarrollo el
+cliente califica el trabajo en `https://molpo.ar/feedback/<TOKEN_CLIENTE>/` y
+las respuestas se ven en `https://molpo.ar/admin/feedback/<TOKEN_ADMIN>/` con el
+promedio de puntaje y de recomendación.
+
+- Se guarda en la tabla `feedback`, que también se crea sola en el primer uso.
+- Cada respuesta avisa a `CONTACT_TO` por mail, con `reply-to` al cliente si dejó
+  su email.
+- El checkbox "autorizo a publicar" marca cuáles se pueden usar como testimonio;
+  sin esa marca el comentario queda para uso interno.
+- El mail de ticket resuelto o cerrado incluye el link al feedback
+  (`?trabajo=soporte` deja preseleccionado el tipo de trabajo).
+- Rate limit de 10 respuestas por hora por token, en memoria del proceso.
+- Nada impide que un cliente responda dos veces: se guardan las dos, ordenadas
+  por fecha.

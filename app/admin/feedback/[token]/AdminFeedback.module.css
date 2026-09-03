@@ -1,0 +1,45 @@
+.resumen {
+  font-size: 15px;
+  color: var(--texto-cuerpo);
+  margin: 0 0 22px;
+}
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.item {
+  border: 1px solid var(--borde);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+}
+.cabecera {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.nota {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--accent);
+}
+.meta {
+  font-size: 13px;
+  color: var(--texto-tenue);
+}
+.comentario {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.extra {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--texto-cuerpo);
+  white-space: pre-wrap;
+}

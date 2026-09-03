@@ -1,0 +1,54 @@
+/* Sólo lo propio del feedback: el resto del formulario reusa Soporte.module.css */
+.escala {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--texto-cuerpo);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+  padding: 9px 14px;
+  cursor: pointer;
+}
+.opcion:has(input:checked) {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+.opcion:has(input:focus-visible) {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--texto-cuerpo);
+}
+.checkbox input {
+  margin-top: 3px;
+}
+.link {
+  color: var(--accent);
+}
+.legend {
+  padding: 0;
+  margin: 0 0 7px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--texto-cuerpo);
+}
+.grupo {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
