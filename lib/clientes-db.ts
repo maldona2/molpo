@@ -88,3 +88,15 @@ export async function tokenDeCliente(nombre: string): Promise<string | null> {
   `;
   return row?.token ?? null;
 }
+
+/** Cambia el email con el que el cliente pide su link. `null` lo deja sin acceso. */
+export async function setClienteEmail(
+  id: number,
+  email: string | null,
+): Promise<Cliente | undefined> {
+  const client = await db();
+  const [cliente] = await client<Cliente[]>`
+    update clientes set email = ${email} where id = ${id} returning *
+  `;
+  return cliente;
+}

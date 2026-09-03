@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { exigirAdmin } from "@/lib/auth";
 import { listClientes } from "@/lib/clientes-db";
-import { crear, cerrarSesiones, cambiarEstado } from "@/app/(privado)/clientes/acciones";
+import { crear, cerrarSesiones, cambiarEstado, guardarEmail } from "@/app/(privado)/clientes/acciones";
 import admin from "@/app/(privado)/Panel.module.css";
 import styles from "./Clientes.module.css";
 
@@ -75,11 +75,21 @@ export default async function ClientesPage({ searchParams }: Props) {
                 </span>
               </div>
 
-              <p className={styles.acceso}>
-                {cliente.email
-                  ? `Entra en ${APP_HOST} con ${cliente.email}`
-                  : "Sin email cargado: no puede pedir su link para entrar."}
-              </p>
+              <form action={guardarEmail} className={styles.email}>
+                <input type="hidden" name="id" value={cliente.id} />
+                <label>
+                  <span>Email con el que entra a {APP_HOST}</span>
+                  <input
+                    name="email"
+                    type="email"
+                    maxLength={320}
+                    defaultValue={cliente.email ?? ""}
+                    placeholder="sin email: no puede entrar"
+                    aria-label={`Email de ${cliente.nombre}`}
+                  />
+                </label>
+                <button type="submit">Guardar</button>
+              </form>
 
               <div className={styles.acciones}>
                 <form action={cerrarSesiones}>
