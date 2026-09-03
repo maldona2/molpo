@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { sendMail } from "@/lib/mail";
-import { clienteDeToken } from "@/lib/tickets";
+import { clienteDeToken } from "@/lib/clientes-db";
 import { validateFeedback, TRABAJO_ETIQUETAS, PUNTAJE_ETIQUETAS } from "@/lib/feedback";
 import { createFeedback } from "@/lib/feedback-db";
 
@@ -23,7 +23,7 @@ function rateLimited(token: string): boolean {
 
 export async function crearFeedback(formData: FormData) {
   const token = String(formData.get("token") ?? "");
-  const cliente = clienteDeToken(token);
+  const cliente = await clienteDeToken(token);
   if (!cliente) redirect("/soporte/invalido/");
 
   // Honeypot: oculto para humanos, los bots lo completan.

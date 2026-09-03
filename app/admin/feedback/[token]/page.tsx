@@ -61,6 +61,7 @@ export default async function AdminFeedbackPage({ params, searchParams }: Props)
           </a>
         ))}
         <a href={`/admin/soporte/${token}/`}>Ver pedidos de soporte →</a>
+        <a href={`/admin/clientes/${token}/`}>Gestionar clientes →</a>
       </nav>
 
       <p className={styles.resumen}>

@@ -5,6 +5,7 @@ estado de cada pedido. Sin login: el token del link es la credencial.
 
 - Cliente: `https://molpo.ar/soporte/<TOKEN_CLIENTE>/`
 - Admin: `https://molpo.ar/admin/soporte/<TOKEN_ADMIN>/`
+- Gestión de clientes: `https://molpo.ar/admin/clientes/<TOKEN_ADMIN>/`
 
 Un token desconocido devuelve 404. `/soporte/`, `/feedback/` y `/admin/` están
 fuera de robots.txt y con `noindex`.
@@ -13,19 +14,21 @@ fuera de robots.txt y con `noindex`.
 
 | Variable | Propósito | Ejemplo |
 |----------|-----------|---------|
-| `DATABASE_URL` | Postgres donde viven los tickets | `postgres://user:pass@host:5432/railway` |
-| `SOPORTE_CLIENTES` | Tokens habilitados y nombre del cliente | `a1b2c3:Acme SA,d4e5f6:Otro Cliente` |
-| `SOPORTE_ADMIN_TOKEN` | Token del panel de administración | cadena larga y aleatoria |
+| `DATABASE_URL` | Postgres donde viven tickets, feedback y clientes | `postgres://user:pass@host:5432/railway` |
+| `SOPORTE_ADMIN_TOKEN` | Token superadmin: entra a los tres paneles de `/admin/` | cadena larga y aleatoria |
 
-Generar tokens con `openssl rand -hex 16`. Sumar un cliente es agregar una
-entrada a `SOPORTE_CLIENTES` y redeploy; quitarle el acceso es borrar la
-entrada. Los tickets ya cargados quedan en la base bajo el nombre del cliente.
+Generar el token con `openssl rand -hex 16`. Los clientes (nombre, token de
+acceso, activo/de baja) se administran desde `/admin/clientes/<TOKEN_ADMIN>/`,
+no por variable de entorno: alta, rotar token y dar de baja son formularios en
+esa página. Los tickets y el feedback ya cargados quedan en la base bajo el
+nombre del cliente.
 
 ## Base de datos
 
 En Railway: agregar el plugin Postgres al proyecto y referenciar su
-`DATABASE_URL` desde el servicio de la web. La tabla `tickets` se crea sola en
-el primer uso (`create table if not exists`), no hay migraciones.
+`DATABASE_URL` desde el servicio de la web. Las tablas `clientes`, `tickets` y
+`feedback` se crean solas en el primer uso (`create table if not exists`), no
+hay migraciones.
 
 ## Avisos por mail
 
@@ -41,7 +44,9 @@ Sin `RESEND_API_KEY` todo se guarda igual: sólo no salen los avisos.
 ## Límites conocidos
 
 - El link es la credencial: si el cliente lo reenvía, quien lo tenga entra.
-  Para rotarlo, cambiar el token en `SOPORTE_CLIENTES`.
+  Para rotarlo, usar "Rotar token" en `/admin/clientes/`.
+- Nombre de cliente único (sin importar mayúsculas): crear uno repetido tira
+  error, para no mezclar tickets bajo el mismo nombre.
 - Rate limit de 20 pedidos por hora por token, en memoria del proceso.
 - Sin adjuntos ni hilo de comentarios: el ida y vuelta sigue por mail.
 - El email del cliente se guarda por ticket, no por cliente: si no lo carga,
@@ -49,7 +54,7 @@ Sin `RESEND_API_KEY` todo se guarda igual: sólo no salen los avisos.
 
 ## Feedback de cierre
 
-Mismo token, sin variables nuevas: al terminar una auditoría o un desarrollo el
+Mismo token de cliente: al terminar una auditoría o un desarrollo el
 cliente califica el trabajo en `https://molpo.ar/feedback/<TOKEN_CLIENTE>/` y
 las respuestas se ven en `https://molpo.ar/admin/feedback/<TOKEN_ADMIN>/` con el
 promedio de puntaje y de recomendación.

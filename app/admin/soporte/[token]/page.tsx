@@ -43,6 +43,7 @@ export default async function AdminSoportePage({ params, searchParams }: Props) 
           </a>
         ))}
         <a href={`/admin/feedback/${token}/`}>Ver feedback →</a>
+        <a href={`/admin/clientes/${token}/`}>Gestionar clientes →</a>
       </nav>
       {error ? (
         <p className={styles.error} role="alert">

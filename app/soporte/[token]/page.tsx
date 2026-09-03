@@ -4,8 +4,9 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import TicketList from "@/components/TicketList";
 import { crearTicket } from "@/app/soporte/actions";
-import { clienteDeToken, PRIORIDADES, TIPOS, ETIQUETAS } from "@/lib/tickets";
+import { PRIORIDADES, TIPOS, ETIQUETAS } from "@/lib/tickets";
 import { listTickets } from "@/lib/tickets-db";
+import { clienteDeToken } from "@/lib/clientes-db";
 import styles from "./Soporte.module.css";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +24,7 @@ type Props = {
 
 export default async function SoportePage({ params, searchParams }: Props) {
   const { token } = await params;
-  const cliente = clienteDeToken(token);
+  const cliente = await clienteDeToken(token);
   if (!cliente) notFound();
 
   const { ok, error } = await searchParams;

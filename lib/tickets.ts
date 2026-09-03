@@ -61,22 +61,6 @@ function limpiar(value: unknown, max: number): string | null {
   return trimmed.length > max ? null : trimmed;
 }
 
-/**
- * Clientes habilitados, leídos de SOPORTE_CLIENTES con formato
- * `token:Nombre del cliente,otroToken:Otro cliente`.
- */
-export function parseClientes(raw: string | undefined): Map<string, string> {
-  const clientes = new Map<string, string>();
-  for (const entrada of (raw ?? "").split(",")) {
-    const separador = entrada.indexOf(":");
-    if (separador < 1) continue;
-    const token = entrada.slice(0, separador).trim();
-    const nombre = entrada.slice(separador + 1).trim();
-    if (token && nombre) clientes.set(token, nombre);
-  }
-  return clientes;
-}
-
 export function validateTicket(input: unknown): Result<TicketInput> {
   if (typeof input !== "object" || input === null) {
     return { ok: false, error: "Cuerpo inválido" };
@@ -119,19 +103,7 @@ export function validateTicket(input: unknown): Result<TicketInput> {
   };
 }
 
-/** Nombre del cliente dueño de ese token, o null si no existe. */
-export function clienteDeToken(token: string): string | null {
-  return parseClientes(process.env.SOPORTE_CLIENTES).get(token) ?? null;
-}
-
-/** Token con el que ese cliente entra a su tablero, para armar el link del mail. */
-export function tokenDeCliente(cliente: string): string | null {
-  for (const [token, nombre] of parseClientes(process.env.SOPORTE_CLIENTES)) {
-    if (nombre === cliente) return token;
-  }
-  return null;
-}
-
+/** Token superadmin: gestiona clientes y entra a los paneles de soporte y feedback. */
 export function esAdmin(token: string): boolean {
   const esperado = process.env.SOPORTE_ADMIN_TOKEN;
   return Boolean(esperado) && token === esperado;

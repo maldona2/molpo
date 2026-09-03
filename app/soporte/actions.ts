@@ -4,15 +4,9 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { sendMail } from "@/lib/mail";
 import { site } from "@/lib/site";
-import {
-  clienteDeToken,
-  esAdmin,
-  parseEstado,
-  tokenDeCliente,
-  validateTicket,
-  ETIQUETAS,
-} from "@/lib/tickets";
+import { esAdmin, parseEstado, validateTicket, ETIQUETAS } from "@/lib/tickets";
 import { createTicket, updateTicket } from "@/lib/tickets-db";
+import { clienteDeToken, tokenDeCliente } from "@/lib/clientes-db";
 
 // ponytail: rate limit in-memory por token, mismo criterio que /api/contact.
 const WINDOW_MS = 60 * 60 * 1000;
@@ -30,7 +24,7 @@ function rateLimited(token: string): boolean {
 
 export async function crearTicket(formData: FormData) {
   const token = String(formData.get("token") ?? "");
-  const cliente = clienteDeToken(token);
+  const cliente = await clienteDeToken(token);
   if (!cliente) redirect("/soporte/invalido/");
 
   // Honeypot: oculto para humanos, los bots lo completan.
@@ -79,7 +73,7 @@ export async function actualizarTicket(formData: FormData) {
 
   // Sólo avisamos cuando cambia el estado, no cuando se retoca la respuesta.
   if (ticket?.email && estado !== estadoPrevio) {
-    const tokenCliente = tokenDeCliente(ticket.cliente);
+    const tokenCliente = await tokenDeCliente(ticket.cliente);
     await sendMail({
       to: ticket.email,
       subject: `Tu pedido #${ticket.id} está ${ETIQUETAS[estado].toLowerCase()}: ${ticket.titulo}`,

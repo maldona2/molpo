@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { crearFeedback } from "@/app/feedback/actions";
-import { clienteDeToken } from "@/lib/tickets";
+import { clienteDeToken } from "@/lib/clientes-db";
 import {
   PUNTAJES,
   PUNTAJE_ETIQUETAS,
@@ -54,7 +54,7 @@ function Escala({
 
 export default async function FeedbackPage({ params, searchParams }: Props) {
   const { token } = await params;
-  const cliente = clienteDeToken(token);
+  const cliente = await clienteDeToken(token);
   if (!cliente) notFound();
 
   const { ok, error, trabajo } = await searchParams;
