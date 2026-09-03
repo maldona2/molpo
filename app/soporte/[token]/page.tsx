@@ -6,6 +6,7 @@ import TicketList from "@/components/TicketList";
 import { crearTicket } from "@/app/soporte/actions";
 import { PRIORIDADES, TIPOS, ETIQUETAS } from "@/lib/tickets";
 import { listTickets } from "@/lib/tickets-db";
+import { listAdjuntos } from "@/lib/adjuntos-db";
 import { clienteDeToken } from "@/lib/clientes-db";
 import styles from "./Soporte.module.css";
 
@@ -29,6 +30,7 @@ export default async function SoportePage({ params, searchParams }: Props) {
 
   const { ok, error } = await searchParams;
   const tickets = await listTickets(cliente);
+  const adjuntos = await listAdjuntos(tickets.map((t) => t.id));
 
   return (
     <>
@@ -36,18 +38,19 @@ export default async function SoportePage({ params, searchParams }: Props) {
       <main id="top">
         <header className={styles.hero}>
           <div className={`container ${styles.heroInner}`}>
-            <p className={`eyebrow ${styles.eyebrow}`}>Soporte · {cliente}</p>
-            <h1 className={styles.h1}>Contame qué hay que arreglar o mejorar.</h1>
+            <p className={`eyebrow ${styles.eyebrow}`}>Soporte</p>
+            <h1 className={styles.h1}>{cliente}</h1>
             <p className={styles.lead}>
-              Cargá acá los bugs, las mejoras y las consultas de tu sistema. Cada pedido
-              queda registrado con su estado, así los dos vemos en qué anda.
+              Contame qué hay que arreglar o mejorar. Cargá acá los bugs, las mejoras y
+              las consultas de tu sistema: cada pedido queda registrado con su estado,
+              así los dos vemos en qué anda.
             </p>
           </div>
         </header>
 
         <section className={styles.body} aria-label="Nuevo pedido">
           <div className={`container ${styles.grid}`}>
-            <form className={styles.form} action={crearTicket}>
+            <form className={styles.form} action={crearTicket} encType="multipart/form-data">
               <input type="hidden" name="token" value={token} />
               <div className={styles.row}>
                 <label className={styles.field}>
@@ -102,6 +105,19 @@ export default async function SoportePage({ params, searchParams }: Props) {
                 </label>
               </div>
               <label className={styles.field}>
+                <span>Capturas de pantalla (opcional)</span>
+                <input
+                  type="file"
+                  name="capturas"
+                  accept="image/png,image/jpeg,image/gif,image/webp"
+                  multiple
+                />
+                <small className={styles.ayudaCampo}>
+                  Hasta 3 imágenes, 3 MB cada una. Una captura del error suele ahorrar
+                  media conversación.
+                </small>
+              </label>
+              <label className={styles.field}>
                 <span>Tu email (opcional)</span>
                 <input name="email" type="email" maxLength={320} autoComplete="email" />
                 <small className={styles.ayudaCampo}>
@@ -147,7 +163,7 @@ export default async function SoportePage({ params, searchParams }: Props) {
         <section className={styles.body} aria-label="Pedidos cargados">
           <div className="container">
             <h2 className={styles.h2}>Tus pedidos</h2>
-            <TicketList tickets={tickets} />
+            <TicketList tickets={tickets} token={token} adjuntos={adjuntos} />
           </div>
         </section>
       </main>

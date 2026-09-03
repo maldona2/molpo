@@ -1,5 +1,6 @@
 import { actualizarTicket } from "@/app/soporte/actions";
 import { ESTADOS, ETIQUETAS, type Ticket } from "@/lib/tickets";
+import type { AdjuntoMeta } from "@/lib/adjuntos-db";
 import styles from "./TicketList.module.css";
 
 const fecha = new Intl.DateTimeFormat("es-AR", {
@@ -11,11 +12,14 @@ const fecha = new Intl.DateTimeFormat("es-AR", {
 
 type Props = {
   tickets: Ticket[];
+  /** Token con el que se piden las capturas: el del cliente o el de admin. */
+  token: string;
+  adjuntos?: AdjuntoMeta[];
   /** Token de admin: si viene, cada ticket puede cambiar de estado y responderse. */
   adminToken?: string;
 };
 
-export default function TicketList({ tickets, adminToken }: Props) {
+export default function TicketList({ tickets, token, adjuntos = [], adminToken }: Props) {
   if (tickets.length === 0) {
     return <p className={styles.vacio}>Todavía no hay pedidos cargados.</p>;
   }
@@ -42,6 +46,20 @@ export default function TicketList({ tickets, adminToken }: Props) {
                 .filter(Boolean)
                 .join(" · ")}
             </p>
+          ) : null}
+          {adjuntos.some((a) => a.ticket_id === ticket.id) ? (
+            <ul className={styles.capturas}>
+              {adjuntos
+                .filter((a) => a.ticket_id === ticket.id)
+                .map((adjunto) => (
+                  <li key={adjunto.id}>
+                    <a href={`/adjuntos/${token}/${adjunto.id}`} target="_blank" rel="noopener">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`/adjuntos/${token}/${adjunto.id}`} alt={adjunto.nombre} />
+                    </a>
+                  </li>
+                ))}
+            </ul>
           ) : null}
           {ticket.respuesta ? (
             <p className={styles.respuesta}>

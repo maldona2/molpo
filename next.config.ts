@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   reactStrictMode: true,
   outputFileTracingRoot: __dirname,
+  // Las capturas de soporte viajan por un server action, y el default de 1 MB
+  // no alcanza para 3 imágenes de 3 MB.
+  experimental: { serverActions: { bodySizeLimit: "12mb" } },
   async headers() {
     return [
       {

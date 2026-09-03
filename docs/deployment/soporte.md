@@ -4,6 +4,7 @@ Cada cliente entra con un link propio, carga bugs/mejoras/consultas y ve el
 estado de cada pedido. Sin login: el token del link es la credencial.
 
 - Cliente: `https://molpo.ar/soporte/<TOKEN_CLIENTE>/`
+- Cliente que perdió su link: `https://molpo.ar/soporte/` (pide el email y se lo reenvía)
 - Admin: `https://molpo.ar/admin/soporte/<TOKEN_ADMIN>/`
 - Gestión de clientes: `https://molpo.ar/admin/clientes/<TOKEN_ADMIN>/`
 
@@ -45,6 +46,10 @@ Sin `RESEND_API_KEY` todo se guarda igual: sólo no salen los avisos.
 
 - El link es la credencial: si el cliente lo reenvía, quien lo tenga entra.
   Para rotarlo, usar "Rotar token" en `/admin/clientes/`.
+- El cliente que pierde el link lo recupera en `/soporte/` con su email, si se lo
+  cargaste en el alta. La respuesta es siempre la misma exista o no ese email,
+  para que nadie averigüe quiénes son clientes probando direcciones; el envío
+  fallido queda sólo en los logs.
 - Nombre de cliente único (sin importar mayúsculas): crear uno repetido tira
   error, para no mezclar tickets bajo el mismo nombre.
 - Rate limit de 20 pedidos por hora por token, en memoria del proceso.
@@ -69,3 +74,20 @@ promedio de puntaje y de recomendación.
 - Rate limit de 10 respuestas por hora por token, en memoria del proceso.
 - Nada impide que un cliente responda dos veces: se guardan las dos, ordenadas
   por fecha.
+
+## Capturas de pantalla
+
+El cliente puede adjuntar hasta 3 imágenes por pedido, de 3 MB cada una, que se
+ven como miniaturas en su tablero y en el panel de admin.
+
+- Van en la tabla `adjuntos`, en una columna `bytea`. Sin servicio de storage
+  aparte: a este volumen la base alcanza, y borrar el ticket borra sus imágenes
+  (`on delete cascade`). El día que pese, migrar a object storage.
+- **El tipo se deduce de los primeros bytes, no del `Content-Type`**: un HTML
+  renombrado a `.png` llega diciendo `image/png`, y servirlo como HTML desde
+  nuestro dominio sería un XSS. Sólo entran PNG, JPG, GIF y WebP.
+- Se sirven desde `/adjuntos/<token>/<id>/`, que valida que el token sea del
+  cliente dueño del ticket (o el de admin). Un token ajeno da 404, igual que un
+  adjunto inexistente.
+- `serverActions.bodySizeLimit` está en 12 MB en `next.config.ts`: el default de
+  Next es 1 MB y no alcanza para tres capturas.

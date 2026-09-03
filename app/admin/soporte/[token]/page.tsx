@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import TicketList from "@/components/TicketList";
 import { esAdmin, ESTADOS, ETIQUETAS } from "@/lib/tickets";
 import { listTickets } from "@/lib/tickets-db";
+import { listAdjuntos } from "@/lib/adjuntos-db";
 import styles from "./AdminSoporte.module.css";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function AdminSoportePage({ params, searchParams }: Props) 
   const { estado, error, ok } = await searchParams;
   const todos = await listTickets();
   const tickets = estado ? todos.filter((t) => t.estado === estado) : todos;
+  const adjuntos = await listAdjuntos(tickets.map((t) => t.id));
 
   return (
     <main className={`container ${styles.main}`}>
@@ -55,7 +57,7 @@ export default async function AdminSoportePage({ params, searchParams }: Props) 
           Pedido actualizado.
         </p>
       ) : null}
-      <TicketList tickets={tickets} adminToken={token} />
+      <TicketList tickets={tickets} token={token} adjuntos={adjuntos} adminToken={token} />
     </main>
   );
 }

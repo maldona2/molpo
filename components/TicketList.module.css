@@ -99,3 +99,19 @@
   border-color: var(--accent);
   cursor: pointer;
 }
+.capturas {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.capturas img {
+  display: block;
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+}

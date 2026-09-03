@@ -7,6 +7,8 @@ import { site } from "@/lib/site";
 import { esAdmin, parseEstado, validateTicket, ETIQUETAS } from "@/lib/tickets";
 import { createTicket, updateTicket } from "@/lib/tickets-db";
 import { clienteDeToken, tokenDeCliente } from "@/lib/clientes-db";
+import { createAdjunto } from "@/lib/adjuntos-db";
+import { validarAdjunto, MAX_POR_TICKET } from "@/lib/adjuntos";
 
 // ponytail: rate limit in-memory por token, mismo criterio que /api/contact.
 const WINDOW_MS = 60 * 60 * 1000;
@@ -20,6 +22,30 @@ function rateLimited(token: string): boolean {
   if (recent.length >= MAX_PER_WINDOW) return true;
   recent.push(now);
   return false;
+}
+
+type Captura = { nombre: string; tipo: string; bytes: Uint8Array };
+
+/** Lee las capturas del form y las valida por contenido, no por su Content-Type. */
+async function leerCapturas(
+  formData: FormData,
+): Promise<{ ok: true; value: Captura[] } | { ok: false; error: string }> {
+  const archivos = formData
+    .getAll("capturas")
+    .filter((entrada): entrada is File => entrada instanceof File && entrada.size > 0);
+
+  if (archivos.length > MAX_POR_TICKET) {
+    return { ok: false, error: `Podés adjuntar hasta ${MAX_POR_TICKET} capturas por pedido` };
+  }
+
+  const capturas: Captura[] = [];
+  for (const archivo of archivos) {
+    const bytes = new Uint8Array(await archivo.arrayBuffer());
+    const valido = validarAdjunto(archivo.name, bytes);
+    if (!valido.ok) return { ok: false, error: valido.error };
+    capturas.push({ ...valido.value, bytes });
+  }
+  return { ok: true, value: capturas };
 }
 
 export async function crearTicket(formData: FormData) {
@@ -37,7 +63,15 @@ export async function crearTicket(formData: FormData) {
   const result = validateTicket(Object.fromEntries(formData.entries()));
   if (!result.ok) redirect(`/soporte/${token}/?error=${encodeURIComponent(result.error)}`);
 
+  // Las capturas se validan antes de crear el ticket: si una no sirve, el
+  // cliente corrige y reenvía sin que le quede un pedido a medias cargado.
+  const capturas = await leerCapturas(formData);
+  if (!capturas.ok) redirect(`/soporte/${token}/?error=${encodeURIComponent(capturas.error)}`);
+
   const ticket = await createTicket(cliente, result.value);
+  for (const captura of capturas.value) {
+    await createAdjunto(ticket.id, captura.nombre, captura.tipo, captura.bytes);
+  }
 
   await sendMail({
     subject: `[${ETIQUETAS[ticket.tipo]}] ${cliente}: ${ticket.titulo}`,
