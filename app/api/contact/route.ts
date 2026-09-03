@@ -48,15 +48,13 @@ export async function POST(request: Request) {
   const sent = await sendMail({
     subject: `Contacto web: ${nombre}`,
     replyTo: `${nombre} <${email}>`,
-    text: [
+    body: [
       `Nombre: ${nombre}`,
       `Email: ${email}`,
       empresa ? `Empresa: ${empresa}` : null,
       "",
       mensaje,
-    ]
-      .filter((line) => line !== null)
-      .join("\n"),
+    ],
   });
 
   if (!sent.ok) {

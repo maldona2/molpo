@@ -40,7 +40,7 @@ export async function crearFeedback(formData: FormData) {
 
   await sendMail({
     subject: `[Feedback ${fb.puntaje}/5] ${cliente} · ${TRABAJO_ETIQUETAS[fb.trabajo]}`,
-    text: [
+    body: [
       `Cliente: ${cliente}`,
       `Trabajo: ${TRABAJO_ETIQUETAS[fb.trabajo]}`,
       `Puntaje: ${fb.puntaje}/5 (${PUNTAJE_ETIQUETAS[fb.puntaje]}) · Recomendaría: ${fb.recomienda}/5`,
@@ -51,9 +51,7 @@ export async function crearFeedback(formData: FormData) {
       fb.comentario,
       fb.destacado ? `\nLo que más sirvió: ${fb.destacado}` : null,
       fb.mejorar ? `\nA mejorar: ${fb.mejorar}` : null,
-    ]
-      .filter((line) => line !== null)
-      .join("\n"),
+    ],
     replyTo: fb.email ?? undefined,
   });
 

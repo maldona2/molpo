@@ -41,16 +41,14 @@ export async function crearTicket(formData: FormData) {
 
   await sendMail({
     subject: `[${ETIQUETAS[ticket.tipo]}] ${cliente}: ${ticket.titulo}`,
-    text: [
+    body: [
       `Cliente: ${cliente}`,
       `Tipo: ${ETIQUETAS[ticket.tipo]} · Prioridad: ${ETIQUETAS[ticket.prioridad]}`,
       ticket.reporta ? `Reporta: ${ticket.reporta}` : null,
       ticket.url ? `Pantalla o URL: ${ticket.url}` : null,
       "",
       ticket.detalle,
-    ]
-      .filter((line) => line !== null)
-      .join("\n"),
+    ],
   });
 
   revalidatePath(`/soporte/${token}`);
@@ -77,21 +75,20 @@ export async function actualizarTicket(formData: FormData) {
     await sendMail({
       to: ticket.email,
       subject: `Tu pedido #${ticket.id} está ${ETIQUETAS[estado].toLowerCase()}: ${ticket.titulo}`,
-      text: [
+      body: [
         `Hola${ticket.reporta ? ` ${ticket.reporta}` : ""},`,
         "",
         `El pedido #${ticket.id} "${ticket.titulo}" pasó a ${ETIQUETAS[estado]}.`,
-        ticket.respuesta ? `\n${ticket.respuesta}` : null,
-        tokenCliente ? `\nVer todos tus pedidos: ${site.url}/soporte/${tokenCliente}/` : null,
+        ticket.respuesta ? "" : null,
+        ticket.respuesta,
         // Sólo cuando el trabajo terminó: pedir feedback en un ticket abierto molesta.
         tokenCliente && (estado === "resuelto" || estado === "cerrado")
-          ? `¿Cómo salió? Contame acá: ${site.url}/feedback/${tokenCliente}/?trabajo=soporte`
+          ? `\n¿Cómo salió? Contame acá: ${site.url}/feedback/${tokenCliente}/?trabajo=soporte`
           : null,
-        "",
-        "molpo",
-      ]
-        .filter((line) => line !== null)
-        .join("\n"),
+      ],
+      button: tokenCliente
+        ? { label: "Ver todos tus pedidos", href: `${site.url}/soporte/${tokenCliente}/` }
+        : undefined,
     });
   }
   revalidatePath(`/admin/soporte/${token}`);
