@@ -1,0 +1,108 @@
+.alta {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--texto-cuerpo);
+}
+.campo input {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+  padding: 10px 14px;
+  min-width: 260px;
+}
+.boton {
+  font: inherit;
+  font-weight: 600;
+  color: var(--blanco);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--r-boton);
+  padding: 11px 22px;
+  cursor: pointer;
+}
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.item {
+  border: 1px solid var(--borde);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cabecera {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.activo,
+.inactivo {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+}
+.activo {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.inactivo {
+  color: var(--texto-tenue);
+  background: color-mix(in srgb, var(--texto-tenue) 14%, transparent);
+}
+.meta {
+  font-size: 14px;
+  color: var(--texto-cuerpo);
+}
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--texto-tenue);
+}
+.link input {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+  padding: 8px 12px;
+}
+.acciones {
+  display: flex;
+  gap: 10px;
+}
+.acciones button {
+  font: inherit;
+  font-size: 13px;
+  color: var(--texto-cuerpo);
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+  padding: 7px 14px;
+  cursor: pointer;
+}
+.acceso {
+  margin: 0;
+  font-size: 13px;
+  color: var(--texto-tenue);
+}

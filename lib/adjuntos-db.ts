@@ -1,10 +1,12 @@
 import "server-only";
 import type postgres from "postgres";
-import { ensureSchema, sql } from "@/lib/db";
+import { ensureSchema } from "@/lib/db";
+import { asegurarTickets } from "@/lib/tickets-db";
 import type { Adjunto } from "@/lib/adjuntos";
 
 async function db(): Promise<postgres.Sql> {
-  const client = sql();
+  // FK a `tickets`: esa tabla tiene que existir antes que esta.
+  const client = await asegurarTickets();
   await ensureSchema("adjuntos", async () => {
     await client`
       create table if not exists adjuntos (

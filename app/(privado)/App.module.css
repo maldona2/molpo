@@ -1,0 +1,59 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+.barra {
+  background: var(--azul-profundo);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.barraInner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-block: 14px;
+}
+.marca img {
+  display: block;
+}
+.links {
+  display: flex;
+  gap: 4px;
+  margin-right: auto;
+  flex-wrap: wrap;
+}
+.links a {
+  font-size: 14px;
+  color: var(--celeste-palido);
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: var(--r-boton);
+}
+.links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.salir {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+.quien {
+  font-size: 13px;
+  color: var(--azul-claro);
+}
+.salir button {
+  font: inherit;
+  font-size: 13px;
+  color: var(--celeste-palido);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--r-boton);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.main {
+  flex: 1;
+  padding-block: clamp(28px, 4vw, 48px);
+}

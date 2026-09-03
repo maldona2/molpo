@@ -19,8 +19,9 @@ dinámicas y la API `/api/contact` están disponibles.
 |----------|-----------|---------|
 | `RESEND_API_KEY` | API key para enviar el formulario mediante Resend | `re_...` |
 | `CONTACT_TO` | Email de destino para formulario y avisos de soporte | `info@molpo.ar` |
-| `DATABASE_URL` | Postgres del módulo de soporte (ver `soporte.md`) | `postgres://...` |
-| `SOPORTE_ADMIN_TOKEN` | Token superadmin: paneles de soporte, feedback y clientes | cadena aleatoria |
+| `DATABASE_URL` | Postgres del área privada (ver `app.md`) | `postgres://...` |
+| `ADMIN_EMAILS` | Emails con acceso de admin en app.molpo.ar (ver `app.md`) | `vos@molpo.ar` |
+| `APP_URL` | URL del subdominio privado, para los links de los mails | `https://app.molpo.ar` |
 
 `molpo.ar` debe estar verificado en Resend. El formulario envía desde
 `molpo web <info@molpo.ar>` mediante la API HTTPS de Resend; la recepción de

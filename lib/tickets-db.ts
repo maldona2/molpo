@@ -3,7 +3,8 @@ import type postgres from "postgres";
 import { ensureSchema, sql } from "@/lib/db";
 import type { Estado, Ticket, TicketInput } from "@/lib/tickets";
 
-async function db(): Promise<postgres.Sql> {
+/** `adjuntos` tiene FK a `tickets`: primero tiene que existir esta. */
+export async function asegurarTickets(): Promise<postgres.Sql> {
   const client = sql();
   await ensureSchema("tickets", async () => {
     await client`
@@ -25,17 +26,56 @@ async function db(): Promise<postgres.Sql> {
     `;
     // Bases creadas antes de la notificación al cliente no tienen la columna.
     await client`alter table tickets add column if not exists email text`;
+    // El cliente ordena su columna de abiertos: `orden` guarda esa prioridad.
+    await client`alter table tickets add column if not exists orden integer not null default 0`;
     await client`create index if not exists tickets_cliente_idx on tickets (cliente, creado desc)`;
   });
   return client;
 }
 
+const db = asegurarTickets;
+
 export async function listTickets(cliente?: string): Promise<Ticket[]> {
   const client = await db();
+  // `orden` manda y la fecha desempata: un ticket recién creado queda arriba
+  // hasta que alguien lo reordene a mano.
   const rows = cliente
-    ? await client<Ticket[]>`select * from tickets where cliente = ${cliente} order by creado desc`
-    : await client<Ticket[]>`select * from tickets order by creado desc limit 500`;
+    ? await client<Ticket[]>`
+        select * from tickets where cliente = ${cliente}
+        order by orden asc, creado desc
+      `
+    : await client<Ticket[]>`select * from tickets order by orden asc, creado desc limit 500`;
   return rows;
+}
+
+/**
+ * Reescribe el orden de una columna entera. A esta escala son decenas de filas,
+ * así que reescribir todo evita el enredo del ranking fraccionario y de tener
+ * que renormalizar cuando se acaban los decimales entre dos vecinos.
+ */
+export async function reordenarColumna(cliente: string, estado: Estado, ids: number[]): Promise<void> {
+  if (ids.length === 0) return;
+  const client = await db();
+  await client.begin(async (tx) => {
+    for (const [posicion, id] of ids.entries()) {
+      // El cliente y el estado van en el where: un id de otro cliente no entra
+      // aunque venga en el pedido.
+      await tx`
+        update tickets set orden = ${posicion}
+        where id = ${id} and cliente = ${cliente} and estado = ${estado}
+      `;
+    }
+  });
+}
+
+/** Ids de una columna, en su orden actual. Base para validar lo que llega del drag. */
+export async function idsDeColumna(cliente: string, estado: Estado): Promise<number[]> {
+  const client = await db();
+  const rows = await client<{ id: number }[]>`
+    select id from tickets where cliente = ${cliente} and estado = ${estado}
+    order by orden asc, creado desc
+  `;
+  return rows.map((r) => r.id);
 }
 
 export async function createTicket(cliente: string, input: TicketInput): Promise<Ticket> {

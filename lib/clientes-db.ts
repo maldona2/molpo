@@ -3,7 +3,8 @@ import type postgres from "postgres";
 import { ensureSchema, sql } from "@/lib/db";
 import { generarToken, type Cliente } from "@/lib/clientes";
 
-async function db(): Promise<postgres.Sql> {
+/** Otras tablas tienen FK a `clientes`: primero tiene que existir esta. */
+export async function asegurarClientes(): Promise<postgres.Sql> {
   const client = sql();
   await ensureSchema("clientes", async () => {
     await client`
@@ -23,6 +24,8 @@ async function db(): Promise<postgres.Sql> {
   });
   return client;
 }
+
+const db = asegurarClientes;
 
 export async function listClientes(): Promise<Cliente[]> {
   const client = await db();

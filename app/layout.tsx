@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
-import JsonLd from "@/components/JsonLd";
-import Analytics from "@/components/Analytics";
-import ConsentBanner from "@/components/ConsentBanner";
 import { site } from "@/lib/site";
-import { siteJsonLd } from "@/lib/jsonld";
 import "./globals.css";
 
 const inter = Inter({
@@ -102,9 +98,13 @@ export const viewport: Viewport = {
   ],
 };
 
+/**
+ * Layout raíz: sólo <html>, <body> y las fuentes. Nada de analítica ni JSON-LD,
+ * que son del sitio público y viven en app/(sitio)/layout.tsx. Mantenerlo sin
+ * headers() ni cookies() es lo que deja que las páginas de marketing sigan
+ * siendo estáticas.
+ */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
-
   return (
     <html
       lang={site.lang}
@@ -118,10 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               '(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();',
           }}
         />
-        <JsonLd data={siteJsonLd()} />
-        <Analytics measurementId={measurementId} />
         {children}
-        <ConsentBanner enabled={Boolean(measurementId)} />
       </body>
     </html>
   );
