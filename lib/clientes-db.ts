@@ -1,13 +1,11 @@
 import "server-only";
 import type postgres from "postgres";
-import { sql } from "@/lib/db";
+import { ensureSchema, sql } from "@/lib/db";
 import { generarToken, type Cliente } from "@/lib/clientes";
-
-const globalForSql = globalThis as unknown as { clientesReady?: Promise<void> };
 
 async function db(): Promise<postgres.Sql> {
   const client = sql();
-  globalForSql.clientesReady ??= (async () => {
+  await ensureSchema("clientes", async () => {
     await client`
       create table if not exists clientes (
         id serial primary key,
@@ -19,8 +17,7 @@ async function db(): Promise<postgres.Sql> {
     `;
     // Un nombre repetido rompe el agrupado de tickets/feedback por cliente.
     await client`create unique index if not exists clientes_nombre_idx on clientes (lower(nombre))`;
-  })();
-  await globalForSql.clientesReady;
+  });
   return client;
 }
 

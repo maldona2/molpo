@@ -1,13 +1,11 @@
 import "server-only";
 import type postgres from "postgres";
-import { sql } from "@/lib/db";
+import { ensureSchema, sql } from "@/lib/db";
 import type { Feedback, FeedbackInput } from "@/lib/feedback";
-
-const globalForSql = globalThis as unknown as { feedbackReady?: Promise<void> };
 
 async function db(): Promise<postgres.Sql> {
   const client = sql();
-  globalForSql.feedbackReady ??= (async () => {
+  await ensureSchema("feedback", async () => {
     await client`
       create table if not exists feedback (
         id serial primary key,
@@ -25,8 +23,7 @@ async function db(): Promise<postgres.Sql> {
       )
     `;
     await client`create index if not exists feedback_cliente_idx on feedback (cliente, creado desc)`;
-  })();
-  await globalForSql.feedbackReady;
+  });
   return client;
 }
 

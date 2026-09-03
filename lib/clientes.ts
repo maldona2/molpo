@@ -26,3 +26,17 @@ export function validateNombreCliente(input: unknown): Result<string> {
   if (nombre.length > LIMITE_NOMBRE) return { ok: false, error: "Nombre demasiado largo" };
   return { ok: true, value: nombre };
 }
+
+/**
+ * `unique_violation` de Postgres: el nombre ya está tomado. Cualquier otro
+ * error (base caída, permisos) no es esto y tiene que propagarse, si no el
+ * panel avisa "nombre repetido" por algo que no tiene nada que ver.
+ */
+export function esNombreDuplicado(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code: unknown }).code === "23505"
+  );
+}

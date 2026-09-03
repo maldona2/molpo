@@ -1,13 +1,11 @@
 import "server-only";
 import type postgres from "postgres";
-import { sql } from "@/lib/db";
+import { ensureSchema, sql } from "@/lib/db";
 import type { Estado, Ticket, TicketInput } from "@/lib/tickets";
-
-const globalForSql = globalThis as unknown as { schemaReady?: Promise<void> };
 
 async function db(): Promise<postgres.Sql> {
   const client = sql();
-  globalForSql.schemaReady ??= (async () => {
+  await ensureSchema("tickets", async () => {
     await client`
       create table if not exists tickets (
         id serial primary key,
@@ -28,8 +26,7 @@ async function db(): Promise<postgres.Sql> {
     // Bases creadas antes de la notificación al cliente no tienen la columna.
     await client`alter table tickets add column if not exists email text`;
     await client`create index if not exists tickets_cliente_idx on tickets (cliente, creado desc)`;
-  })();
-  await globalForSql.schemaReady;
+  });
   return client;
 }
 
