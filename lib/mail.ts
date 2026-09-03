@@ -2,8 +2,7 @@
 // contacto, soporte y feedback. Cada caller pasa las líneas del cuerpo y acá
 // se derivan las dos versiones que espera Resend: texto plano y HTML de marca.
 
-// Node (pnpm test) exige la extensión; tsc con moduleResolution bundler no la admite.
-// @ts-expect-error TS5097: allowImportingTsExtensions no está prendido a propósito.
+// La extensión explícita la exige node al correr los tests con type stripping.
 import { site } from "./site.ts";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
