@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { esAdmin } from "@/lib/tickets";
-import { esNombreDuplicado, validateNombreCliente } from "@/lib/clientes";
+import { esNombreDuplicado, validateEmailCliente, validateNombreCliente } from "@/lib/clientes";
 import { crearCliente, rotarToken, setClienteActivo } from "@/lib/clientes-db";
 
 const NO_ENCONTRADO = "No se encontró ese cliente";
@@ -17,8 +17,13 @@ export async function crear(formData: FormData) {
     redirect(`/admin/clientes/${token}/?error=${encodeURIComponent(result.error)}`);
   }
 
+  const email = validateEmailCliente(formData.get("email"));
+  if (!email.ok) {
+    redirect(`/admin/clientes/${token}/?error=${encodeURIComponent(email.error)}`);
+  }
+
   try {
-    await crearCliente(result.value);
+    await crearCliente(result.value, email.value);
   } catch (error) {
     // Sólo el choque contra el índice único es "nombre repetido"; el resto
     // (base caída, permisos) tiene que explotar en vez de disfrazarse.

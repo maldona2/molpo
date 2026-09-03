@@ -6,6 +6,7 @@ export type Cliente = {
   id: number;
   token: string;
   nombre: string;
+  email: string | null;
   activo: boolean;
   creado: Date;
 };
@@ -13,6 +14,21 @@ export type Cliente = {
 type Result<T> = { ok: true; value: T } | { ok: false; error: string };
 
 const LIMITE_NOMBRE = 200;
+const LIMITE_EMAIL = 320;
+
+// Mismo criterio que el resto del sitio: algo@algo.tld sin espacios.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Email opcional del cliente. `""` vale y significa "sin email". */
+export function validateEmailCliente(input: unknown): Result<string | undefined> {
+  if (input === null || input === undefined) return { ok: true, value: undefined };
+  if (typeof input !== "string") return { ok: false, error: "Email inválido" };
+  const email = input.trim();
+  if (!email) return { ok: true, value: undefined };
+  if (email.length > LIMITE_EMAIL) return { ok: false, error: "El email es demasiado largo" };
+  if (!EMAIL_RE.test(email)) return { ok: false, error: "Email inválido" };
+  return { ok: true, value: email };
+}
 
 /** Token de acceso a /soporte/<token>/ y /feedback/<token>/. */
 export function generarToken(): string {

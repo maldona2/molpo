@@ -58,6 +58,10 @@ export default async function AdminClientesPage({ params, searchParams }: Props)
           <span>Nuevo cliente</span>
           <input name="nombre" type="text" required maxLength={200} placeholder="Acme SA" />
         </label>
+        <label className={styles.campo}>
+          <span>Email (para que pida su link solo)</span>
+          <input name="email" type="email" maxLength={320} placeholder="vos@acme.com" />
+        </label>
         <button type="submit" className={styles.boton}>
           Crear
         </button>
@@ -75,6 +79,7 @@ export default async function AdminClientesPage({ params, searchParams }: Props)
                 </span>
                 <span className={styles.meta}>
                   {cliente.nombre} · alta {fecha.format(new Date(cliente.creado))}
+                  {cliente.email ? ` · ${cliente.email}` : " · sin email"}
                 </span>
               </div>
 

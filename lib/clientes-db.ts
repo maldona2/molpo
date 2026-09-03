@@ -17,6 +17,9 @@ async function db(): Promise<postgres.Sql> {
     `;
     // Un nombre repetido rompe el agrupado de tickets/feedback por cliente.
     await client`create unique index if not exists clientes_nombre_idx on clientes (lower(nombre))`;
+    // Con el email el cliente pide su propio link desde /soporte/, sin depender
+    // de que se haya guardado la URL con el token.
+    await client`alter table clientes add column if not exists email text`;
   });
   return client;
 }
@@ -26,11 +29,25 @@ export async function listClientes(): Promise<Cliente[]> {
   return client<Cliente[]>`select * from clientes order by creado desc`;
 }
 
-export async function crearCliente(nombre: string): Promise<Cliente> {
+export async function crearCliente(nombre: string, email?: string): Promise<Cliente> {
   const client = await db();
   const [cliente] = await client<Cliente[]>`
-    insert into clientes (token, nombre) values (${generarToken()}, ${nombre})
+    insert into clientes (token, nombre, email)
+    values (${generarToken()}, ${nombre}, ${email ?? null})
     returning *
+  `;
+  return cliente;
+}
+
+/**
+ * Cliente activo con ese email, para reenviarle su link. Devuelve undefined sin
+ * distinguir "no existe" de "está de baja": quien pregunta no tiene que poder
+ * averiguar quiénes son clientes.
+ */
+export async function clientePorEmail(email: string): Promise<Cliente | undefined> {
+  const client = await db();
+  const [cliente] = await client<Cliente[]>`
+    select * from clientes where lower(email) = lower(${email}) and activo limit 1
   `;
   return cliente;
 }
