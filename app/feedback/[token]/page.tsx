@@ -66,8 +66,8 @@ export default async function FeedbackPage({ params, searchParams }: Props) {
       <main id="top">
         <header className={styles.hero}>
           <div className={`container ${styles.heroInner}`}>
-            <p className={`eyebrow ${styles.eyebrow}`}>Feedback · {cliente}</p>
-            <h1 className={styles.h1}>¿Cómo salió el trabajo?</h1>
+            <p className={`eyebrow ${styles.eyebrow}`}>Feedback</p>
+            <h1 className={styles.h1}>{cliente}, ¿cómo salió el trabajo?</h1>
             <p className={styles.lead}>
               Terminamos una auditoría, un desarrollo o un pedido de soporte y quiero saber
               qué te sirvió y qué no. Son dos minutos y me sirven para el próximo trabajo.
