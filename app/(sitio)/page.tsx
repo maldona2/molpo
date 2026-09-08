@@ -3,6 +3,7 @@ import TrustStrip from "@/components/TrustStrip";
 import Servicios from "@/components/Servicios";
 import Proceso from "@/components/Proceso";
 import Casos from "@/components/Casos";
+import Testimonios from "@/components/Testimonios";
 import SobreMi from "@/components/SobreMi";
 import CtaFinal from "@/components/CtaFinal";
 import Footer from "@/components/Footer";
@@ -19,6 +20,7 @@ export default function Home() {
         <Servicios />
         <Proceso />
         <Casos />
+        <Testimonios />
         <SobreMi />
         <CtaFinal />
       </main>

@@ -1,0 +1,53 @@
+.wrap {
+  background: var(--surface);
+  border-top: 1px solid var(--borde-2);
+}
+.inner {
+  padding-top: clamp(56px, 8vw, 96px);
+  padding-bottom: clamp(56px, 8vw, 96px);
+}
+.h2 {
+  font-size: clamp(26px, 3.5vw, 40px);
+  line-height: 1.1;
+  margin: 12px 0 0;
+  max-width: 20ch;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 22px;
+  margin-top: 40px;
+}
+.grid:has(> :only-child) {
+  grid-template-columns: 1fr;
+}
+.card {
+  margin: 0;
+  max-width: 780px;
+  padding: 30px 28px;
+  border-left: 3px solid var(--azul-medio);
+  border-radius: 0 var(--r-card) var(--r-card) 0;
+  background: var(--seccion-alt);
+}
+.quote {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: var(--font-founders), sans-serif;
+  font-size: clamp(19px, 2.2vw, 26px);
+  line-height: 1.35;
+}
+.autor {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 18px;
+}
+.nombre {
+  color: var(--text-strong);
+  font-weight: 600;
+  font-size: 14px;
+}
+.meta {
+  color: var(--texto-cuerpo-2);
+  font-size: 13px;
+}
