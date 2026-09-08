@@ -1,4 +1,5 @@
 import { identidad } from "@/lib/auth";
+import { idDeTicket, puedeVerTicket } from "@/lib/tickets";
 import { getAdjunto } from "@/lib/adjuntos-db";
 import { detectarTipoImagen } from "@/lib/adjuntos";
 
@@ -15,15 +16,17 @@ export async function GET(_request: Request, { params }: Props) {
   if (!quien) return new Response("No encontrado", { status: 404 });
 
   const { id } = await params;
-  const adjuntoId = Number(id);
-  if (!Number.isInteger(adjuntoId)) return new Response("No encontrado", { status: 404 });
+  // Mismo rango que un id de ticket: los dos son `serial`, y un número más
+  // grande hace explotar la consulta en vez de devolver 404.
+  const adjuntoId = idDeTicket(id);
+  if (adjuntoId === null) return new Response("No encontrado", { status: 404 });
 
   const adjunto = await getAdjunto(adjuntoId);
   if (!adjunto) return new Response("No encontrado", { status: 404 });
 
   // Mismo 404 para "no existe" y "no es tuyo": no confirmamos la existencia de
-  // un adjunto a quien no puede verlo.
-  if (quien.rol === "cliente" && quien.nombre !== adjunto.cliente) {
+  // un adjunto a quien no puede verlo. Una sola regla, compartida con el detalle.
+  if (!puedeVerTicket(quien, adjunto.cliente)) {
     return new Response("No encontrado", { status: 404 });
   }
 

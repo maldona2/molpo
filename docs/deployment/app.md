@@ -7,6 +7,7 @@ clientes, el tablero, la gestión de clientes y el feedback.
 |-----|-------------|
 | `app.molpo.ar/entrar/` | cualquiera pide su link por email |
 | `app.molpo.ar/tablero/` | cliente (sus pedidos) y admin (todos) |
+| `app.molpo.ar/tablero/<id>/` | el detalle de un pedido: el cliente los suyos, el admin todos |
 | `app.molpo.ar/pedidos/` | cliente: carga un pedido nuevo |
 | `app.molpo.ar/opinar/` | cliente: deja feedback de cierre |
 | `app.molpo.ar/clientes/` | admin: alta y baja de clientes |
@@ -68,6 +69,35 @@ Al reordenar se reescribe la columna entera en una transacción. Son decenas de
 filas: evita el enredo del ranking fraccionario y de renormalizar cuando se
 acaban los decimales entre dos vecinos.
 
+## Detalle del pedido
+
+El título de cada tarjeta es un link a `/tablero/<id>/`: ahí está el pedido
+entero, que en la tarjeta no entra. Detalle completo con sus saltos de línea,
+pantalla o URL, quién lo reporta, cuándo se creó y cuándo fue la última novedad,
+todas las capturas en miniatura y la respuesta del admin si ya la escribió.
+
+- **Quién lo ve**: el admin todos, el cliente sólo los suyos. Un pedido ajeno da
+  el mismo 404 que uno inexistente, igual que en `/adjuntos/<id>/`. Las dos
+  rutas usan la misma función (`puedeVerTicket` en `lib/tickets.ts`): una sola
+  regla de autorización, no dos que se van separando con el tiempo.
+- **El admin gestiona desde acá**: cambia el estado y escribe la respuesta para
+  el cliente en el mismo form, con un solo "Guardar y avisar". El `select` de la
+  tarjeta sigue existiendo y usa la misma acción; cuando manda sólo el estado, la
+  respuesta ya escrita queda intacta.
+- **El mail dice la verdad**: si cambió el estado, "tu pedido está Resuelto"; si
+  el admin sólo contestó, "novedad en tu pedido". El botón del mail va al pedido,
+  no al tablero. Borrar una respuesta sin tocar el estado se guarda pero no manda
+  mail: no hay novedad que contar.
+- **Dos pestañas abiertas**: el form manda con qué respuesta se pintó. Si mientras
+  tanto cambió, en vez de pisarla redirige con `?conflicto=1` y muestra la que
+  quedó guardada. Se pierde un click, no lo que escribió el otro.
+- El drag de la tarjeta arranca a los 6px, así que el click en el título abre el
+  detalle. Por teclado el `Enter` sobre el link entra al detalle y sobre la
+  tarjeta levanta el drag.
+- Un id que no es un id (`abc`, `1e3`, mayor a int4) da 404 antes de tocar la
+  base: un número fuera de rango haría explotar la consulta en vez de no
+  encontrar nada.
+
 ## Variables de entorno
 
 | Variable | Propósito |
@@ -95,7 +125,8 @@ Tipos (bug / mejora / consulta), prioridad y estado. El cliente los carga en
 `/pedidos/` y los ve en su tablero.
 
 - Ticket nuevo: aviso a `CONTACT_TO`.
-- Cambio de estado: aviso al cliente, si dejó un email en ese pedido. El email
+- Cambio de estado o respuesta nueva: aviso al cliente, si dejó un email en ese
+  pedido (ver "Detalle del pedido"). El email
   se guarda **por ticket**, no por cliente: si no lo carga, no recibe avisos de
   ese pedido.
 - Rate limit de 20 pedidos por hora por cliente, en memoria del proceso.

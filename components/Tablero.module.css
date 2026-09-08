@@ -93,6 +93,13 @@
   line-height: 1.45;
   font-weight: 500;
 }
+.enlaceTitulo {
+  color: inherit;
+  text-decoration: none;
+}
+.enlaceTitulo:hover {
+  text-decoration: underline;
+}
 .capturas {
   display: inline-block;
   margin-top: 8px;
