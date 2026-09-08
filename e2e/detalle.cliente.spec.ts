@@ -77,6 +77,7 @@ test.describe("detalle del pedido, como cliente", () => {
     await page.goto(`/tablero/${tickets.completo}/`);
 
     await expect(page.getByRole("button", { name: "Guardar y avisar" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Resolver con Grok" })).toHaveCount(0);
     await expect(page.getByText("Respuesta para el cliente")).toHaveCount(0);
   });
 

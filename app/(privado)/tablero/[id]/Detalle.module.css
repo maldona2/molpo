@@ -44,10 +44,19 @@
   color: var(--texto-tenue);
   background: rgba(128, 128, 128, 0.12);
 }
+.cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
 .h1 {
   font-size: clamp(22px, 3vw, 30px);
-  margin: 0 0 20px;
+  margin: 0;
   line-height: 1.25;
+  flex: 1 1 16rem;
 }
 .h2 {
   font-size: 13px;

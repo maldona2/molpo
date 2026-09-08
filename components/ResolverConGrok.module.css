@@ -1,0 +1,47 @@
+.wrap {
+  flex: 0 1 16rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.boton,
+.secundario {
+  font: inherit;
+  font-size: 14px;
+  border-radius: var(--r-boton);
+  padding: 9px 14px;
+  cursor: pointer;
+}
+.boton {
+  color: var(--blanco, #fff);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+}
+.boton:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.secundario {
+  color: var(--texto-cuerpo);
+  background: var(--bg);
+  border: 1px solid var(--borde);
+}
+.aviso,
+.ok {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.aviso {
+  color: #b4231f;
+}
+:root[data-theme="dark"] .aviso {
+  color: #ff9d99;
+}
+.ok {
+  color: var(--accent);
+}
+.aviso code {
+  font-size: 12px;
+}

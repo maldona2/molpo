@@ -13,6 +13,48 @@ test.describe("detalle del pedido, como admin", () => {
     await expect(page.getByText("Otra SRL")).toBeVisible();
   });
 
+  test("ve el botón para resolver con Grok", async ({ page }) => {
+    await page.goto(`/tablero/${compartido.completo}/`);
+    await expect(page.getByRole("button", { name: "Resolver con Grok" })).toBeVisible();
+  });
+
+  test("si el helper no está, ofrece copiar el prompt", async ({ page }) => {
+    await page.route("http://127.0.0.1:47821/**", (ruta) => ruta.abort());
+    await page.goto(`/tablero/${compartido.completo}/`);
+    await page.getByRole("button", { name: "Resolver con Grok" }).click();
+    await expect(page.getByText(/El helper no está corriendo/)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Copiar prompt" })).toBeVisible();
+  });
+
+  test("si el helper responde, avisa en qué carpeta abrió", async ({ page }) => {
+    await page.route("http://127.0.0.1:47821/**", async (ruta) => {
+      if (ruta.request().method() === "OPTIONS") {
+        await ruta.fulfill({
+          status: 204,
+          headers: {
+            "access-control-allow-origin": "http://app.localhost:3000",
+            "access-control-allow-methods": "GET, POST, OPTIONS",
+            "access-control-allow-headers": "content-type",
+            "access-control-allow-private-network": "true",
+          },
+        });
+        return;
+      }
+      await ruta.fulfill({
+        status: 200,
+        contentType: "application/json",
+        headers: {
+          "access-control-allow-origin": "http://app.localhost:3000",
+          "access-control-allow-private-network": "true",
+        },
+        body: JSON.stringify({ ok: true, cwd: "/Users/x/Coding/komuk" }),
+      });
+    });
+    await page.goto(`/tablero/${compartido.completo}/`);
+    await page.getByRole("button", { name: "Resolver con Grok" }).click();
+    await expect(page.getByText("Abierto en komuk")).toBeVisible();
+  });
+
   test("ve el formulario de gestión con el estado actual", async ({ page }) => {
     await page.goto(`/tablero/${compartido.completo}/`);
 

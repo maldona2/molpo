@@ -91,6 +91,12 @@ todas las capturas en miniatura y la respuesta del admin si ya la escribió.
 - **Dos pestañas abiertas**: el form manda con qué respuesta se pintó. Si mientras
   tanto cambió, en vez de pisarla redirige con `?conflicto=1` y muestra la que
   quedó guardada. Se pierde un click, no lo que escribió el otro.
+- **Resolver con Grok** (admin): un botón en el detalle manda el ticket a un
+  helper local (`127.0.0.1:47821`) que abre Terminal en el repo del cliente.
+  El cwd no viaja por la red: vive en `~/.molpo/proyectos.json` y la primera
+  vez macOS pregunta la carpeta. El ticket no cambia de estado. Instalación:
+  `pnpm resolver:install` en la Mac. Si el helper no está, el botón deja copiar
+  el prompt.
 - El drag de la tarjeta arranca a los 6px, así que el click en el título abre el
   detalle. Por teclado el `Enter` sobre el link entra al detalle y sobre la
   tarjeta levanta el drag.

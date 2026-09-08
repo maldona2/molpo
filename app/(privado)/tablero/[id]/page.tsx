@@ -4,8 +4,12 @@ import { exigirIdentidad } from "@/lib/auth";
 import { ESTADOS, ETIQUETAS, LIMITE_RESPUESTA, idDeTicket, puedeVerTicket } from "@/lib/tickets";
 import { getTicket } from "@/lib/tickets-db";
 import { listAdjuntos } from "@/lib/adjuntos-db";
+import { armarPrompt } from "@/lib/resolver";
 import { moverTicket } from "@/app/(privado)/tablero/acciones";
+import ResolverConGrok from "@/components/ResolverConGrok";
 import styles from "./Detalle.module.css";
+
+const APP_URL = (process.env.APP_URL ?? "https://app.molpo.ar").replace(/\/+$/, "");
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +40,7 @@ export default async function DetallePage({ params, searchParams }: Props) {
 
   const capturas = await listAdjuntos([ticket.id]);
   const { conflicto } = await searchParams;
+  const prompt = armarPrompt(ticket, capturas, APP_URL);
 
   return (
     <div className={`container ${styles.wrap}`}>
@@ -54,7 +59,12 @@ export default async function DetallePage({ params, searchParams }: Props) {
         </span>
       </div>
 
-      <h1 className={styles.h1}>{ticket.titulo}</h1>
+      <div className={styles.cabecera}>
+        <h1 className={styles.h1}>{ticket.titulo}</h1>
+        {quien.rol === "admin" ? (
+          <ResolverConGrok cliente={ticket.cliente} prompt={prompt} />
+        ) : null}
+      </div>
 
       <dl className={styles.datos}>
         {ticket.url ? (
