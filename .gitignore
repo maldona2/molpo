@@ -19,3 +19,8 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+
+# Playwright
+/e2e/.estado/
+/test-results/
+/playwright-report/
