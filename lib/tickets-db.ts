@@ -48,6 +48,13 @@ export async function listTickets(cliente?: string): Promise<Ticket[]> {
   return rows;
 }
 
+/** Un ticket por id, sin filtrar por cliente: quién puede verlo lo decide la página. */
+export async function getTicket(id: number): Promise<Ticket | undefined> {
+  const client = await db();
+  const [ticket] = await client<Ticket[]>`select * from tickets where id = ${id}`;
+  return ticket;
+}
+
 /**
  * Reescribe el orden de una columna entera. A esta escala son decenas de filas,
  * así que reescribir todo evita el enredo del ranking fraccionario y de tener
