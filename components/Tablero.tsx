@@ -69,7 +69,13 @@ function Contenido({
           {esAdmin ? ` · ${tarjeta.cliente}` : ""}
         </span>
       </div>
-      <p className={styles.tarjetaTitulo}>{tarjeta.titulo}</p>
+      {/* El drag arranca recién a los 6px (ver PointerSensor), así que un click
+          sin movimiento sigue abriendo el detalle. */}
+      <p className={styles.tarjetaTitulo}>
+        <a className={styles.enlaceTitulo} href={`/tablero/${tarjeta.id}/`}>
+          {tarjeta.titulo}
+        </a>
+      </p>
       {tarjeta.capturas > 0 ? (
         <a className={styles.capturas} href={`/adjuntos/${tarjeta.primerAdjunto}`} target="_blank" rel="noopener">
           {tarjeta.capturas} captura{tarjeta.capturas > 1 ? "s" : ""}
@@ -116,6 +122,13 @@ function TarjetaArrastrable({ tarjeta, arrastrable, ...resto }: TarjetaProps) {
       className={`${styles.tarjeta} ${isDragging ? styles.arrastrando : ""}`}
       {...attributes}
       {...listeners}
+      // El KeyboardSensor arranca el drag con Enter y hace preventDefault. Sin
+      // este filtro se come el Enter del link del título (y el del select de
+      // mover), y el detalle queda inalcanzable sin mouse. El drag por teclado
+      // sigue andando parado sobre la tarjeta misma.
+      onKeyDown={(evento) => {
+        if (evento.target === evento.currentTarget) listeners?.onKeyDown?.(evento);
+      }}
     >
       <Contenido tarjeta={tarjeta} {...resto} />
     </li>
