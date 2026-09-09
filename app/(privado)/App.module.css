@@ -85,6 +85,26 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+/* El sidebar es oscuro en los dos temas: el toggle usa colores claros fijos.
+   Doble clase para ganarle al estilo base de ThemeToggle sin depender del
+   orden de carga del CSS. */
+.tema.tema {
+  width: 32px;
+  height: 32px;
+  color: var(--celeste-palido);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.tema.tema:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
 .salirBtn {
   flex-shrink: 0;
   font: inherit;

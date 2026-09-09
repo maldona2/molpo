@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { identidad } from "@/lib/auth";
 import { salir } from "@/app/(privado)/acciones";
 import NavLinks from "@/components/NavLinks";
+import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./App.module.css";
 
 export const metadata: Metadata = {
@@ -41,9 +42,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <span className={styles.quienRol}>{quien.rol === "admin" ? "Admin" : "Cliente"}</span>
               <span className={styles.quienNombre}>{quien.rol === "admin" ? "molpo" : quien.nombre}</span>
             </div>
-            <button type="submit" className={styles.salirBtn}>
-              Salir
-            </button>
+            <div className={styles.acciones}>
+              <ThemeToggle className={styles.tema} />
+              <button type="submit" className={styles.salirBtn}>
+                Salir
+              </button>
+            </div>
           </form>
         </aside>
       ) : null}
