@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
 import { crearFeedback } from "@/app/(privado)/opinar/acciones";
 import { exigirIdentidad } from "@/lib/auth";
 import {
@@ -59,8 +57,6 @@ export default async function OpinarPage({ searchParams }: Props) {
 
   return (
     <>
-      <Nav />
-      <main id="top">
         <header className={styles.hero}>
           <div className={`container ${styles.heroInner}`}>
             <p className={`eyebrow ${styles.eyebrow}`}>Feedback</p>
@@ -173,8 +169,6 @@ export default async function OpinarPage({ searchParams }: Props) {
             </aside>
           </div>
         </section>
-      </main>
-      <Footer />
     </>
   );
 }
