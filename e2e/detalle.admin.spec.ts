@@ -100,8 +100,7 @@ test.describe("detalle del pedido, como admin", () => {
     await page.goto("/tablero/");
 
     const tarjeta = page.locator("li", { has: page.getByRole("link", { name: titulo }) }).first();
-    await tarjeta.locator("select[name=estado]").selectOption("resuelto");
-    await tarjeta.getByRole("button", { name: "Mover" }).click();
+    await tarjeta.getByRole("button", { name: "Resuelto" }).click();
     await expect(page).toHaveURL(/\/tablero\/?$/);
     // Esperar a que la tarjeta aparezca en su columna nueva: sin esto, el
     // `goto` de abajo compite con el redirect de la acción y sale ERR_ABORTED.

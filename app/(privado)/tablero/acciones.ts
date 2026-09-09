@@ -11,13 +11,12 @@ import {
   normalizarRespuesta,
   avisoDeTicket,
 } from "@/lib/tickets";
-import { getTicket, idsDeColumna, reordenarColumna, updateTicket } from "@/lib/tickets-db";
-import { sanearOrden, COLUMNA_ORDENABLE } from "@/lib/tablero";
+import { getTicket, updateTicket } from "@/lib/tickets-db";
 
 /**
  * Guarda el estado y/o la respuesta de un ticket, y le avisa al cliente. La usan
- * el select de la tarjeta (que sólo manda el estado) y el form del detalle (que
- * también contesta). Sólo admin: el cliente no decide qué está resuelto.
+ * los botones de estado de la tarjeta (que sólo mandan el estado) y el form del
+ * detalle (que también contesta). Sólo admin: el cliente no decide qué está resuelto.
  */
 export async function moverTicket(formData: FormData) {
   const quien = await identidad();
@@ -64,22 +63,4 @@ export async function moverTicket(formData: FormData) {
   redirect("/tablero/");
 }
 
-/**
- * Guarda el orden de la columna de abiertos del cliente: así dice qué le urge
- * sin escribir un mail. Sólo toca sus propios tickets.
- */
-export async function reordenar(formData: FormData) {
-  const quien = await identidad();
-  if (quien?.rol !== "cliente") redirect("/");
 
-  const pedidos = String(formData.get("orden") ?? "")
-    .split(",")
-    .filter(Boolean)
-    .map(Number);
-
-  const reales = await idsDeColumna(quien.nombre, COLUMNA_ORDENABLE);
-  await reordenarColumna(quien.nombre, COLUMNA_ORDENABLE, sanearOrden(pedidos, reales));
-
-  revalidatePath("/tablero");
-  redirect("/tablero/");
-}

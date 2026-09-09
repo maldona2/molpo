@@ -46,20 +46,30 @@
   min-height: 60px;
 }
 .tarjeta {
+  position: relative;
   background: var(--bg);
   border: 1px solid var(--borde);
   border-radius: var(--r-boton);
-  padding: 12px 14px;
-  cursor: grab;
-  touch-action: manipulation;
+  padding: 12px 14px 12px 16px;
 }
-.tarjeta:focus-visible {
-  outline: 3px solid var(--focus-ring);
-  outline-offset: 1px;
+.tarjeta::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--borde);
 }
-.arrastrando {
-  opacity: 0.5;
-  cursor: grabbing;
+.tarjeta[data-prioridad="alta"]::before {
+  background: #b4231f;
+}
+.tarjeta[data-prioridad="media"]::before {
+  background: var(--azul-medio);
+}
+.tarjeta[data-prioridad="baja"]::before {
+  background: var(--texto-tenue);
 }
 .tarjetaMeta {
   display: flex;
@@ -89,8 +99,8 @@
 }
 .tarjetaTitulo {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 15px;
+  line-height: 1.4;
   font-weight: 500;
 }
 .enlaceTitulo {
@@ -100,39 +110,70 @@
 .enlaceTitulo:hover {
   text-decoration: underline;
 }
-.capturas {
-  display: inline-block;
-  margin-top: 8px;
+.miniatura {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
   font-size: 12px;
   color: var(--texto-tenue);
+  text-decoration: none;
+}
+.miniatura:hover {
+  color: var(--texto-cuerpo);
+}
+.miniatura img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--surface);
+  flex-shrink: 0;
 }
 .respuesta {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--texto-cuerpo);
   border-left: 2px solid var(--borde);
   padding-left: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.mover {
+.estados {
   display: flex;
-  gap: 6px;
-  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 12px;
 }
-.mover select,
-.mover button {
+.estados form {
+  flex: 1 1 calc(50% - 4px);
+  min-width: 0;
+}
+.estados button {
+  width: 100%;
   font: inherit;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.2;
   color: var(--texto-cuerpo);
   background: var(--surface);
   border: 1px solid var(--borde);
-  border-radius: var(--r-boton);
-  padding: 5px 8px;
+  border-radius: 8px;
+  padding: 7px 6px;
   cursor: pointer;
 }
-.mover select {
-  flex: 1;
-  min-width: 0;
+.estados button:hover:not(:disabled) {
+  border-color: var(--azul-medio);
+  color: var(--text-strong);
+}
+.estados button[aria-current="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--blanco, #fff);
+  cursor: default;
 }
 .vacia {
   font-size: 13px;

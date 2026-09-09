@@ -93,9 +93,6 @@ test.describe("detalle del pedido, como cliente", () => {
   });
 
   test("con el teclado, Enter sobre el título también abre el detalle", async ({ page }) => {
-    // dnd-kit escucha Enter para arrancar un drag de teclado. Si el listener
-    // del KeyboardSensor está en la tarjeta entera, se come el Enter del link y
-    // el detalle queda inalcanzable sin mouse.
     await page.goto("/tablero/");
 
     const titulo = page.getByRole("link", { name: TITULOS.completo });
@@ -106,34 +103,11 @@ test.describe("detalle del pedido, como cliente", () => {
     await expect(page).toHaveURL(new RegExp(`/tablero/${tickets.completo}/?$`));
   });
 
-  test("arrastrar la tarjeta reordena, se guarda y no navega al detalle", async ({ page }) => {
+  test("el cliente no mueve tickets desde la tarjeta", async ({ page }) => {
     await page.goto("/tablero/");
 
-    const abiertos = page.getByRole("region", { name: "Abierto" });
-    const titulos = () => abiertos.getByRole("link").allInnerTexts();
-
-    const primera = abiertos.getByRole("link", { name: TITULOS.completo });
-    const segunda = abiertos.getByRole("link", { name: TITULOS.pelado });
-    await expect(primera).toBeVisible();
-    await expect(segunda).toBeVisible();
-    const antes = await titulos();
-
-    const origen = await primera.boundingBox();
-    const destino = await segunda.boundingBox();
-    if (!origen || !destino) throw new Error("No se pudieron ubicar las tarjetas");
-
-    // Más de los 6px del PointerSensor: esto tiene que ser drag, no click.
-    await page.mouse.move(origen.x + origen.width / 2, origen.y + origen.height / 2);
-    await page.mouse.down();
-    await page.mouse.move(destino.x + destino.width / 2, destino.y + destino.height / 2, { steps: 12 });
-    await page.mouse.up();
-
-    // Que no navegue no alcanza: si el drag no arrancó, esto pasaría igual.
-    await expect(page).toHaveURL(/\/tablero\/?(\?.*)?$/);
-    await expect.poll(titulos).not.toEqual(antes);
-
-    // El cliente ordenando su columna de abiertos es justo lo que se persiste.
-    await page.reload();
-    await expect.poll(titulos).not.toEqual(antes);
+    const tarjeta = page.locator("li", { has: page.getByRole("link", { name: TITULOS.completo }) });
+    await expect(tarjeta.getByRole("button", { name: "En curso" })).toHaveCount(0);
+    await expect(tarjeta.getByRole("button", { name: "Resuelto" })).toHaveCount(0);
   });
 });

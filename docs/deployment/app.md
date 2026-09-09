@@ -54,20 +54,9 @@ queda una cookie de sesión.
 
 Columnas = los estados de siempre: Abierto, En curso, Resuelto, Cerrado.
 
-- **Admin**: arrastra una tarjeta entre columnas y eso cambia el estado, con el
-  mismo aviso por mail de antes. Filtro por cliente.
-- **Cliente**: no puede cambiar estados —no es su decisión—, pero sí **ordena su
-  columna de Abierto**, y así dice qué le urge sin escribir un mail. Ese orden
-  se guarda en `tickets.orden`.
-
-El tablero se renderiza en el server y **el drag se monta después**: el HTML que
-manda el server es exactamente lo que ve alguien sin JS, y cada tarjeta del admin
-trae un `select` "Mover" que funciona igual. El drag de `@dnd-kit` se maneja con
-teclado (espacio para levantar, flechas para mover), así que no depende del mouse.
-
-Al reordenar se reescribe la columna entera en una transacción. Son decenas de
-filas: evita el enredo del ranking fraccionario y de renormalizar cuando se
-acaban los decimales entre dos vecinos.
+- **Admin**: en cada tarjeta hay un control con los cuatro estados. Un click
+  mueve el pedido y manda el mismo aviso por mail de siempre. Filtro por cliente.
+- **Cliente**: ve el tablero y entra al detalle; no cambia estados.
 
 ## Detalle del pedido
 
@@ -81,8 +70,8 @@ todas las capturas en miniatura y la respuesta del admin si ya la escribió.
   rutas usan la misma función (`puedeVerTicket` en `lib/tickets.ts`): una sola
   regla de autorización, no dos que se van separando con el tiempo.
 - **El admin gestiona desde acá**: cambia el estado y escribe la respuesta para
-  el cliente en el mismo form, con un solo "Guardar y avisar". El `select` de la
-  tarjeta sigue existiendo y usa la misma acción; cuando manda sólo el estado, la
+  el cliente en el mismo form, con un solo "Guardar y avisar". Los botones de
+  estado de la tarjeta usan la misma acción; cuando mandan sólo el estado, la
   respuesta ya escrita queda intacta.
 - **El mail dice la verdad**: si cambió el estado, "tu pedido está Resuelto"; si
   el admin sólo contestó, "novedad en tu pedido". El botón del mail va al pedido,
@@ -97,9 +86,6 @@ todas las capturas en miniatura y la respuesta del admin si ya la escribió.
   vez macOS pregunta la carpeta. El ticket no cambia de estado. Instalación:
   `pnpm resolver:install` en la Mac. Si el helper no está, el botón deja copiar
   el prompt.
-- El drag de la tarjeta arranca a los 6px, así que el click en el título abre el
-  detalle. Por teclado el `Enter` sobre el link entra al detalle y sobre la
-  tarjeta levanta el drag.
 - Un id que no es un id (`abc`, `1e3`, mayor a int4) da 404 antes de tocar la
   base: un número fuera de rango haría explotar la consulta en vez de no
   encontrar nada.

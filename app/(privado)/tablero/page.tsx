@@ -3,7 +3,7 @@ import { exigirIdentidad } from "@/lib/auth";
 import { ETIQUETAS } from "@/lib/tickets";
 import { listTickets } from "@/lib/tickets-db";
 import { listAdjuntos } from "@/lib/adjuntos-db";
-import { agruparPorEstado, COLUMNAS, COLUMNA_ORDENABLE } from "@/lib/tablero";
+import { agruparPorEstado, COLUMNAS } from "@/lib/tablero";
 import Tablero from "@/components/Tablero";
 import styles from "./Tablero.module.css";
 
@@ -31,8 +31,8 @@ export default async function TableroPage({ searchParams }: Props) {
         <h1 className={styles.h1}>{esAdmin ? "Tablero" : "Tus pedidos"}</h1>
         <p className={styles.bajada}>
           {esAdmin
-            ? "Arrastrá una tarjeta para cambiarle el estado. Al cliente le llega el aviso."
-            : "Acá ves en qué anda cada pedido. Ordená la columna de abiertos para decirme qué te urge primero."}
+            ? "Tocá un estado en la tarjeta para moverla. Al cliente le llega el aviso."
+            : "Acá ves en qué anda cada pedido. El título abre el detalle."}
         </p>
       </div>
 
@@ -70,7 +70,6 @@ export default async function TableroPage({ searchParams }: Props) {
           })),
         }))}
         esAdmin={esAdmin}
-        columnaOrdenable={COLUMNA_ORDENABLE}
       />
     </div>
   );
