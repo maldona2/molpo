@@ -10,12 +10,14 @@ import {
   hayQueAvisar,
   normalizarRespuesta,
   avisoDeTicket,
+  avisoTrasMover,
+  urlTrasMover,
 } from "@/lib/tickets";
 import { getTicket, updateTicket } from "@/lib/tickets-db";
 
 /**
  * Guarda el estado y/o la respuesta de un ticket, y le avisa al cliente. La usan
- * los botones de estado de la tarjeta (que sólo mandan el estado) y el form del
+ * el select de la tarjeta (que sólo manda el estado) y el form del
  * detalle (que también contesta). Sólo admin: el cliente no decide qué está resuelto.
  */
 export async function moverTicket(formData: FormData) {
@@ -46,8 +48,9 @@ export async function moverTicket(formData: FormData) {
   // El detalle puede guardar sólo una respuesta: el mail no puede decir que
   // el pedido "pasó" a un estado si el estado no cambió.
   const cambioEstado = previo.estado !== estado;
+  let mailEnviado = false;
   if (ticket?.email && hayQueAvisar(cambioEstado, respuesta)) {
-    await sendMail({
+    const envio = await sendMail({
       to: ticket.email,
       ...avisoDeTicket(ticket, estado, cambioEstado),
       // Al pedido, no al tablero: el mail habla de uno solo.
@@ -56,11 +59,12 @@ export async function moverTicket(formData: FormData) {
         href: `${process.env.APP_URL ?? "https://app.molpo.ar"}/tablero/${ticket.id}/`,
       },
     });
+    mailEnviado = envio.ok;
   }
 
   revalidatePath("/tablero");
   revalidatePath(`/tablero/${id}`);
-  redirect("/tablero/");
+  redirect(urlTrasMover(avisoTrasMover(previo.estado, estado, mailEnviado)));
 }
 
 

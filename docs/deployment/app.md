@@ -54,8 +54,8 @@ queda una cookie de sesión.
 
 Columnas = los estados de siempre: Abierto, En curso, Resuelto, Cerrado.
 
-- **Admin**: en cada tarjeta hay un control con los cuatro estados. Un click
-  mueve el pedido y manda el mismo aviso por mail de siempre. Filtro por cliente.
+- **Admin**: en cada tarjeta hay un select de estado. Al cambiarlo se mueve el
+  pedido y manda el mismo aviso por mail de siempre. Filtro por cliente.
 - **Cliente**: ve el tablero y entra al detalle; no cambia estados.
 
 ## Detalle del pedido
@@ -70,8 +70,8 @@ todas las capturas en miniatura y la respuesta del admin si ya la escribió.
   rutas usan la misma función (`puedeVerTicket` en `lib/tickets.ts`): una sola
   regla de autorización, no dos que se van separando con el tiempo.
 - **El admin gestiona desde acá**: cambia el estado y escribe la respuesta para
-  el cliente en el mismo form, con un solo "Guardar y avisar". Los botones de
-  estado de la tarjeta usan la misma acción; cuando mandan sólo el estado, la
+  el cliente en el mismo form, con un solo "Guardar y avisar". El select de
+  la tarjeta usa la misma acción; cuando manda sólo el estado, la
   respuesta ya escrita queda intacta.
 - **El mail dice la verdad**: si cambió el estado, "tu pedido está Resuelto"; si
   el admin sólo contestó, "novedad en tu pedido". El botón del mail va al pedido,

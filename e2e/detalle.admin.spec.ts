@@ -100,7 +100,7 @@ test.describe("detalle del pedido, como admin", () => {
     await page.goto("/tablero/");
 
     const tarjeta = page.locator("li", { has: page.getByRole("link", { name: titulo }) }).first();
-    await tarjeta.getByRole("button", { name: "Resuelto" }).click();
+    await tarjeta.getByRole("combobox", { name: `Mover #${id}` }).selectOption("resuelto");
     await expect(page).toHaveURL(/\/tablero\/?$/);
     // Esperar a que la tarjeta aparezca en su columna nueva: sin esto, el
     // `goto` de abajo compite con el redirect de la acción y sale ERR_ABORTED.
@@ -111,6 +111,13 @@ test.describe("detalle del pedido, como admin", () => {
     await page.goto(`/tablero/${id}/`);
     await expect(page.locator("select[name=estado]")).toHaveValue("resuelto");
     await expect(page.locator("textarea[name=respuesta]")).toHaveValue("Escrita desde el detalle.");
+  });
+
+  test("si el pedido pasó a resuelto con mail, el tablero muestra el toast", async ({ page }) => {
+    await page.goto("/tablero/?aviso=resuelto");
+    await expect(page.getByRole("status")).toHaveText(
+      "Le avisamos al cliente que el pedido quedó resuelto.",
+    );
   });
 
   test("no pisa una respuesta que cambió en otra pestaña", async ({ page, context }) => {

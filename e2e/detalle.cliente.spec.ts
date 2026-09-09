@@ -107,7 +107,6 @@ test.describe("detalle del pedido, como cliente", () => {
     await page.goto("/tablero/");
 
     const tarjeta = page.locator("li", { has: page.getByRole("link", { name: TITULOS.completo }) });
-    await expect(tarjeta.getByRole("button", { name: "En curso" })).toHaveCount(0);
-    await expect(tarjeta.getByRole("button", { name: "Resuelto" })).toHaveCount(0);
+    await expect(tarjeta.getByRole("combobox")).toHaveCount(0);
   });
 });

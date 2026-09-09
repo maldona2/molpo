@@ -1,4 +1,4 @@
-import { moverTicket } from "@/app/(privado)/tablero/acciones";
+import MoverEstado from "@/components/MoverEstado";
 import styles from "./Tablero.module.css";
 
 export type TarjetaData = {
@@ -68,20 +68,14 @@ function Tarjeta({
       {tarjeta.respuesta ? <p className={styles.respuesta}>{tarjeta.respuesta}</p> : null}
 
       {esAdmin ? (
-        <div className={styles.estados} role="group" aria-label={`Mover #${tarjeta.id}`}>
-          {columnas.map((columna) => {
-            const actual = columna.estado === estado;
-            return (
-              <form action={moverTicket} key={columna.estado}>
-                <input type="hidden" name="id" value={tarjeta.id} />
-                <input type="hidden" name="estado" value={columna.estado} />
-                <button type="submit" disabled={actual} aria-current={actual ? "true" : undefined}>
-                  {columna.etiqueta}
-                </button>
-              </form>
-            );
-          })}
-        </div>
+        <MoverEstado
+          id={tarjeta.id}
+          estado={estado}
+          opciones={columnas.map((columna) => ({
+            estado: columna.estado,
+            etiqueta: columna.etiqueta,
+          }))}
+        />
       ) : null}
     </li>
   );

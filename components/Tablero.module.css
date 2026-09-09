@@ -143,37 +143,37 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.estados {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+.mover {
+  position: relative;
   margin-top: 12px;
 }
-.estados form {
-  flex: 1 1 calc(50% - 4px);
-  min-width: 0;
-}
-.estados button {
+.mover select {
   width: 100%;
   font: inherit;
-  font-size: 11px;
-  line-height: 1.2;
+  font-size: 13px;
   color: var(--texto-cuerpo);
   background: var(--surface);
   border: 1px solid var(--borde);
   border-radius: 8px;
-  padding: 7px 6px;
+  padding: 8px 28px 8px 10px;
   cursor: pointer;
+  appearance: none;
 }
-.estados button:hover:not(:disabled) {
+.mover select:hover,
+.mover select:focus-visible {
   border-color: var(--azul-medio);
-  color: var(--text-strong);
 }
-.estados button[aria-current="true"] {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--blanco, #fff);
-  cursor: default;
+.mover::after {
+  content: "";
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--texto-tenue);
+  border-bottom: 1.5px solid var(--texto-tenue);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
 }
 .vacia {
   font-size: 13px;

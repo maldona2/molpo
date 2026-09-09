@@ -192,6 +192,26 @@ export function avisoDeTicket(
  * `serial`, o sea int4: un número más grande no es "no encontrado", es un error
  * de postgres, y un 500 le dice al que prueba más que un 404.
  */
+export type AvisoTablero = "resuelto";
+
+/**
+ * El toast del tablero sólo tiene sentido si el pedido acaba de pasar a
+ * resuelto y el mail al cliente salió. Mover sin mail, o re-guardar ya
+ * resuelto, no es una novedad que merezca un aviso en pantalla.
+ */
+export function avisoTrasMover(previo: Estado, estado: Estado, mailEnviado: boolean): AvisoTablero | null {
+  if (estado === "resuelto" && previo !== "resuelto" && mailEnviado) return "resuelto";
+  return null;
+}
+
+export function urlTrasMover(aviso: AvisoTablero | null): string {
+  return aviso ? `/tablero/?aviso=${aviso}` : "/tablero/";
+}
+
+export function parseAviso(value: unknown): AvisoTablero | null {
+  return value === "resuelto" ? "resuelto" : null;
+}
+
 export function idDeTicket(crudo: string): number | null {
   // Sólo dígitos: `Number` también acepta "0x10", "1e3" y " 12 ", y cada forma
   // sería otra URL para el mismo ticket.

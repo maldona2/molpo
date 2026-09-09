@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
 import { exigirIdentidad } from "@/lib/auth";
-import { ETIQUETAS } from "@/lib/tickets";
+import { ETIQUETAS, parseAviso } from "@/lib/tickets";
 import { listTickets } from "@/lib/tickets-db";
 import { listAdjuntos } from "@/lib/adjuntos-db";
 import { agruparPorEstado, COLUMNAS } from "@/lib/tablero";
 import Tablero from "@/components/Tablero";
+import Toast from "@/components/Toast";
 import styles from "./Tablero.module.css";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: "Tablero" };
 
-type Props = { searchParams: Promise<{ cliente?: string }> };
+type Props = { searchParams: Promise<{ cliente?: string; aviso?: string }> };
 
 export default async function TableroPage({ searchParams }: Props) {
   const quien = await exigirIdentidad();
   const esAdmin = quien.rol === "admin";
 
-  const { cliente: filtro } = await searchParams;
+  const { cliente: filtro, aviso: avisoCrudo } = await searchParams;
+  const aviso = parseAviso(avisoCrudo);
   const todos = await listTickets(esAdmin ? undefined : quien.nombre);
   const tickets = esAdmin && filtro ? todos.filter((t) => t.cliente === filtro) : todos;
   const adjuntos = await listAdjuntos(tickets.map((t) => t.id));
@@ -71,6 +73,9 @@ export default async function TableroPage({ searchParams }: Props) {
         }))}
         esAdmin={esAdmin}
       />
+      {aviso === "resuelto" ? (
+        <Toast>Le avisamos al cliente que el pedido quedó resuelto.</Toast>
+      ) : null}
     </div>
   );
 }
