@@ -16,8 +16,10 @@ export default async function EntrarPage({ searchParams }: Props) {
   const { enviado, error, expirado } = await searchParams;
 
   return (
-    <div className={`container ${styles.wrap}`}>
+    <div className={styles.wrap}>
       <div className={styles.caja}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/molpo-negro.png" alt="molpo" className={styles.logo} />
         <h1 className={styles.h1}>Entrá a tu espacio</h1>
         <p className={styles.lead}>
           Poné tu email y te mando un link para entrar. No hay contraseña que recordar.

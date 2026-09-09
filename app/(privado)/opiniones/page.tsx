@@ -8,7 +8,7 @@ import {
   type Trabajo,
 } from "@/lib/feedback";
 import { listFeedback } from "@/lib/feedback-db";
-import admin from "@/app/(privado)/Panel.module.css";
+import panel from "@/app/(privado)/Panel.module.css";
 import styles from "./Opiniones.module.css";
 
 export const dynamic = "force-dynamic";
@@ -40,59 +40,78 @@ export default async function OpinionesPage({ searchParams }: Props) {
   const recomienda = promedio(items.map((f) => f.recomienda));
 
   return (
-    <main className={`container ${admin.main}`}>
-      <h1 className={admin.h1}>Feedback de clientes</h1>
-      <nav className={admin.filtros} aria-label="Filtrar por trabajo">
-        <a href="/opiniones/" className={!filtro ? admin.activo : undefined}>
+    <main className={`container ${panel.main}`}>
+      <h1 className={panel.h1}>Feedback de clientes</h1>
+
+      <div className={panel.stats}>
+        <div className={panel.stat}>
+          <span className={panel.statValor}>{puntaje ?? "—"}</span>
+          <span className={panel.statEtiqueta}>Puntaje promedio / 5</span>
+        </div>
+        <div className={panel.stat}>
+          <span className={panel.statValor}>{recomienda ?? "—"}</span>
+          <span className={panel.statEtiqueta}>Recomendación promedio / 5</span>
+        </div>
+        <div className={panel.stat}>
+          <span className={panel.statValor}>{items.length}</span>
+          <span className={panel.statEtiqueta}>Respuestas</span>
+        </div>
+      </div>
+
+      <nav className={panel.filtros} aria-label="Filtrar por trabajo">
+        <a href="/opiniones/" className={!filtro ? panel.activo : undefined}>
           Todos ({todos.length})
         </a>
         {TRABAJOS.map((t) => (
           <a
             key={t}
             href={`/opiniones/?trabajo=${t}`}
-            className={filtro === t ? admin.activo : undefined}
+            className={filtro === t ? panel.activo : undefined}
           >
             {TRABAJO_ETIQUETAS[t]} ({todos.filter((f) => f.trabajo === t).length})
           </a>
         ))}
-        <a href="/tablero/">Ver tablero →</a>
-        <a href="/clientes/">Gestionar clientes →</a>
+        <a href="/tablero/" className={panel.aparte}>
+          Ver tablero →
+        </a>
+        <a href="/clientes/" className={panel.aparte}>
+          Gestionar clientes →
+        </a>
       </nav>
-
-      <p className={styles.resumen}>
-        {puntaje === null
-          ? "Todavía no hay respuestas."
-          : `Puntaje promedio ${puntaje}/5 · Recomendación ${recomienda}/5 · ${items.length} respuesta(s)`}
-      </p>
 
       <ul className={styles.lista}>
         {items.map((f) => (
           <li key={f.id} className={styles.item}>
-            <div className={styles.cabecera}>
-              <span className={styles.nota}>{f.puntaje}/5</span>
-              <span className={styles.meta}>
-                #{f.id} · {f.cliente} · {TRABAJO_ETIQUETAS[f.trabajo]} ·{" "}
-                {PUNTAJE_ETIQUETAS[f.puntaje]} · Recomienda {f.recomienda}/5 ·{" "}
-                {fecha.format(new Date(f.creado))}
-                {f.publicar ? " · publicable" : ""}
-              </span>
+            <div className={styles.nota} data-nota={f.puntaje}>
+              {f.puntaje}
             </div>
-            <p className={styles.comentario}>{f.comentario}</p>
-            {f.destacado ? (
-              <p className={styles.extra}>
-                <strong>Lo que sirvió:</strong> {f.destacado}
-              </p>
-            ) : null}
-            {f.mejorar ? (
-              <p className={styles.extra}>
-                <strong>A mejorar:</strong> {f.mejorar}
-              </p>
-            ) : null}
-            {f.nombre || f.email ? (
-              <p className={styles.extra}>{[f.nombre, f.email].filter(Boolean).join(" · ")}</p>
-            ) : null}
+            <div className={styles.cuerpo}>
+              <div className={styles.cabecera}>
+                <span className={styles.cliente}>{f.cliente}</span>
+                <span className={styles.meta}>
+                  {TRABAJO_ETIQUETAS[f.trabajo]} · {PUNTAJE_ETIQUETAS[f.puntaje]} · Recomienda{" "}
+                  {f.recomienda}/5 · {fecha.format(new Date(f.creado))}
+                  {f.publicar ? " · publicable" : ""}
+                </span>
+              </div>
+              <p className={styles.comentario}>{f.comentario}</p>
+              {f.destacado ? (
+                <p className={styles.extra}>
+                  <strong>Lo que sirvió:</strong> {f.destacado}
+                </p>
+              ) : null}
+              {f.mejorar ? (
+                <p className={styles.extra}>
+                  <strong>A mejorar:</strong> {f.mejorar}
+                </p>
+              ) : null}
+              {f.nombre || f.email ? (
+                <p className={styles.contacto}>{[f.nombre, f.email].filter(Boolean).join(" · ")}</p>
+              ) : null}
+            </div>
           </li>
         ))}
+        {items.length === 0 ? <li className={styles.vacio}>Todavía no hay respuestas.</li> : null}
       </ul>
     </main>
   );

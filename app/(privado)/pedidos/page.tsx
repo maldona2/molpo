@@ -29,83 +29,89 @@ export default async function PedidosPage({ searchParams }: Props) {
 
       <div className={styles.grid}>
         <form className={styles.form} action={crearPedido} encType="multipart/form-data">
-          <div className={styles.row}>
+          <fieldset className={styles.grupo}>
+            <legend className={styles.legend}>Qué pasó</legend>
+            <div className={styles.row}>
+              <label className={styles.field}>
+                <span>Tipo</span>
+                <select name="tipo" defaultValue="bug" required>
+                  {TIPOS.map((tipo) => (
+                    <option key={tipo} value={tipo}>
+                      {ETIQUETAS[tipo]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className={styles.field}>
+                <span>Prioridad</span>
+                <select name="prioridad" defaultValue="media" required>
+                  {PRIORIDADES.map((prioridad) => (
+                    <option key={prioridad} value={prioridad}>
+                      {ETIQUETAS[prioridad]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
             <label className={styles.field}>
-              <span>Tipo</span>
-              <select name="tipo" defaultValue="bug" required>
-                {TIPOS.map((tipo) => (
-                  <option key={tipo} value={tipo}>
-                    {ETIQUETAS[tipo]}
-                  </option>
-                ))}
-              </select>
+              <span>Título</span>
+              <input
+                name="titulo"
+                type="text"
+                required
+                maxLength={200}
+                placeholder="No puedo guardar una factura con descuento"
+              />
             </label>
             <label className={styles.field}>
-              <span>Prioridad</span>
-              <select name="prioridad" defaultValue="media" required>
-                {PRIORIDADES.map((prioridad) => (
-                  <option key={prioridad} value={prioridad}>
-                    {ETIQUETAS[prioridad]}
-                  </option>
-                ))}
-              </select>
+              <span>Detalle</span>
+              <textarea
+                name="detalle"
+                required
+                maxLength={5000}
+                rows={6}
+                placeholder="Qué hiciste, qué esperabas que pasara y qué pasó. Si hay un mensaje de error, copialo tal cual."
+              />
             </label>
-          </div>
+          </fieldset>
 
-          <label className={styles.field}>
-            <span>Título</span>
-            <input
-              name="titulo"
-              type="text"
-              required
-              maxLength={200}
-              placeholder="No puedo guardar una factura con descuento"
-            />
-          </label>
+          <fieldset className={styles.grupo}>
+            <legend className={styles.legend}>Dónde pasó (opcional)</legend>
+            <div className={styles.row}>
+              <label className={styles.field}>
+                <span>Pantalla o URL</span>
+                <input name="url" type="text" maxLength={500} placeholder="Facturación → Nueva" />
+              </label>
+              <label className={styles.field}>
+                <span>Quién reporta</span>
+                <input name="reporta" type="text" maxLength={200} autoComplete="name" />
+              </label>
+            </div>
+          </fieldset>
 
-          <label className={styles.field}>
-            <span>Detalle</span>
-            <textarea
-              name="detalle"
-              required
-              maxLength={5000}
-              rows={6}
-              placeholder="Qué hiciste, qué esperabas que pasara y qué pasó. Si hay un mensaje de error, copialo tal cual."
-            />
-          </label>
-
-          <div className={styles.row}>
+          <fieldset className={styles.grupo}>
+            <legend className={styles.legend}>Adjuntos y contacto (opcional)</legend>
             <label className={styles.field}>
-              <span>Pantalla o URL (opcional)</span>
-              <input name="url" type="text" maxLength={500} placeholder="Facturación → Nueva" />
+              <span>Capturas de pantalla</span>
+              <input
+                type="file"
+                name="capturas"
+                accept="image/png,image/jpeg,image/gif,image/webp"
+                multiple
+              />
+              <small className={styles.ayudaCampo}>
+                Hasta 3 imágenes, 3 MB cada una. Una captura del error suele ahorrar media
+                conversación.
+              </small>
             </label>
             <label className={styles.field}>
-              <span>Quién reporta (opcional)</span>
-              <input name="reporta" type="text" maxLength={200} autoComplete="name" />
+              <span>Email para avisos</span>
+              <input name="email" type="email" maxLength={320} autoComplete="email" />
+              <small className={styles.ayudaCampo}>
+                Si lo dejás, te aviso cada vez que este pedido cambia de estado.
+              </small>
             </label>
-          </div>
-
-          <label className={styles.field}>
-            <span>Capturas de pantalla (opcional)</span>
-            <input
-              type="file"
-              name="capturas"
-              accept="image/png,image/jpeg,image/gif,image/webp"
-              multiple
-            />
-            <small className={styles.ayudaCampo}>
-              Hasta 3 imágenes, 3 MB cada una. Una captura del error suele ahorrar media
-              conversación.
-            </small>
-          </label>
-
-          <label className={styles.field}>
-            <span>Email para avisos (opcional)</span>
-            <input name="email" type="email" maxLength={320} autoComplete="email" />
-            <small className={styles.ayudaCampo}>
-              Si lo dejás, te aviso cada vez que este pedido cambia de estado.
-            </small>
-          </label>
+          </fieldset>
 
           {error ? (
             <p className={styles.error} role="alert">

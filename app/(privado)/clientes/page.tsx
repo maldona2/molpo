@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { exigirAdmin } from "@/lib/auth";
 import { listClientes } from "@/lib/clientes-db";
-import { crear, cerrarSesiones, cambiarEstado, guardarEmail } from "@/app/(privado)/clientes/acciones";
-import admin from "@/app/(privado)/Panel.module.css";
+import { crear } from "@/app/(privado)/clientes/acciones";
+import ClientesTable from "@/app/(privado)/clientes/ClientesTable";
+import panel from "@/app/(privado)/Panel.module.css";
 import styles from "./Clientes.module.css";
 
 export const dynamic = "force-dynamic";
@@ -15,13 +16,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-const fecha = new Intl.DateTimeFormat("es-AR", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-  timeZone: "America/Argentina/Buenos_Aires",
-});
-
 type Props = { searchParams: Promise<{ ok?: string; error?: string }> };
 
 export default async function ClientesPage({ searchParams }: Props) {
@@ -29,21 +23,22 @@ export default async function ClientesPage({ searchParams }: Props) {
 
   const { ok, error } = await searchParams;
   const clientes = await listClientes();
+  const activos = clientes.filter((c) => c.activo).length;
 
   return (
-    <main className={`container ${admin.main}`}>
-      <h1 className={admin.h1}>Clientes</h1>
-      <nav className={admin.filtros} aria-label="Otros paneles">
-        <a href="/tablero/">Ver tablero →</a>
-        <a href="/opiniones/">Ver feedback →</a>
-      </nav>
+    <main className={`container ${panel.main}`}>
+      <h1 className={panel.h1}>Clientes</h1>
+      <p className={panel.bajada}>
+        {activos} activo{activos === 1 ? "" : "s"} de {clientes.length} en total.
+      </p>
+
       {error ? (
-        <p className={admin.error} role="alert">
+        <p className={panel.error} role="alert">
           {error}
         </p>
       ) : null}
       {ok ? (
-        <p className={admin.ok} role="status">
+        <p className={panel.ok} role="status">
           Listo.
         </p>
       ) : null}
@@ -62,49 +57,16 @@ export default async function ClientesPage({ searchParams }: Props) {
         </button>
       </form>
 
-      <ul className={styles.lista}>
-        {clientes.map((cliente) => (
-            <li key={cliente.id} className={styles.item}>
-              <div className={styles.cabecera}>
-                <span className={cliente.activo ? styles.activo : styles.inactivo}>
-                  {cliente.activo ? "Activo" : "De baja"}
-                </span>
-                <span className={styles.meta}>
-                  {cliente.nombre} · alta {fecha.format(new Date(cliente.creado))}
-                  {cliente.email ? ` · ${cliente.email}` : " · sin email"}
-                </span>
-              </div>
-
-              <form action={guardarEmail} className={styles.email}>
-                <input type="hidden" name="id" value={cliente.id} />
-                <label>
-                  <span>Email con el que entra a {APP_HOST}</span>
-                  <input
-                    name="email"
-                    type="email"
-                    maxLength={320}
-                    defaultValue={cliente.email ?? ""}
-                    placeholder="sin email: no puede entrar"
-                    aria-label={`Email de ${cliente.nombre}`}
-                  />
-                </label>
-                <button type="submit">Guardar</button>
-              </form>
-
-              <div className={styles.acciones}>
-                <form action={cerrarSesiones}>
-                  <input type="hidden" name="id" value={cliente.id} />
-                  <button type="submit">Cerrar sus sesiones</button>
-                </form>
-                <form action={cambiarEstado}>
-                            <input type="hidden" name="id" value={cliente.id} />
-                  <input type="hidden" name="activo" value={cliente.activo ? "0" : "1"} />
-                  <button type="submit">{cliente.activo ? "Dar de baja" : "Reactivar"}</button>
-                </form>
-              </div>
-            </li>
-        ))}
-      </ul>
+      <ClientesTable
+        appHost={APP_HOST}
+        clientes={clientes.map((c) => ({
+          id: c.id,
+          nombre: c.nombre,
+          email: c.email,
+          activo: c.activo,
+          creado: c.creado.toISOString(),
+        }))}
+      />
     </main>
   );
 }

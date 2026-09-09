@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { identidad } from "@/lib/auth";
 import { salir } from "@/app/(privado)/acciones";
+import NavLinks from "@/components/NavLinks";
 import styles from "./App.module.css";
 
 export const metadata: Metadata = {
@@ -9,46 +10,43 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
+const NAV_ADMIN = [
+  { href: "/tablero/", label: "Tablero" },
+  { href: "/clientes/", label: "Clientes" },
+  { href: "/opiniones/", label: "Feedback" },
+];
+const NAV_CLIENTE = [
+  { href: "/tablero/", label: "Mis pedidos" },
+  { href: "/pedidos/", label: "Cargar pedido" },
+  { href: "/opinar/", label: "Dejar feedback" },
+];
+
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const quien = await identidad();
+  const nav = quien?.rol === "admin" ? NAV_ADMIN : NAV_CLIENTE;
 
   return (
-    <div className={styles.shell}>
-      <header className={styles.barra}>
-        <div className={`container ${styles.barraInner}`}>
+    <div className={`${styles.shell} ${quien ? "" : styles.shellSolo}`}>
+      {quien ? (
+        <aside className={styles.sidebar}>
           <a href="/" className={styles.marca} aria-label="molpo — inicio">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/molpo-blanco.png" alt="molpo" width={62} height={22} />
+            <img src="/assets/molpo-blanco.png" alt="molpo" width={68} height={24} />
           </a>
 
-          {quien ? (
-            <nav className={styles.links} aria-label="Secciones">
-              {quien.rol === "admin" ? (
-                <>
-                  <a href="/tablero/">Tablero</a>
-                  <a href="/clientes/">Clientes</a>
-                  <a href="/opiniones/">Feedback</a>
-                </>
-              ) : (
-                <>
-                  <a href="/tablero/">Mis pedidos</a>
-                  <a href="/pedidos/">Cargar pedido</a>
-                  <a href="/opinar/">Dejar feedback</a>
-                </>
-              )}
-            </nav>
-          ) : null}
+          <NavLinks items={nav} />
 
-          {quien ? (
-            <form action={salir} className={styles.salir}>
-              <span className={styles.quien}>
-                {quien.rol === "admin" ? "Admin" : quien.nombre}
-              </span>
-              <button type="submit">Salir</button>
-            </form>
-          ) : null}
-        </div>
-      </header>
+          <form action={salir} className={styles.cuenta}>
+            <div className={styles.quien}>
+              <span className={styles.quienRol}>{quien.rol === "admin" ? "Admin" : "Cliente"}</span>
+              <span className={styles.quienNombre}>{quien.rol === "admin" ? "molpo" : quien.nombre}</span>
+            </div>
+            <button type="submit" className={styles.salirBtn}>
+              Salir
+            </button>
+          </form>
+        </aside>
+      ) : null}
       <main className={styles.main}>{children}</main>
     </div>
   );

@@ -2,7 +2,8 @@
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  margin-bottom: 28px;
+  margin: 24px 0 28px;
+  flex-wrap: wrap;
 }
 .campo {
   display: flex;
@@ -19,7 +20,7 @@
   border: 1px solid var(--borde);
   border-radius: var(--r-boton);
   padding: 10px 14px;
-  min-width: 260px;
+  min-width: 240px;
 }
 .boton {
   font: inherit;
@@ -31,26 +32,62 @@
   padding: 11px 22px;
   cursor: pointer;
 }
-.lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 14px;
+.boton:hover {
+  background: var(--link-hover);
 }
-.item {
+.buscador {
+  display: block;
+  margin-bottom: 14px;
+}
+.buscador input {
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+  padding: 9px 14px;
+  width: 100%;
+  max-width: 320px;
+}
+.tablaWrap {
+  overflow-x: auto;
   border: 1px solid var(--borde);
   border-radius: var(--r-card);
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
-.cabecera {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.tabla th {
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-tenue);
+  font-weight: 600;
+  padding: 12px 16px;
+  background: var(--seccion-alt);
+  border-bottom: 1px solid var(--borde);
+  white-space: nowrap;
+}
+.tabla td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--borde);
+  vertical-align: middle;
+}
+.tabla tr:last-child td {
+  border-bottom: 0;
+}
+.celdaNombre {
+  font-weight: 500;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+.celdaTenue {
+  color: var(--texto-tenue);
+  white-space: nowrap;
 }
 .activo,
 .inactivo {
@@ -58,6 +95,7 @@
   font-weight: 600;
   border-radius: var(--r-pill);
   padding: 3px 10px;
+  white-space: nowrap;
 }
 .activo {
   color: var(--accent);
@@ -67,75 +105,53 @@
   color: var(--texto-tenue);
   background: color-mix(in srgb, var(--texto-tenue) 14%, transparent);
 }
-.meta {
-  font-size: 14px;
-  color: var(--texto-cuerpo);
-}
-.link {
+.emailForm {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
-  color: var(--texto-tenue);
+  gap: 6px;
+  min-width: 260px;
 }
-.link input {
+.emailForm input {
+  flex: 1;
+  min-width: 0;
   font: inherit;
   font-size: 13px;
   color: var(--text);
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--borde);
   border-radius: var(--r-boton);
-  padding: 8px 12px;
+  padding: 7px 10px;
+}
+.emailForm button {
+  font: inherit;
+  font-size: 13px;
+  color: var(--texto-cuerpo);
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
+  padding: 7px 10px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 .acciones {
   display: flex;
-  gap: 10px;
+  gap: 6px;
 }
-.acciones button {
+.accionBtn {
   font: inherit;
   font-size: 13px;
   color: var(--texto-cuerpo);
   background: transparent;
   border: 1px solid var(--borde);
   border-radius: var(--r-boton);
-  padding: 7px 14px;
+  padding: 7px 10px;
   cursor: pointer;
+  white-space: nowrap;
 }
-.acceso {
-  margin: 0;
-  font-size: 13px;
+.accionBtn:hover {
+  border-color: var(--azul-medio);
+}
+.sinResultados {
+  text-align: center;
   color: var(--texto-tenue);
-}
-.email {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-}
-.email label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-  font-size: 13px;
-  color: var(--texto-tenue);
-}
-.email input {
-  font: inherit;
-  font-size: 13px;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--borde);
-  border-radius: var(--r-boton);
-  padding: 8px 12px;
-}
-.email button {
-  font: inherit;
-  font-size: 13px;
-  color: var(--texto-cuerpo);
-  background: transparent;
-  border: 1px solid var(--borde);
-  border-radius: var(--r-boton);
-  padding: 8px 14px;
-  cursor: pointer;
+  padding: 24px 16px;
 }

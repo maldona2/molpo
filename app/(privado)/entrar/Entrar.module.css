@@ -1,86 +1,106 @@
 .wrap {
+  min-height: calc(100vh - 96px);
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding-block: clamp(24px, 6vw, 72px);
+  padding: 24px;
 }
 .caja {
   width: 100%;
-  max-width: 420px;
+  max-width: 380px;
+  background: var(--surface);
   border: 1px solid var(--borde);
   border-radius: var(--r-card);
-  padding: clamp(24px, 4vw, 36px);
-  background: var(--surface);
+  box-shadow: var(--sombra-card);
+  padding: 36px 32px;
+  text-align: center;
+}
+.logo {
+  height: 22px;
+  margin: 0 auto 24px;
+  display: block;
 }
 .h1 {
-  font-size: clamp(24px, 3vw, 30px);
-  margin: 0 0 10px;
+  font-size: 22px;
+  margin: 0 0 8px;
 }
 .lead {
-  margin: 0 0 24px;
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--texto-cuerpo);
+  margin: 0 0 24px;
 }
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  text-align: left;
 }
 .campo {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  font-weight: 500;
+  gap: 6px;
   font-size: 14px;
+  font-weight: 500;
   color: var(--texto-cuerpo);
 }
 .campo input {
   font: inherit;
+  font-size: 14px;
   color: var(--text);
   background: var(--bg);
   border: 1px solid var(--borde);
   border-radius: var(--r-boton);
-  padding: 12px 14px;
+  padding: 11px 14px;
 }
 .campo input:focus-visible {
-  outline: 3px solid var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 1px;
 }
 .web {
   position: absolute;
   left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
 }
 .submit {
   font: inherit;
+  font-size: 15px;
   font-weight: 600;
   color: var(--blanco);
   background: var(--accent);
   border: 0;
   border-radius: var(--r-boton);
-  padding: 13px 24px;
+  padding: 12px;
   cursor: pointer;
 }
-.error {
-  margin: 0;
-  font-size: 14px;
-  color: #b4231f;
+.submit:hover {
+  background: var(--link-hover);
 }
-:root[data-theme="dark"] .error {
-  color: #ff9d99;
+.error {
+  font-size: 13px;
+  color: #b4231f;
+  background: rgba(180, 35, 31, 0.08);
+  border-radius: var(--r-boton);
+  padding: 9px 12px;
+  margin: 0;
+  text-align: left;
 }
 .ok {
-  margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-radius: var(--r-boton);
+  padding: 9px 12px;
+  margin: 0;
+  text-align: left;
 }
 .pie {
-  margin: 24px 0 0;
   font-size: 13px;
   color: var(--texto-tenue);
+  margin: 24px 0 0;
 }
 .pie a {
-  color: var(--accent);
+  color: var(--link);
+}
+.pie a:hover {
+  color: var(--link-hover);
 }

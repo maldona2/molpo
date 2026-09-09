@@ -1,31 +1,55 @@
-.resumen {
-  font-size: 15px;
-  color: var(--texto-cuerpo);
-  margin: 0 0 22px;
-}
 .lista {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 .item {
+  display: flex;
+  gap: 16px;
   border: 1px solid var(--borde);
   border-radius: var(--r-card);
   padding: 18px 20px;
 }
-.cabecera {
+.nota {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 10px;
+  justify-content: center;
+  font-family: var(--font-founders), sans-serif;
+  font-size: 18px;
+  color: var(--blanco);
+  background: var(--texto-tenue);
 }
-.nota {
-  font-weight: 700;
+.nota[data-nota="5"],
+.nota[data-nota="4"] {
+  background: var(--accent);
+}
+.nota[data-nota="1"],
+.nota[data-nota="2"] {
+  background: #b4231f;
+}
+.cuerpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cabecera {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cliente {
+  font-weight: 600;
+  color: var(--text-strong);
   font-size: 15px;
-  color: var(--accent);
 }
 .meta {
   font-size: 13px;
@@ -33,13 +57,23 @@
 }
 .comentario {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--texto-cuerpo);
 }
 .extra {
-  margin: 10px 0 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--texto-cuerpo-2);
+}
+.contacto {
+  margin: 0;
+  font-size: 12px;
+  color: var(--texto-tenue);
+}
+.vacio {
+  color: var(--texto-tenue);
   font-size: 14px;
-  color: var(--texto-cuerpo);
-  white-space: pre-wrap;
+  padding: 20px 0;
 }

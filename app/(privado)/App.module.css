@@ -1,59 +1,128 @@
 .shell {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 232px 1fr;
   background: var(--bg);
 }
-.barra {
-  background: var(--azul-profundo);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.shellSolo {
+  grid-template-columns: 1fr;
 }
-.barraInner {
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--azul-profundo);
   display: flex;
-  align-items: center;
-  gap: 24px;
-  padding-block: 14px;
+  flex-direction: column;
+  padding: 20px 14px;
+}
+.marca {
+  display: block;
+  padding: 8px 10px 28px;
 }
 .marca img {
   display: block;
 }
-.links {
+.nav {
   display: flex;
-  gap: 4px;
-  margin-right: auto;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
 }
-.links a {
+.navLink {
   font-size: 14px;
+  font-weight: 500;
   color: var(--celeste-palido);
   text-decoration: none;
-  padding: 7px 12px;
+  padding: 10px 12px;
   border-radius: var(--r-boton);
+  position: relative;
 }
-.links a:hover {
+.navLink:hover {
   background: rgba(255, 255, 255, 0.08);
 }
-.salir {
+/* Marcado activo: comparar pathname en un client component wrapper si se
+   necesita exactitud; como fallback CSS, :has() sobre aria-current. */
+.navLink[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--blanco);
+}
+.navLink[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--azul-claro);
+}
+.cuenta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-left: auto;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 12px;
 }
 .quien {
-  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.quienRol {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--azul-claro);
 }
-.salir button {
-  font: inherit;
+.quienNombre {
   font-size: 13px;
+  color: var(--celeste-palido);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.salirBtn {
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 12px;
   color: var(--celeste-palido);
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--r-boton);
-  padding: 6px 12px;
+  padding: 6px 10px;
   cursor: pointer;
 }
+.salirBtn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
 .main {
-  flex: 1;
-  padding-block: clamp(28px, 4vw, 48px);
+  min-width: 0;
+  padding: clamp(28px, 4vw, 48px);
+}
+@media (max-width: 860px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 16px;
+  }
+  .marca {
+    padding: 0 16px 0 0;
+  }
+  .nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .cuenta {
+    border-top: none;
+    margin-top: 0;
+  }
 }

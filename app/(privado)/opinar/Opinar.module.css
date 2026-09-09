@@ -1,54 +1,202 @@
-/* Sólo lo propio del feedback: el resto del formulario reusa Soporte.module.css */
-.escala {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.wrap {
+  padding-bottom: 40px;
+  max-width: 900px;
 }
-.opcion {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-weight: 400;
-  font-size: 14px;
+.encabezado {
+  margin-bottom: 28px;
+}
+.h1 {
+  font-size: clamp(24px, 3.2vw, 30px);
+  margin: 0 0 6px;
+}
+.bajada {
+  font-size: 15px;
   color: var(--texto-cuerpo);
+  margin: 0;
+  max-width: 62ch;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 32px;
+  align-items: start;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.grupo {
+  border: 1px solid var(--borde);
+  border-radius: var(--r-card);
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+}
+.legend {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-tenue);
+  padding: 0 4px;
+}
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--texto-cuerpo);
+}
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
   border: 1px solid var(--borde);
   border-radius: var(--r-boton);
-  padding: 9px 14px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+.escala {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.opcion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 64px;
+  padding: 10px 6px;
+  border: 1px solid var(--borde);
+  border-radius: var(--r-boton);
   cursor: pointer;
+  text-align: center;
 }
 .opcion:has(input:checked) {
   border-color: var(--accent);
-  color: var(--accent);
-  font-weight: 600;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
-.opcion:has(input:focus-visible) {
-  outline: 3px solid var(--focus-ring);
-  outline-offset: 1px;
+.opcion input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.opcion input:focus-visible ~ * {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.opcionNumero {
+  font-family: var(--font-founders), sans-serif;
+  font-size: 18px;
+  color: var(--text-strong);
+}
+.opcionTexto {
+  font-size: 11px;
+  color: var(--texto-tenue);
+  min-height: 14px;
 }
 .checkbox {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--texto-cuerpo);
+  cursor: pointer;
 }
 .checkbox input {
   margin-top: 3px;
+  flex-shrink: 0;
 }
-.link {
-  color: var(--accent);
+.web {
+  position: absolute;
+  left: -9999px;
 }
-.legend {
-  padding: 0;
-  margin: 0 0 7px;
-  font-weight: 500;
+.submit {
+  align-self: flex-start;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--blanco);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--r-boton);
+  padding: 12px 26px;
+  cursor: pointer;
+}
+.submit:hover {
+  background: var(--link-hover);
+}
+.error {
   font-size: 14px;
+  color: #b4231f;
+  background: rgba(180, 35, 31, 0.08);
+  border-radius: var(--r-boton);
+  padding: 10px 14px;
+  margin: 0;
+}
+.ok {
+  font-size: 14px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-radius: var(--r-boton);
+  padding: 10px 14px;
+  margin: 0;
+}
+.ayuda {
+  background: var(--seccion-alt);
+  border-radius: var(--r-card);
+  padding: 20px;
+  position: sticky;
+  top: 24px;
+}
+.ayudaTitle {
+  font-size: 14px;
+  margin: 0 0 12px;
+  color: var(--text-strong);
+}
+.ayudaLista {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--texto-cuerpo);
 }
-.grupo {
-  border: 0;
-  padding: 0;
+.ayudaExtra {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--texto-cuerpo);
   margin: 0;
-  min-width: 0;
+}
+.link {
+  color: var(--link);
+}
+.link:hover {
+  color: var(--link-hover);
+}
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .ayuda {
+    position: static;
+  }
 }
