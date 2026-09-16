@@ -4,6 +4,7 @@ import { exigirIdentidad } from "@/lib/auth";
 import { crearPedido } from "@/app/(privado)/pedidos/acciones";
 import { PRIORIDADES, TIPOS, ETIQUETAS } from "@/lib/tickets";
 import styles from "./Pedidos.module.css";
+import { CapturasInput } from "./CapturasInput";
 
 export const dynamic = "force-dynamic";
 
@@ -93,12 +94,7 @@ export default async function PedidosPage({ searchParams }: Props) {
             <legend className={styles.legend}>Adjuntos y contacto (opcional)</legend>
             <label className={styles.field}>
               <span>Capturas de pantalla</span>
-              <input
-                type="file"
-                name="capturas"
-                accept="image/png,image/jpeg,image/gif,image/webp"
-                multiple
-              />
+              <CapturasInput />
               <small className={styles.ayudaCampo}>
                 Hasta 3 imágenes, 3 MB cada una. Una captura del error suele ahorrar media
                 conversación.

@@ -6,8 +6,12 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: __dirname,
   // Las capturas de soporte viajan por un server action, y el default de 1 MB
-  // no alcanza para 3 imágenes de 3 MB.
-  experimental: { serverActions: { bodySizeLimit: "12mb" } },
+  // no alcanza para 3 imágenes de 3 MB. El middleware también lee el body y
+  // lo trunca en 10 MB por defecto: tienen que ir iguales o el form llega roto.
+  experimental: {
+    serverActions: { bodySizeLimit: "12mb" },
+    middlewareClientMaxBodySize: "12mb",
+  },
   async headers() {
     return [
       {
