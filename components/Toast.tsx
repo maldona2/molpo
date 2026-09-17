@@ -10,8 +10,14 @@ export default function Toast({ children }: { children: string }) {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    if (url.searchParams.has("aviso")) {
-      url.searchParams.delete("aviso");
+    let cambio = false;
+    for (const clave of ["aviso", "sync"]) {
+      if (url.searchParams.has(clave)) {
+        url.searchParams.delete(clave);
+        cambio = true;
+      }
+    }
+    if (cambio) {
       const query = url.searchParams.toString();
       window.history.replaceState(null, "", url.pathname + (query ? `?${query}` : ""));
     }

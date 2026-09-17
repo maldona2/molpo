@@ -4,6 +4,8 @@ import { ETIQUETAS, parseAviso } from "@/lib/tickets";
 import { listTickets } from "@/lib/tickets-db";
 import { listAdjuntos } from "@/lib/adjuntos-db";
 import { agruparPorEstado, COLUMNAS } from "@/lib/tablero";
+import { leerEstadoSync } from "@/lib/komuk-hub-db";
+import { sincronizarKomuk } from "@/app/(privado)/tablero/acciones";
 import Tablero from "@/components/Tablero";
 import Toast from "@/components/Toast";
 import styles from "./Tablero.module.css";
@@ -13,14 +15,21 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: "Tablero" };
 
-type Props = { searchParams: Promise<{ cliente?: string; aviso?: string }> };
+type Props = { searchParams: Promise<{ cliente?: string; aviso?: string; sync?: string }> };
+
+const fechaSync = new Intl.DateTimeFormat("es-AR", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  timeZone: "America/Argentina/Buenos_Aires",
+});
 
 export default async function TableroPage({ searchParams }: Props) {
   const quien = await exigirIdentidad();
   const esAdmin = quien.rol === "admin";
 
-  const { cliente: filtro, aviso: avisoCrudo } = await searchParams;
+  const { cliente: filtro, aviso: avisoCrudo, sync } = await searchParams;
   const aviso = parseAviso(avisoCrudo);
+  const estadoSync = esAdmin ? await leerEstadoSync() : undefined;
   const todos = await listTickets(esAdmin ? undefined : quien.nombre);
   const tickets = esAdmin && filtro ? todos.filter((t) => t.cliente === filtro) : todos;
   const adjuntos = await listAdjuntos(tickets.map((t) => t.id));
@@ -37,6 +46,23 @@ export default async function TableroPage({ searchParams }: Props) {
           ? "Tocá un estado en la tarjeta para moverla. Al cliente le llega el aviso."
           : "Acá ves en qué anda cada pedido. El título abre el detalle."}
       </p>
+
+      {esAdmin ? (
+        <form action={sincronizarKomuk} className={styles.sync}>
+          <button type="submit" className={styles.syncBoton}>
+            Sincronizar ahora
+          </button>
+          <p className={styles.syncEstado}>
+            KOMUK Hub: última sincronización{" "}
+            {estadoSync?.last_synced_at ? fechaSync.format(estadoSync.last_synced_at) : "nunca"}
+          </p>
+          {estadoSync?.last_status === "error" ? (
+            <p className={styles.syncError} role="alert">
+              Último error: {estadoSync.last_error}
+            </p>
+          ) : null}
+        </form>
+      ) : null}
 
       <div className={panel.stats}>
         <div className={panel.stat}>
@@ -92,12 +118,17 @@ export default async function TableroPage({ searchParams }: Props) {
             respuesta: t.respuesta,
             capturas: adjuntos.filter((a) => a.ticket_id === t.id).length,
             primerAdjunto: adjuntos.find((a) => a.ticket_id === t.id)?.id ?? null,
+            externa: t.external_source === "komuk_hub" && t.external_url ? t.external_url : null,
           })),
         }))}
         esAdmin={esAdmin}
       />
       {aviso === "resuelto" ? (
         <Toast>Le avisamos al cliente que el pedido quedó resuelto.</Toast>
+      ) : null}
+      {sync === "ok" ? <Toast>Sincronización con KOMUK Hub terminada.</Toast> : null}
+      {sync === "error" ? (
+        <Toast>La sincronización con KOMUK Hub falló. Mirá el último error.</Toast>
       ) : null}
     </div>
   );

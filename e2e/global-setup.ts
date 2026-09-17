@@ -52,6 +52,7 @@ export default async function globalSetup(): Promise<void> {
       completo: semilla.ticketCompleto,
       pelado: semilla.ticketPelado,
       ajeno: semilla.ticketAjeno,
+      komuk: semilla.ticketKomuk,
     }),
   );
 }

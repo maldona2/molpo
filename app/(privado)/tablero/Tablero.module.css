@@ -1,3 +1,39 @@
 .wrap {
   padding-bottom: 40px;
 }
+.sync {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 0 0 24px;
+}
+.syncBoton {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blanco);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--r-boton);
+  padding: 9px 16px;
+  cursor: pointer;
+}
+.syncBoton:hover {
+  background: var(--link-hover);
+}
+.syncEstado {
+  margin: 0;
+  font-size: 13px;
+  color: var(--texto-tenue);
+}
+.syncError {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #b4231f;
+  background: rgba(180, 35, 31, 0.1);
+  border-radius: var(--r-boton);
+  padding: 9px 12px;
+}

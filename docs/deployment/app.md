@@ -98,6 +98,8 @@ todas las capturas en miniatura y la respuesta del admin si ya la escribió.
 | `ADMIN_EMAILS` | Emails con acceso de admin, separados por coma |
 | `APP_URL` | URL pública del subdominio, para los links de los mails |
 | `RESEND_API_KEY` | Sin esto no salen los mails, pero todo lo demás anda |
+| `KOMUK_HUB_BASE_URL` | Origen del Hub de KOMUK. Sin esto el sync programado no arranca. Ver [komuk-hub.md](../integrations/komuk-hub.md) |
+| `KOMUK_HUB_TOKEN` | Bearer de solo lectura del Hub. Nunca se loguea. Ver [komuk-hub.md](../integrations/komuk-hub.md) |
 
 ## Puesta en marcha
 
