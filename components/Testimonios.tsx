@@ -13,13 +13,14 @@ export default function Testimonios() {
         </h2>
         <div className={styles.grid}>
           {testimonios.map((t) => (
-            <figure key={`${t.name}-${t.company}`} className={styles.card}>
+            <figure key={`${t.name}-${t.company ?? t.trabajo}`} className={styles.card}>
               <blockquote className={styles.quote}>“{t.quote}”</blockquote>
               <figcaption className={styles.autor}>
                 <span className={styles.nombre}>{t.name}</span>
                 <span className={styles.meta}>
                   {t.role ? `${t.role}, ` : ""}
-                  {t.company} · {t.trabajo}
+                  {t.company ? `${t.company} · ` : ""}
+                  {t.trabajo}
                 </span>
               </figcaption>
             </figure>
