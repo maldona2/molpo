@@ -14,6 +14,7 @@ export const testimonios: readonly TestimonioHome[] = [
     quote:
       "Muy buena comunicación, todo explicado detalladamente y buena atención ante los errores. Las ideas! Fue increíble haberte dado una idea y que hayas aparecido con 5 opciones distintas y mejoradas!",
     name: "Tato Robles Avalos",
+    company: "TR Fit",
     trabajo: "Desarrollo",
   },
   {
