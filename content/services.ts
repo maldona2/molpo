@@ -9,10 +9,15 @@ export type ServicioDetalle = {
   notFit: readonly string[];
   process: readonly { title: string; text: string }[];
   deliverables: readonly string[];
-  caseSlug: string;
-  caseContext: string;
+  caseSlug?: string;
+  caseContext?: string;
   questions: readonly { question: string; answer: string }[];
   cta: string;
+  /**
+   * Links extra del CTA. Van con la ruta sola: el origen lo pone la página
+   * desde `site.agente`, así el host vive en un solo lugar.
+   */
+  extraLinks?: readonly { label: string; path: string }[];
 };
 
 export const serviciosDetalle: readonly ServicioDetalle[] = [
@@ -231,6 +236,77 @@ export const serviciosDetalle: readonly ServicioDetalle[] = [
       },
     ],
     cta: "Decime qué información copiás hoy, entre qué sistemas y qué ocurre cuando queda desactualizada.",
+  },
+  {
+    slug: "agente-tiendanube",
+    eyebrow: "Agente de ventas para Tienda Nube",
+    title: "Tus clientes preguntan como en el local. El catálogo responde.",
+    description:
+      "App partner de Tienda Nube: el cliente escribe en criollo y ve foto, precio y stock reales. Una instalación por tienda, el mismo producto Molpo.",
+    lead:
+      "La consulta típica no copia el título del producto. Molpo busca en el catálogo de la tienda, cotiza en vivo y muestra tarjetas para abrir la ficha. No reemplaza el checkout: acerca al pedido. Se instala desde el admin de Tienda Nube; cada comercio queda con su logo, su URL y su índice.",
+    signals: [
+      "WhatsApp y el teléfono se llenan de “¿tenés X?” y “¿cuánto sale?”.",
+      "El catálogo está en Tienda Nube pero nadie lo consulta como hablaría un cliente.",
+      "Hay que repetir precios y stock que ya están en la tienda.",
+      "Quieren un vendedor 24 horas sin armar un bot genérico que inventa productos.",
+    ],
+    fit: [
+      "Tiendas Nube con catálogo publicado y consultas repetidas de producto.",
+      "Comercios dispuestos a instalar una app partner de solo lectura sobre productos.",
+      "Equipos que pueden revisar las conversaciones y tomar los pedidos a mano o en la tienda.",
+    ],
+    notFit: [
+      "Quienes necesitan que el agente cobre, facture o reemplace el checkout.",
+      "Catálogos que no están en Tienda Nube o no se pueden leer por API.",
+      "Pedidos de un chatbot que prometa plazos de envío o descuentos que no están en la tienda.",
+    ],
+    process: [
+      {
+        title: "Instalar Molpo en la tienda",
+        text: "El comerciante autoriza la app en su admin. Molpo guarda el token de esa tienda y baja el catálogo por la API oficial.",
+      },
+      {
+        title: "Indexar y mostrar",
+        text: "Se arma el índice de búsqueda y un chat con la cara de la tienda: logo, nombre y productos de ese comercio, no de otro.",
+      },
+      {
+        title: "Probar consultas reales",
+        text: "Se recorren las preguntas que ya llegan por WhatsApp. Si el catálogo no tiene el producto, el agente lo dice y deriva a una persona.",
+      },
+      {
+        title: "Seguir el uso",
+        text: "Queda registro de qué preguntaron. Eso sirve para ver huecos del catálogo, no para inventar stock.",
+      },
+    ],
+    deliverables: [
+      "App partner instalada en la Tienda Nube del cliente (solo lectura de productos).",
+      "Chat público con la marca de esa tienda y tarjetas de producto.",
+      "Sincronización del catálogo y webhooks cuando cambia un producto.",
+      "Registro de consultas para ver qué se busca y qué no está.",
+    ],
+    questions: [
+      {
+        question: "¿Molpo publica o cambia productos en mi tienda?",
+        answer:
+          "No. El permiso es de lectura. El catálogo se consulta para responder; altas, precios y stock se siguen gestionando en Tienda Nube.",
+      },
+      {
+        question: "¿El cliente compra dentro del chat?",
+        answer:
+          "No. Ve foto, precio y stock y entra a la ficha de la tienda. El checkout sigue siendo el de Tienda Nube.",
+      },
+      {
+        question: "¿Sirve para más de una tienda?",
+        answer:
+          "Sí. Molpo es una sola app; cada tienda la instala y queda aislada: su token, su catálogo y su URL.",
+      },
+    ],
+    cta: "Si tenés una Tienda Nube y las mismas preguntas se repiten, lo vemos con tu catálogo.",
+    extraLinks: [
+      { label: "Ver una demo", path: "/s/demo" },
+      { label: "Conectar mi tienda", path: "/tiendanube/conectar" },
+    ],
   },
 ] as const;
 

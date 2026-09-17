@@ -22,6 +22,13 @@ export const servicios = [
     texto:
       "Conecto tus sistemas y ordeno tus datos para que la información deje de vivir copiada en tres lugares distintos.",
   },
+  {
+    num: "04",
+    slug: "agente-tiendanube",
+    titulo: "Agente de ventas para Tienda Nube",
+    texto:
+      "Tus clientes preguntan como en el local. Molpo responde con el catálogo real: foto, precio y stock. Se instala como app partner.",
+  },
 ] as const;
 
 export const pasos = [

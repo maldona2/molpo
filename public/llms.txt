@@ -13,6 +13,7 @@ Contacto:
 - **Desarrollo a medida**: Sistemas hechos para la operación real del cliente, no plantillas. Con estructura para crecer sin rehacer todo más adelante.
 - **Rescatar sistemas con IA**: Revisa, termina y deja en producción sistemas que se empezaron con IA y quedaron a medias, inseguros o difíciles de mantener.
 - **Integración de sistemas y datos**: Conecta sistemas y ordena datos para que la información deje de vivir copiada en varios lugares distintos.
+- **Agente de ventas para Tienda Nube**: App partner. El cliente pregunta en criollo y ve foto, precio y stock del catálogo real. Una instalación por tienda. https://molpo.ar/servicios/agente-tiendanube/
 
 ## Cómo trabaja (proceso — "Sin humo. Con evidencia.")
 

@@ -223,21 +223,42 @@
   margin: 16px 0 0;
 }
 
-.ctaLink {
-  min-height: 48px;
+.ctaLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 24px;
+}
+
+.ctaLink,
+.ctaLinkAlt {
+  min-height: 48px;
   padding: 12px 22px;
   display: inline-flex;
   align-items: center;
-  color: #fff;
-  background: var(--azul-primario);
   border-radius: var(--r-boton);
   font-weight: 700;
+}
+
+.ctaLink {
+  color: #fff;
+  background: var(--azul-primario);
 }
 
 .ctaLink:hover {
   color: #fff;
   background: #14304f;
+}
+
+.ctaLinkAlt {
+  color: var(--azul-primario);
+  background: transparent;
+  border: 1px solid var(--borde);
+}
+
+.ctaLinkAlt:hover {
+  color: var(--azul-primario);
+  background: var(--seccion-alt);
 }
 
 .aside {

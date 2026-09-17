@@ -32,6 +32,10 @@ export const site = {
     webDisplay: "molpo.ar",
     phoneDisplay: "+54 9 381 300 0120",
   },
+  /** App partner Tienda Nube (Railway). No mezclar con app.molpo.ar. */
+  agente: {
+    origin: "https://agente.molpo.ar",
+  },
   nav: [
     { label: "Servicios", href: "/#servicios" },
     { label: "Cómo trabajo", href: "/#proceso" },

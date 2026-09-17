@@ -69,7 +69,7 @@ export default async function ServicioPage({ params }: { params: Promise<Params>
   const servicio = getServicioDetalle(slug);
   if (!servicio) notFound();
 
-  const caso = getProyecto(servicio.caseSlug);
+  const caso = servicio.caseSlug ? getProyecto(servicio.caseSlug) : undefined;
   const url = serviceUrl(servicio.slug);
   const jsonLd = {
     "@context": "https://schema.org",
@@ -185,7 +185,7 @@ export default async function ServicioPage({ params }: { params: Promise<Params>
                 <div className={styles.caseCard}>
                   <div>
                     <h2 id="case-h">{caso.cliente}: {caso.card.titulo}</h2>
-                    <p>{servicio.caseContext}</p>
+                    <p>{servicio.caseContext ?? ""}</p>
                   </div>
                   <Link href={`/casos/${caso.slug}/`} className={styles.caseLink}>
                     Ver caso completo →
@@ -211,9 +211,20 @@ export default async function ServicioPage({ params }: { params: Promise<Params>
               <p className="eyebrow">Primer paso</p>
               <h2 id="service-cta-h">Podemos empezar por una conversación concreta.</h2>
               <p>{servicio.cta}</p>
-              <a href={site.contact.contactPath} className={styles.ctaLink}>
-                Escribime
-              </a>
+              <div className={styles.ctaLinks}>
+                <a href={site.contact.contactPath} className={styles.ctaLink}>
+                  Escribime
+                </a>
+                {servicio.extraLinks?.map((link) => (
+                  <a
+                    key={link.path}
+                    href={`${site.agente.origin}${link.path}`}
+                    className={styles.ctaLinkAlt}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
             </section>
           </article>
 
