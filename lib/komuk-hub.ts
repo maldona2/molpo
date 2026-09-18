@@ -45,27 +45,29 @@ function validarPagina(body: unknown): Pagina {
   if (!b || !Array.isArray(b.data) || !(b.next_cursor === null || esTexto(b.next_cursor))) {
     throw new HubError("El Hub devolvió una respuesta con forma inesperada", null);
   }
+  // El Hub a veces manda priority: null; lo normalizamos antes de validar.
+  const normalizados = b.data.map((item) => {
+    const r = (item ?? {}) as Record<string, unknown>;
+    const priority = r.priority == null ? "medium" : r.priority;
+    return { ...r, priority };
+  });
   const campos = ["id", "title", "status", "priority", "updated_at", "url"] as const;
-  for (const item of b.data) {
-    const r = item as Record<string, unknown>;
+  for (const r of normalizados) {
     if (!r || campos.some((c) => !esTexto(r[c])) || Number.isNaN(Date.parse(r.updated_at as string))) {
       throw new HubError("El Hub devolvió un requerimiento con forma inesperada", null);
     }
   }
   return {
-    data: b.data.map((item) => {
-      const r = item as Record<string, unknown>;
-      return {
-        id: r.id as string,
-        title: r.title as string,
-        description: esTexto(r.description) ? r.description : "",
-        status: r.status as string,
-        priority: r.priority as string,
-        created_at: esTexto(r.created_at) ? r.created_at : (r.updated_at as string),
-        updated_at: r.updated_at as string,
-        url: r.url as string,
-      };
-    }),
+    data: normalizados.map((r) => ({
+      id: r.id as string,
+      title: r.title as string,
+      description: esTexto(r.description) ? r.description : "",
+      status: r.status as string,
+      priority: r.priority as string,
+      created_at: esTexto(r.created_at) ? r.created_at : (r.updated_at as string),
+      updated_at: r.updated_at as string,
+      url: r.url as string,
+    })),
     next_cursor: b.next_cursor as string | null,
   };
 }
