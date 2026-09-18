@@ -27,6 +27,7 @@ export const TITULOS = {
   completo: "No puedo guardar una factura con descuento",
   pelado: "Sumar un filtro por fecha",
   ajeno: "Secreto de otro cliente",
+  komuk: '<img src=x onerror="window.__xss=1">Req <b>peligroso</b>',
 } as const;
 
 /** PNG de 1x1 transparente: alcanza para que detectarTipoImagen lo acepte. */
@@ -63,6 +64,7 @@ export type Semilla = {
   ticketCompleto: number;
   ticketPelado: number;
   ticketAjeno: number;
+  ticketKomuk: number;
 };
 
 /**
@@ -105,6 +107,10 @@ export async function sembrar(): Promise<Semilla> {
     await sql`
       insert into clientes (token, nombre, email)
       values (${randomBytes(8).toString("hex")}, ${OTRO_CLIENTE}, ${"otro@otra.test"})
+    `;
+    await sql`
+      insert into clientes (token, nombre)
+      values (${randomBytes(8).toString("hex")}, ${"KOMUK"})
     `;
 
     const cookieAdmin = await cookieDeSesion(sql, "admin", null);
@@ -151,13 +157,28 @@ export async function sembrar(): Promise<Semilla> {
       titulo: TITULOS.ajeno,
       detalle: "Esto no lo tiene que ver Panadería Sol.",
     });
+    // Espejo del Hub: el título y el detalle traen HTML para probar que se
+    // muestra como texto, no se interpreta.
+    const ticketKomuk = await alta({
+      cliente: "KOMUK",
+      tipo: "mejora",
+      prioridad: "media",
+      estado: "abierto",
+      titulo: TITULOS.komuk,
+      detalle: '<script>window.__xss=1</script>',
+      url: "https://hub.example/r/e2e-1",
+      external_source: "komuk_hub",
+      external_id: "e2e-1",
+      external_url: "https://hub.example/r/e2e-1",
+      external_status: "in_progress",
+    });
 
     await sql`
       insert into adjuntos (ticket_id, nombre, tipo, bytes)
       values (${ticketCompleto}, ${"pantalla.png"}, ${"image/png"}, ${PNG_1X1})
     `;
 
-    return { cookieAdmin, cookieCliente, ticketCompleto, ticketPelado, ticketAjeno };
+    return { cookieAdmin, cookieCliente, ticketCompleto, ticketPelado, ticketAjeno, ticketKomuk };
   } finally {
     await sql.end();
   }

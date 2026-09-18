@@ -29,6 +29,17 @@ export async function asegurarTickets(): Promise<postgres.Sql> {
     // El cliente ordena su columna de abiertos: `orden` guarda esa prioridad.
     await client`alter table tickets add column if not exists orden integer not null default 0`;
     await client`create index if not exists tickets_cliente_idx on tickets (cliente, creado desc)`;
+    // Tickets espejo de sistemas de terceros (hoy el Hub de KOMUK). Los
+    // tickets propios tienen las cuatro en null.
+    await client`alter table tickets add column if not exists external_source text`;
+    await client`alter table tickets add column if not exists external_id text`;
+    await client`alter table tickets add column if not exists external_url text`;
+    await client`alter table tickets add column if not exists external_updated_at timestamptz`;
+    // Estado tal como lo informa el origen. De sólo lectura: el estado de
+    // trabajo sigue siendo `estado`.
+    await client`alter table tickets add column if not exists external_status text`;
+    // La garantía de no duplicar: dos nulls no chocan, así que los tickets propios no se ven afectados.
+    await client`create unique index if not exists tickets_external_idx on tickets (external_source, external_id)`;
   });
   return client;
 }

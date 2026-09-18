@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { exigirIdentidad } from "@/lib/auth";
 import { ESTADOS, ETIQUETAS, LIMITE_RESPUESTA, idDeTicket, puedeVerTicket } from "@/lib/tickets";
+import { hrefSeguro } from "@/lib/komuk-hub-sync";
 import { getTicket } from "@/lib/tickets-db";
 import { listAdjuntos } from "@/lib/adjuntos-db";
 import { armarPrompt } from "@/lib/resolver";
@@ -55,6 +56,16 @@ export default async function DetallePage({ params, searchParams }: Props) {
               {ETIQUETAS[ticket.prioridad]}
             </span>
             <span className={styles.estado}>{ETIQUETAS[ticket.estado]}</span>
+            {ticket.external_source === "komuk_hub" ? (
+              <a
+                className={styles.badgeExterno}
+                href={hrefSeguro(ticket.external_url ?? "")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                KOMUK Hub
+              </a>
+            ) : null}
             <span className={styles.metaTexto}>
               #{ticket.id} · {ETIQUETAS[ticket.tipo]}
               {quien.rol === "admin" ? ` · ${ticket.cliente}` : ""}
@@ -132,6 +143,18 @@ export default async function DetallePage({ params, searchParams }: Props) {
               <dt>Última novedad</dt>
               <dd>{fecha.format(ticket.actualizado)}</dd>
             </div>
+            {ticket.external_source === "komuk_hub" ? (
+              <>
+                <div>
+                  <dt>Estado en el Hub</dt>
+                  <dd>{ticket.external_status}</dd>
+                </div>
+                <div>
+                  <dt>Origen</dt>
+                  <dd>Sólo lectura: título, detalle y estado vienen del Hub.</dd>
+                </div>
+              </>
+            ) : null}
           </dl>
 
           {quien.rol === "admin" ? (

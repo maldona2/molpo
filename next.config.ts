@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -5,6 +6,19 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   reactStrictMode: true,
   outputFileTracingRoot: __dirname,
+  // instrumentation.ts importa postgres. El compilador Edge recorre el
+  // import() aunque register() retorne antes: acá el módulo queda vacío
+  // sólo en Edge. En Node se empaqueta de verdad y el sync corre.
+  webpack: (config, { nextRuntime }) => {
+    if (nextRuntime === "edge") {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        [path.join(__dirname, "lib/komuk-hub-db")]: false,
+        [path.join(__dirname, "lib/komuk-hub-db.ts")]: false,
+      };
+    }
+    return config;
+  },
   // Las capturas de soporte viajan por un server action, y el default de 1 MB
   // no alcanza para 3 imágenes de 3 MB. El middleware también lee el body y
   // lo trunca en 10 MB por defecto: tienen que ir iguales o el form llega roto.

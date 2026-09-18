@@ -14,6 +14,7 @@ import {
   urlTrasMover,
 } from "@/lib/tickets";
 import { getTicket, updateTicket } from "@/lib/tickets-db";
+import { correrSyncKomuk } from "@/lib/komuk-hub-db";
 
 /**
  * Guarda el estado y/o la respuesta de un ticket, y le avisa al cliente. La usan
@@ -65,6 +66,15 @@ export async function moverTicket(formData: FormData) {
   revalidatePath("/tablero");
   revalidatePath(`/tablero/${id}`);
   redirect(urlTrasMover(avisoTrasMover(previo.estado, estado, mailEnviado)));
+}
+
+/** Botón "Sincronizar ahora" del tablero. Sólo admin: trae del Hub, nunca escribe en él. */
+export async function sincronizarKomuk() {
+  const quien = await identidad();
+  if (quien?.rol !== "admin") redirect("/");
+  const r = await correrSyncKomuk();
+  revalidatePath("/tablero");
+  redirect(r.ok ? "/tablero/?sync=ok" : "/tablero/?sync=error");
 }
 
 

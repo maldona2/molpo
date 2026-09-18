@@ -36,6 +36,11 @@ export type Ticket = {
   respuesta: string | null;
   creado: Date;
   actualizado: Date;
+  external_source: string | null;
+  external_id: string | null;
+  external_url: string | null;
+  external_updated_at: Date | null;
+  external_status: string | null;
 };
 
 export type TicketInput = {

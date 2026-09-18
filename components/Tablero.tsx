@@ -1,4 +1,5 @@
 import MoverEstado from "@/components/MoverEstado";
+import { hrefSeguro } from "@/lib/komuk-hub-sync";
 import styles from "./Tablero.module.css";
 
 export type TarjetaData = {
@@ -11,6 +12,7 @@ export type TarjetaData = {
   respuesta: string | null;
   capturas: number;
   primerAdjunto: number | null;
+  externa: string | null;
 };
 
 export type ColumnaData = {
@@ -45,6 +47,16 @@ function Tarjeta({
           #{tarjeta.id} · {tarjeta.tipo}
           {esAdmin ? ` · ${tarjeta.cliente}` : ""}
         </span>
+        {tarjeta.externa ? (
+          <a
+            className={styles.badgeExterno}
+            href={hrefSeguro(tarjeta.externa)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            KOMUK Hub
+          </a>
+        ) : null}
       </div>
       <p className={styles.tarjetaTitulo}>
         <a className={styles.enlaceTitulo} href={`/tablero/${tarjeta.id}/`}>
