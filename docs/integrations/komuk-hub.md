@@ -22,9 +22,10 @@ Si no está, el sync no llama al Hub y guarda un error claro.
 
 ## Cómo corre
 
-Cada 15 minutos vía `instrumentation.ts` (`setInterval` en el proceso Node) y
-con el botón **Sincronizar ahora** del tablero (sólo admin). Un
-`pg_try_advisory_lock` evita que dos procesos corran a la vez.
+Una vez al día a las **07:00 ART** vía `instrumentation.ts` (tick cada 15 min
+que solo corre el sync en esa hora) y con el botón **Sincronizar ahora** del
+tablero (sólo admin). Un `pg_try_advisory_lock` evita que dos procesos corran a
+la vez.
 
 El recorte es `updated_since = last_synced_at − 5 min` (o 1970 si nunca corrió).
 El upsert es por `(external_source, external_id)`. Si `external_updated_at` no
