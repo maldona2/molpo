@@ -46,14 +46,14 @@ function validarPagina(body: unknown): Pagina {
     throw new HubError("El Hub devolvió una respuesta con forma inesperada", null);
   }
   // El Hub a veces manda priority: null; lo normalizamos antes de validar.
-  const normalizados = b.data.map((item) => {
-    const r = (item ?? {}) as Record<string, unknown>;
-    const priority = r.priority == null ? "medium" : r.priority;
-    return { ...r, priority };
+  type Row = Record<string, unknown>;
+  const normalizados: Row[] = b.data.map((item): Row => {
+    const r = (item && typeof item === "object" ? item : {}) as Row;
+    return { ...r, priority: r.priority == null ? "medium" : r.priority };
   });
   const campos = ["id", "title", "status", "priority", "updated_at", "url"] as const;
   for (const r of normalizados) {
-    if (!r || campos.some((c) => !esTexto(r[c])) || Number.isNaN(Date.parse(r.updated_at as string))) {
+    if (campos.some((c) => !esTexto(r[c])) || Number.isNaN(Date.parse(String(r.updated_at)))) {
       throw new HubError("El Hub devolvió un requerimiento con forma inesperada", null);
     }
   }
