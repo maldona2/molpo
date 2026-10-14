@@ -59,7 +59,7 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
   const ultimos = useRef(tickets);
   ultimos.current = tickets;
 
-  const [, enTransicion] = useTransition();
+  const [guardando, enTransicion] = useTransition();
   const [filtros, setFiltros] = useState(filtrosIniciales);
   const [menu, setMenu] = useState<string | null>(null);
   const [colapsadas, setColapsadas] = useState<Partial<Record<Estado, boolean>>>({ cerrado: true });
@@ -130,7 +130,7 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
     });
   }
 
-  function responder(id: number, texto: string) {
+  function responder(id: number, texto: string, previa: string) {
     const t = ultimos.current.find((x) => x.id === id);
     if (!esAdmin || !t) return;
     const respuesta = texto.trim() || null;
@@ -141,7 +141,7 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
         id,
         estado: t.estado,
         respuesta: texto,
-        respuestaPrevia: t.respuesta ?? "",
+        respuestaPrevia: previa,
       }).catch(() => null);
       if (!r?.ok) {
         return avisar(
@@ -160,9 +160,10 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
       const escribiendo =
         e.target instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
       if (e.key === "Escape") {
-        if (menu) setMenu(null);
-        else if (abierto !== null) setAbierto(null);
+        // En un campo, Esc sólo lo suelta: el borrador no se pierde por un Esc de más.
         if (escribiendo) (e.target as HTMLElement).blur();
+        else if (menu) setMenu(null);
+        else if (abierto !== null) setAbierto(null);
         return;
       }
       if (escribiendo || e.metaKey || e.ctrlKey || e.altKey) return;
@@ -278,7 +279,8 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
           onCerrar={() => setAbierto(null)}
           onPaso={paso}
           onMover={(estado) => mover(actual.id, estado)}
-          onResponder={(texto) => responder(actual.id, texto)}
+          onResponder={(texto, previa) => responder(actual.id, texto, previa)}
+          guardando={guardando}
         />
       ) : null}
 

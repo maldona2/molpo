@@ -184,8 +184,66 @@ test.describe("tablero, como admin", () => {
     await panel.getByRole("button", { name: "Guardar" }).click();
     await expect(page.getByRole("status")).toContainText("Alguien más cambió la respuesta");
 
+    // Guardar de nuevo con el mismo borrador sigue chocando: no se pisa la otra respuesta.
+    await expect(panel.getByText("La escribió la otra pestaña.")).toBeVisible();
+    await panel.getByRole("button", { name: "Guardar" }).click();
+    await expect(page.getByRole("status")).toContainText("Alguien más cambió la respuesta");
+
     await page.goto(`/tablero/${id}/`);
     await expect(page.locator("textarea[name=respuesta]")).toHaveValue("La escribió la otra pestaña.");
+  });
+
+  test("el panel sigue chocando si arrastrar otro pedido refrescó el tablero antes de guardar", async ({ page, context }) => {
+    const titulo = "Conflicto tras refresco";
+    const id = await altaTicket({ titulo });
+    const otro = await altaTicket({ titulo: "Otro para mover" });
+    await page.goto("/tablero/");
+    await tarjeta(page, titulo).click();
+    const panel = page.getByRole("dialog", { name: titulo });
+    await panel.getByRole("textbox", { name: "Respuesta para el cliente" }).fill("La mía.");
+
+    const otra = await context.newPage();
+    await otra.goto(`/tablero/${id}/`);
+    await otra.locator("textarea[name=respuesta]").fill("La escribió la otra pestaña.");
+    await otra.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(otra.getByRole("status")).toHaveText("Cambios guardados.");
+    await otra.close();
+
+    // Arrastrar otro pedido refresca los datos de este tablero con la respuesta nueva.
+    await page
+      .locator("li", { has: tarjeta(page, "Otro para mover") })
+      .dragTo(page.getByRole("region", { name: "En curso" }));
+    await expect(page.getByRole("status")).toContainText(`#${otro} pasó a En curso.`);
+
+    await panel.getByRole("button", { name: "Guardar" }).click();
+    await expect(page.getByRole("status")).toContainText("Alguien más cambió la respuesta");
+
+    await page.goto(`/tablero/${id}/`);
+    await expect(page.locator("textarea[name=respuesta]")).toHaveValue("La escribió la otra pestaña.");
+  });
+
+  test("Esc dentro de un campo sólo lo desenfoca y no pierde el borrador", async ({ page }) => {
+    const titulo = "Esc en el campo";
+    await altaTicket({ titulo });
+    await page.goto("/tablero/");
+    await tarjeta(page, titulo).click();
+    const panel = page.getByRole("dialog", { name: titulo });
+    const campo = panel.getByRole("textbox", { name: "Respuesta para el cliente" });
+    await campo.fill("Borrador a medias");
+    await page.keyboard.press("Escape");
+    await expect(panel).toBeVisible();
+    await expect(campo).toHaveValue("Borrador a medias");
+    await expect(campo).not.toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(panel).toHaveCount(0);
+  });
+
+  test("en el celular la barra del admin no scrollea de costado", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/tablero/");
+    await expect(page.getByRole("button", { name: "Sincronizar" })).toBeVisible();
+    const ancho = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(ancho).toBeLessThanOrEqual(375);
   });
 
   test("con el panel abierto, j y k recorren los pedidos visibles", async ({ page }) => {

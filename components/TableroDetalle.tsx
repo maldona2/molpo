@@ -20,12 +20,27 @@ type Props = {
   onCerrar: () => void;
   onPaso: (delta: number) => void;
   onMover: (estado: Estado) => void;
-  onResponder: (texto: string) => void;
+  /** `previa` es la respuesta sobre la que se escribió el borrador, no la última que vino del server. */
+  onResponder: (texto: string, previa: string) => void;
+  /** Hay un guardado en vuelo: la respuesta optimista no es una novedad de otra pestaña. */
+  guardando: boolean;
 };
 
-export default function TableroDetalle({ t, esAdmin, ahora, posicion, onCerrar, onPaso, onMover, onResponder }: Props) {
-  const [borrador, setBorrador] = useState(t.respuesta ?? "");
-  const hayCambios = borrador.trim() !== (t.respuesta ?? "");
+export default function TableroDetalle({ t, esAdmin, ahora, posicion, onCerrar, onPaso, onMover, onResponder, guardando }: Props) {
+  const ext = t.respuesta ?? "";
+  const [borrador, setBorrador] = useState(ext);
+  // base: la respuesta sobre la que se empezó a escribir. Es la que se manda como
+  // respuestaPrevia, así otra pestaña que cambie la respuesta siempre choca.
+  const [base, setBase] = useState(ext);
+  if (!guardando && ext !== base) {
+    if (borrador === base || borrador.trim() === ext) {
+      // Borrador sin tocar (o ya guardado por nosotros): seguimos al server.
+      setBase(ext);
+      setBorrador(ext);
+    }
+  }
+  const ajena = !guardando && ext !== base;
+  const hayCambios = borrador.trim() !== ext;
   const dias = diasDesde(t.actividad, ahora);
   const tituloId = `detalle-${t.id}`;
 
@@ -151,7 +166,21 @@ export default function TableroDetalle({ t, esAdmin, ahora, posicion, onCerrar, 
               placeholder="Qué le contás al cliente sobre este pedido."
               onChange={(e) => setBorrador(e.target.value)}
             />
-            <button type="button" className={styles.guardar} disabled={!hayCambios} onClick={() => onResponder(borrador)}>
+            {ajena ? (
+              <p className={styles.nota} role="alert">
+                Otra persona dejó esta respuesta: “{ext}”{" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBase(ext);
+                    setBorrador(ext);
+                  }}
+                >
+                  Usar esta
+                </button>
+              </p>
+            ) : null}
+            <button type="button" className={styles.guardar} disabled={!hayCambios} onClick={() => onResponder(borrador, base)}>
               Guardar
             </button>
             {t.email ? <p className={styles.nota}>Le llega por mail a {t.email}</p> : null}
