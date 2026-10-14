@@ -188,7 +188,7 @@ export function filtrosDesdeQuery(query: Query): Filtros {
   const [vista] = validos(VISTAS, query.vista);
   return {
     q: (valores(query.q)[0] ?? "").slice(0, 200),
-    clientes: [...new Set(valores(query.cliente))],
+    clientes: [...new Set(valores(query.cliente))].filter(Boolean),
     tipos: validos(TIPOS, query.tipo),
     prioridades: validos(PRIORIDADES, query.prio),
     atajos: validos(ATAJOS, query.atajo),
