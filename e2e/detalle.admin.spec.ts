@@ -159,4 +159,19 @@ test.describe("detalle del pedido, como admin", () => {
     await page.getByRole("button", { name: "Guardar y avisar" }).click();
     await expect(page).toHaveURL(/\/tablero\/?$/);
   });
+
+  test("guardar dos veces seguidas en la misma página confirma las dos", async ({ page }) => {
+    const id = await altaTicket({ titulo: "Dos guardados" });
+    await page.goto(`/tablero/${id}/`);
+
+    await page.locator("textarea[name=respuesta]").fill("Primera respuesta.");
+    await page.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
+
+    // Sin recargar, con el primer toast ya apagado: el segundo tiene que volver a salir.
+    await expect(page.getByRole("status")).toBeHidden({ timeout: 8000 });
+    await page.locator("textarea[name=respuesta]").fill("Segunda respuesta.");
+    await page.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
+  });
 });
