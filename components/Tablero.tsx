@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
-import { sincronizarKomuk } from "@/app/(privado)/tablero/acciones";
-import type { Estado } from "@/lib/tickets";
+import { guardarTicket, sincronizarKomuk } from "@/app/(privado)/tablero/acciones";
+import { ETIQUETAS, type Estado } from "@/lib/tickets";
 import {
   DIAS_ESTANCADO,
   FILTROS_INICIALES,
@@ -11,6 +11,7 @@ import {
   filtrar,
   filtrosAQuery,
   hayFiltros,
+  ordenNavegacion,
   textoSync,
   vivo,
   type Filtros,
@@ -18,7 +19,9 @@ import {
 } from "@/lib/tablero";
 import TableroBarra from "@/components/TableroBarra";
 import TableroColumnas from "@/components/TableroColumnas";
+import TableroDetalle from "@/components/TableroDetalle";
 import TableroLista from "@/components/TableroLista";
+import Toast from "@/components/Toast";
 import panel from "@/app/(privado)/Panel.module.css";
 import styles from "./Tablero.module.css";
 
@@ -31,12 +34,37 @@ type Props = {
   sync: { ultima: number | null; error: string | null } | null;
 };
 
+type Cambio = { id: number; estado?: Estado; respuesta?: string | null };
+type Aviso = { texto: string; deshacer?: () => void; n: number };
+
 const CLAVE_COLAPSADAS = "molpo:tablero:colapsadas";
 
-export default function Tablero({ tickets, esAdmin, ahora, filtrosIniciales, sync }: Props) {
+export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIniciales, sync }: Props) {
+  // Mover y responder se ven al instante. Si el server falla, al terminar la
+  // transición React vuelve solo a lo que vino del server.
+  const [tickets, aplicar] = useOptimistic(delServer, (actuales: TarjetaTablero[], c: Cambio) =>
+    actuales.map((t) =>
+      t.id !== c.id
+        ? t
+        : {
+            ...t,
+            estado: c.estado ?? t.estado,
+            respuesta: c.respuesta === undefined ? t.respuesta : c.respuesta,
+            actividad: ahora,
+          },
+    ),
+  );
+  // Deshacer corre varios renders después de armarse: lee los tickets de acá,
+  // no los que quedaron en su closure.
+  const ultimos = useRef(tickets);
+  ultimos.current = tickets;
+
+  const [, enTransicion] = useTransition();
   const [filtros, setFiltros] = useState(filtrosIniciales);
   const [menu, setMenu] = useState<string | null>(null);
   const [colapsadas, setColapsadas] = useState<Partial<Record<Estado, boolean>>>({ cerrado: true });
+  const [abierto, setAbierto] = useState<number | null>(null);
+  const [aviso, setAviso] = useState<Aviso | null>(null);
   const buscador = useRef<HTMLInputElement>(null);
 
   const cambiar = (parcial: Partial<Filtros>) => setFiltros((f) => ({ ...f, ...parcial }));
@@ -44,7 +72,10 @@ export default function Tablero({ tickets, esAdmin, ahora, filtrosIniciales, syn
   useEffect(() => {
     try {
       const guardadas = localStorage.getItem(CLAVE_COLAPSADAS);
-      if (guardadas) setColapsadas(JSON.parse(guardadas));
+      const parsed: unknown = guardadas ? JSON.parse(guardadas) : null;
+      if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) {
+        setColapsadas((c) => ({ ...c, ...parsed }));
+      }
     } catch {
       // Sin storage (ventana privada, sitio bloqueado): quedan las de fábrica.
     }
@@ -67,12 +98,69 @@ export default function Tablero({ tickets, esAdmin, ahora, filtrosIniciales, syn
     window.history.replaceState(null, "", `/tablero/${query ? `?${query}` : ""}`);
   }, [filtros]);
 
+  const visibles = useMemo(
+    () => filtrar(tickets, filtros, esAdmin, ahora),
+    [tickets, filtros, esAdmin, ahora],
+  );
+  const ids = ordenNavegacion(visibles, filtros.vista, colapsadas);
+  const actual = abierto === null ? null : (tickets.find((t) => t.id === abierto) ?? null);
+
+  function avisar(texto: string, deshacer?: () => void) {
+    setAviso({ texto, deshacer, n: Date.now() });
+  }
+
+  function paso(delta: number) {
+    // Fuera del filtro (indexOf = -1), "siguiente" va al primero.
+    const siguiente = ids[ids.indexOf(abierto ?? -1) + delta];
+    if (siguiente !== undefined) setAbierto(siguiente);
+  }
+
+  function mover(id: number, estado: Estado, avisarCliente = true) {
+    const t = ultimos.current.find((x) => x.id === id);
+    if (!esAdmin || !t || t.estado === estado) return;
+    const previo = t.estado;
+    enTransicion(async () => {
+      aplicar({ id, estado });
+      const r = await guardarTicket({ id, estado, avisar: avisarCliente });
+      if (!r.ok) return avisar(`No pudimos mover #${id}. Probá de nuevo.`);
+      if (!avisarCliente) return avisar(`#${id} volvió a ${ETIQUETAS[estado]}.`);
+      const aQuien = r.mailEnviado ? ` Le avisamos a ${t.reporta ?? t.email}.` : "";
+      avisar(`#${id} pasó a ${ETIQUETAS[estado]}.${aQuien}`, () => mover(id, previo, false));
+    });
+  }
+
+  function responder(id: number, texto: string) {
+    const t = ultimos.current.find((x) => x.id === id);
+    if (!esAdmin || !t) return;
+    const respuesta = texto.trim() || null;
+    if ((respuesta ?? "") === (t.respuesta ?? "")) return;
+    enTransicion(async () => {
+      aplicar({ id, respuesta });
+      const r = await guardarTicket({
+        id,
+        estado: t.estado,
+        respuesta: texto,
+        respuestaPrevia: t.respuesta ?? "",
+      });
+      if (!r.ok) {
+        return avisar(
+          r.motivo === "conflicto"
+            ? "Alguien más cambió la respuesta mientras escribías. Revisala antes de guardar de nuevo."
+            : "No pudimos guardar la respuesta. Probá de nuevo.",
+        );
+      }
+      if (!respuesta) return avisar("Respuesta borrada.");
+      avisar(r.mailEnviado ? `Respuesta guardada. Le llega por mail a ${t.reporta ?? t.email}.` : "Respuesta guardada.");
+    });
+  }
+
   useEffect(() => {
     function tecla(e: KeyboardEvent) {
       const escribiendo =
         e.target instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
       if (e.key === "Escape") {
         if (menu) setMenu(null);
+        else if (abierto !== null) setAbierto(null);
         if (escribiendo) (e.target as HTMLElement).blur();
         return;
       }
@@ -80,16 +168,18 @@ export default function Tablero({ tickets, esAdmin, ahora, filtrosIniciales, syn
       if (e.key === "/") {
         e.preventDefault();
         buscador.current?.focus();
+      } else if (abierto !== null && (e.key === "j" || e.key === "ArrowDown")) {
+        e.preventDefault();
+        paso(1);
+      } else if (abierto !== null && (e.key === "k" || e.key === "ArrowUp")) {
+        e.preventDefault();
+        paso(-1);
       }
     }
     window.addEventListener("keydown", tecla);
     return () => window.removeEventListener("keydown", tecla);
   });
 
-  const visibles = useMemo(
-    () => filtrar(tickets, filtros, esAdmin, ahora),
-    [tickets, filtros, esAdmin, ahora],
-  );
   const filtrando = hayFiltros(filtros, esAdmin);
   const sinCerrar = tickets.filter(vivo).length;
   const altas = tickets.filter((t) => t.prioridad === "alta" && vivo(t)).length;
@@ -162,10 +252,39 @@ export default function Tablero({ tickets, esAdmin, ahora, filtrosIniciales, syn
           onColapsar={alternarColumna}
           esAdmin={esAdmin}
           ahora={ahora}
+          abierto={abierto}
+          onAbrir={setAbierto}
         />
       ) : (
-        <TableroLista visibles={visibles} filtrando={filtrando} esAdmin={esAdmin} ahora={ahora} />
+        <TableroLista
+          visibles={visibles}
+          filtrando={filtrando}
+          esAdmin={esAdmin}
+          ahora={ahora}
+          abierto={abierto}
+          onAbrir={setAbierto}
+        />
       )}
+
+      {actual ? (
+        <TableroDetalle
+          key={actual.id}
+          t={actual}
+          esAdmin={esAdmin}
+          ahora={ahora}
+          posicion={{ i: ids.indexOf(actual.id), n: ids.length }}
+          onCerrar={() => setAbierto(null)}
+          onPaso={paso}
+          onMover={(estado) => mover(actual.id, estado)}
+          onResponder={(texto) => responder(actual.id, texto)}
+        />
+      ) : null}
+
+      {aviso ? (
+        <Toast key={aviso.n} accion={aviso.deshacer ? { etiqueta: "Deshacer", alHacer: aviso.deshacer } : undefined}>
+          {aviso.texto}
+        </Toast>
+      ) : null}
     </div>
   );
 }

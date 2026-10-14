@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { OTRO_CLIENTE, TITULOS } from "./sembrar.ts";
+import { tickets } from "./tickets.ts";
 
 test.describe("tablero, como cliente", () => {
   test("ve sus pedidos con un buscador acotado y sin herramientas de admin", async ({ page }) => {
@@ -21,5 +22,18 @@ test.describe("tablero, como cliente", () => {
     await page.goto(`/tablero/?cliente=${encodeURIComponent(OTRO_CLIENTE)}`);
     await expect(page.getByText(TITULOS.ajeno)).toHaveCount(0);
     await expect(page.getByRole("link", { name: TITULOS.completo })).toBeVisible();
+  });
+
+  test("el panel le muestra la respuesta, sin botones de gestión", async ({ page }) => {
+    await page.goto("/tablero/");
+    await page.getByRole("link", { name: TITULOS.completo }).click();
+    const panel = page.getByRole("dialog", { name: TITULOS.completo });
+    await expect(panel.getByText("Lo estamos mirando.")).toBeVisible();
+    await expect(panel.getByRole("button", { name: "En curso", exact: true })).toHaveCount(0);
+    await expect(panel.getByRole("textbox")).toHaveCount(0);
+    await expect(panel.getByRole("link", { name: "Abrir página completa" })).toHaveAttribute(
+      "href",
+      `/tablero/${tickets.completo}/`,
+    );
   });
 });

@@ -5,7 +5,13 @@ import styles from "./Toast.module.css";
 
 const VIDA_MS = 5000;
 
-export default function Toast({ children }: { children: string }) {
+export default function Toast({
+  children,
+  accion,
+}: {
+  children: string;
+  accion?: { etiqueta: string; alHacer: () => void };
+}) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -30,6 +36,18 @@ export default function Toast({ children }: { children: string }) {
   return (
     <p className={styles.toast} role="status">
       {children}
+      {accion ? (
+        <button
+          type="button"
+          className={styles.accion}
+          onClick={() => {
+            setVisible(false);
+            accion.alHacer();
+          }}
+        >
+          {accion.etiqueta}
+        </button>
+      ) : null}
     </p>
   );
 }

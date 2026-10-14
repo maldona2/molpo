@@ -109,4 +109,95 @@ test.describe("tablero, como admin", () => {
     await page.reload();
     await expect(page.getByRole("button", { name: "Expandir Resuelto" })).toBeVisible();
   });
+
+  test("click en la tarjeta abre el panel sin salir del tablero", async ({ page }) => {
+    const titulo = "Panel sin salir";
+    const id = await altaTicket({ titulo, detalle: "Detalle visible en el panel." });
+    await page.goto("/tablero/");
+
+    await tarjeta(page, titulo).click();
+    const panel = page.getByRole("dialog", { name: titulo });
+    await expect(panel.getByText("Detalle visible en el panel.")).toBeVisible();
+    await expect(page).toHaveURL(/\/tablero\/?$/);
+    await expect(panel.getByRole("link", { name: "Abrir página completa" })).toHaveAttribute(
+      "href",
+      `/tablero/${id}/`,
+    );
+
+    await page.keyboard.press("Escape");
+    await expect(panel).toHaveCount(0);
+  });
+
+  test("cambiar el estado desde el panel mueve la tarjeta, avisa y persiste", async ({ page }) => {
+    const titulo = "Mover desde el panel";
+    const id = await altaTicket({ titulo, respuesta: "Escrita antes." });
+    await page.goto("/tablero/");
+
+    await tarjeta(page, titulo).click();
+    const panel = page.getByRole("dialog", { name: titulo });
+    await panel.getByRole("button", { name: "En curso", exact: true }).click();
+
+    await expect(page.getByRole("status")).toContainText(`#${id} pasó a En curso.`);
+    await expect(page.getByRole("region", { name: "En curso" }).getByRole("link", { name: titulo })).toBeVisible();
+    await expect(panel.getByRole("button", { name: "En curso", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    // Mover no toca la respuesta: el panel no manda el campo.
+    await page.goto(`/tablero/${id}/`);
+    await expect(page.locator("select[name=estado]")).toHaveValue("en_curso");
+    await expect(page.locator("textarea[name=respuesta]")).toHaveValue("Escrita antes.");
+  });
+
+  test("guardar la respuesta desde el panel", async ({ page }) => {
+    const titulo = "Responder desde el panel";
+    const id = await altaTicket({ titulo });
+    await page.goto("/tablero/");
+
+    await tarjeta(page, titulo).click();
+    const panel = page.getByRole("dialog", { name: titulo });
+    await expect(panel.getByRole("button", { name: "Guardar" })).toBeDisabled();
+    await panel.getByRole("textbox", { name: "Respuesta para el cliente" }).fill("Lo vemos mañana.");
+    await panel.getByRole("button", { name: "Guardar" }).click();
+    await expect(page.getByRole("status")).toContainText("Respuesta guardada.");
+
+    await page.goto(`/tablero/${id}/`);
+    await expect(page.locator("textarea[name=respuesta]")).toHaveValue("Lo vemos mañana.");
+  });
+
+  test("el panel no pisa una respuesta que cambió en otra pestaña", async ({ page, context }) => {
+    const titulo = "Conflicto en el panel";
+    const id = await altaTicket({ titulo });
+    await page.goto("/tablero/");
+    await tarjeta(page, titulo).click();
+
+    const otra = await context.newPage();
+    await otra.goto(`/tablero/${id}/`);
+    await otra.locator("textarea[name=respuesta]").fill("La escribió la otra pestaña.");
+    await otra.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(otra.getByRole("status")).toHaveText("Cambios guardados.");
+    await otra.close();
+
+    const panel = page.getByRole("dialog", { name: titulo });
+    await panel.getByRole("textbox", { name: "Respuesta para el cliente" }).fill("La mía.");
+    await panel.getByRole("button", { name: "Guardar" }).click();
+    await expect(page.getByRole("status")).toContainText("Alguien más cambió la respuesta");
+
+    await page.goto(`/tablero/${id}/`);
+    await expect(page.locator("textarea[name=respuesta]")).toHaveValue("La escribió la otra pestaña.");
+  });
+
+  test("con el panel abierto, j y k recorren los pedidos visibles", async ({ page }) => {
+    await altaTicket({ titulo: "Recorrer uno", prioridad: "alta" });
+    await altaTicket({ titulo: "Recorrer dos", prioridad: "baja" });
+    await page.goto("/tablero/?q=Recorrer");
+
+    await tarjeta(page, "Recorrer uno").click();
+    await expect(page.getByRole("dialog", { name: "Recorrer uno" })).toContainText("1 de 2");
+    await page.keyboard.press("j");
+    await expect(page.getByRole("dialog", { name: "Recorrer dos" })).toContainText("2 de 2");
+    await page.keyboard.press("k");
+    await expect(page.getByRole("dialog", { name: "Recorrer uno" })).toBeVisible();
+  });
 });

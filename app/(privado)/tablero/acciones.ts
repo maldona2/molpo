@@ -106,3 +106,33 @@ export async function sincronizarKomuk() {
   revalidatePath("/tablero");
   redirect(r.ok ? "/tablero/?sync=ok" : "/tablero/?sync=error");
 }
+
+export type ResultadoGuardar =
+  | { ok: true; mailEnviado: boolean }
+  | { ok: false; motivo: "invalido" | "conflicto" };
+
+/**
+ * El tablero mueve y responde sin salir de la página: devuelve en vez de
+ * redirigir. `avisar: false` es para Deshacer: el cliente ya recibió un mail
+ * y no le mandamos otro por un cambio que nunca quisimos hacer.
+ */
+export async function guardarTicket(datos: {
+  id: number;
+  estado: string;
+  respuesta?: string;
+  respuestaPrevia?: string;
+  avisar?: boolean;
+}): Promise<ResultadoGuardar> {
+  const quien = await identidad();
+  if (quien?.rol !== "admin") return { ok: false, motivo: "invalido" };
+  // Una server action la puede llamar cualquiera con cualquier cosa: no confiar en la forma.
+  const d = (typeof datos === "object" && datos !== null ? datos : {}) as Record<string, unknown>;
+  const r = await guardar({
+    id: d.id,
+    estado: d.estado,
+    respuesta: d.respuesta,
+    respuestaPrevia: d.respuestaPrevia,
+    avisar: d.avisar !== false,
+  });
+  return r.ok ? { ok: true, mailEnviado: r.mailEnviado } : r;
+}
