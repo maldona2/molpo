@@ -36,4 +36,16 @@ test.describe("tablero, como cliente", () => {
       `/tablero/${tickets.completo}/`,
     );
   });
+
+  test("en el celular la página no scrollea de costado y el panel ocupa la pantalla", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/tablero/");
+
+    const ancho = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(ancho).toBeLessThanOrEqual(375);
+
+    await page.getByRole("link", { name: TITULOS.completo }).click();
+    const caja = await page.getByRole("dialog", { name: TITULOS.completo }).boundingBox();
+    expect(caja?.width).toBe(375);
+  });
 });
