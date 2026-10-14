@@ -15,6 +15,7 @@ test.describe("tickets espejo de KOMUK Hub, como admin", () => {
     await page.goto(`/tablero/${tickets.komuk}/`);
     await expect(page.getByRole("link", { name: "KOMUK Hub" })).toHaveAttribute("href", "https://hub.example/r/e2e-1");
     await expect(page.getByText("in_progress")).toBeVisible();
+    await expect(page.getByText("Título y detalle vienen del Hub; el estado lo manejamos acá.")).toBeVisible();
   });
 
   test("el tablero muestra el botón Sincronizar al admin", async ({ page }) => {

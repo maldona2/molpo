@@ -11,7 +11,7 @@ export default function Toast({ children }: { children: string }) {
   useEffect(() => {
     const url = new URL(window.location.href);
     let cambio = false;
-    for (const clave of ["aviso", "sync"]) {
+    for (const clave of ["aviso", "sync", "guardado", "sin_cambios"]) {
       if (url.searchParams.has(clave)) {
         url.searchParams.delete(clave);
         cambio = true;

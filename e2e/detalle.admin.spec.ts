@@ -70,8 +70,9 @@ test.describe("detalle del pedido, como admin", () => {
 
     await page.locator("textarea[name=respuesta]").fill("Lo miro esta semana.");
     await page.getByRole("button", { name: "Guardar y avisar" }).click();
-    // La acción siempre vuelve al tablero.
-    await expect(page).toHaveURL(/\/tablero\/?$/);
+    // Vuelve al mismo pedido y lo dice (el toast limpia la query, por eso no se mira la URL entera).
+    await expect(page).toHaveURL(new RegExp(`/tablero/${id}/`));
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
 
     await page.goto(`/tablero/${id}/`);
     await expect(page.getByRole("heading", { name: "Respuesta" })).toBeVisible();
@@ -85,7 +86,8 @@ test.describe("detalle del pedido, como admin", () => {
 
     await page.locator("select[name=estado]").selectOption("en_curso");
     await page.getByRole("button", { name: "Guardar y avisar" }).click();
-    await expect(page).toHaveURL(/\/tablero\/?$/);
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
+    await expect(page.locator("select[name=estado]")).toHaveValue("en_curso");
 
     await page.goto(`/tablero/${id}/`);
     await expect(page.locator("select[name=estado]")).toHaveValue("en_curso");
@@ -104,7 +106,7 @@ test.describe("detalle del pedido, como admin", () => {
     await nueva.goto(`/tablero/${id}/`);
     await nueva.locator("textarea[name=respuesta]").fill("La escribió la otra pestaña.");
     await nueva.getByRole("button", { name: "Guardar y avisar" }).click();
-    await expect(nueva).toHaveURL(/\/tablero\/?$/);
+    await expect(nueva.getByRole("status")).toHaveText("Cambios guardados.");
     await nueva.close();
 
     // La vieja se pintó con la respuesta vacía y ahora intenta mover el estado.
@@ -136,9 +138,25 @@ test.describe("detalle del pedido, como admin", () => {
     const antes = await ultimaNovedad.innerText();
 
     await page.getByRole("button", { name: "Guardar y avisar" }).click();
-    await expect(page).toHaveURL(/\/tablero\/?$/);
+    await expect(page.getByRole("status")).toHaveText("No había cambios para guardar.");
 
     await page.goto(`/tablero/${id}/`);
     await expect(ultimaNovedad).toHaveText(antes);
+  });
+
+  test("si el pedido pasó a resuelto con mail, el detalle lo dice", async ({ page }) => {
+    await page.goto(`/tablero/${compartido.completo}/?guardado=1&aviso=resuelto`);
+    await expect(page.getByRole("status")).toHaveText(
+      "Le avisamos al cliente que el pedido quedó resuelto.",
+    );
+  });
+
+  test("un id inválido en el form vuelve al tablero sin romper", async ({ page }) => {
+    await page.goto(`/tablero/${compartido.completo}/`);
+    await page.locator("input[name=id]").evaluate((input: HTMLInputElement) => {
+      input.value = "2147483648";
+    });
+    await page.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(page).toHaveURL(/\/tablero\/?$/);
   });
 });

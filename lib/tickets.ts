@@ -209,8 +209,13 @@ export function avisoTrasMover(previo: Estado, estado: Estado, mailEnviado: bool
   return null;
 }
 
-export function urlTrasMover(aviso: AvisoTablero | null): string {
-  return aviso ? `/tablero/?aviso=${aviso}` : "/tablero/";
+/**
+ * A dónde vuelve el form del detalle: al mismo pedido, diciendo qué pasó. Volver
+ * al tablero le hacía perder al admin el pedido que estaba mirando.
+ */
+export function urlTrasGuardar(id: number, cambio: boolean, aviso: AvisoTablero | null): string {
+  if (!cambio) return `/tablero/${id}/?sin_cambios=1`;
+  return `/tablero/${id}/?guardado=1${aviso ? `&aviso=${aviso}` : ""}`;
 }
 
 export function parseAviso(value: unknown): AvisoTablero | null {
