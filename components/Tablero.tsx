@@ -121,8 +121,9 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
     const previo = t.estado;
     enTransicion(async () => {
       aplicar({ id, estado });
-      const r = await guardarTicket({ id, estado, avisar: avisarCliente });
-      if (!r.ok) return avisar(`No pudimos mover #${id}. Probá de nuevo.`);
+      // Un throw (red caída, 500) iría al error boundary: lo atajamos para avisar.
+      const r = await guardarTicket({ id, estado, avisar: avisarCliente }).catch(() => null);
+      if (!r?.ok) return avisar(`No pudimos mover #${id}. Probá de nuevo.`);
       if (!avisarCliente) return avisar(`#${id} volvió a ${ETIQUETAS[estado]}.`);
       const aQuien = r.mailEnviado ? ` Le avisamos a ${t.reporta ?? t.email}.` : "";
       avisar(`#${id} pasó a ${ETIQUETAS[estado]}.${aQuien}`, () => mover(id, previo, false));
@@ -141,10 +142,10 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
         estado: t.estado,
         respuesta: texto,
         respuestaPrevia: t.respuesta ?? "",
-      });
-      if (!r.ok) {
+      }).catch(() => null);
+      if (!r?.ok) {
         return avisar(
-          r.motivo === "conflicto"
+          r?.motivo === "conflicto"
             ? "Alguien más cambió la respuesta mientras escribías. Revisala antes de guardar de nuevo."
             : "No pudimos guardar la respuesta. Probá de nuevo.",
         );

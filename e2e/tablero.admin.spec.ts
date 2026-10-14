@@ -200,4 +200,26 @@ test.describe("tablero, como admin", () => {
     await page.keyboard.press("k");
     await expect(page.getByRole("dialog", { name: "Recorrer uno" })).toBeVisible();
   });
+
+  test("si el server falla al mover, avisa y la tarjeta vuelve a su columna", async ({ page }) => {
+    const titulo = "Mover con falla";
+    const id = await altaTicket({ titulo });
+    await page.goto("/tablero/");
+    await tarjeta(page, titulo).click();
+    const panel = page.getByRole("dialog", { name: titulo });
+
+    await page.route("**/tablero/**", (r) => (r.request().method() === "POST" ? r.abort() : r.continue()));
+    await panel.getByRole("button", { name: "En curso", exact: true }).click();
+
+    await expect(page.getByRole("status")).toContainText(`No pudimos mover #${id}. Probá de nuevo.`);
+    await expect(page.getByRole("region", { name: "En curso" }).getByRole("link", { name: titulo })).toHaveCount(0);
+    await expect(panel.getByRole("button", { name: "En curso", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+
+    await page.unroute("**/tablero/**");
+    await page.goto(`/tablero/${id}/`);
+    await expect(page.locator("select[name=estado]")).not.toHaveValue("en_curso");
+  });
 });
