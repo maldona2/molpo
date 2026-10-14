@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { exigirIdentidad } from "@/lib/auth";
-import { ESTADOS, ETIQUETAS, LIMITE_RESPUESTA, idDeTicket, puedeVerTicket } from "@/lib/tickets";
+import { ESTADOS, ETIQUETAS, LIMITE_RESPUESTA, idDeTicket, parseAviso, puedeVerTicket } from "@/lib/tickets";
 import { hrefSeguro } from "@/lib/komuk-hub-sync";
 import { getTicket } from "@/lib/tickets-db";
 import { listAdjuntos } from "@/lib/adjuntos-db";
 import { armarPrompt } from "@/lib/resolver";
 import { moverTicket } from "@/app/(privado)/tablero/acciones";
+import Toast from "@/components/Toast";
 import ResolverConGrok from "@/components/ResolverConGrok";
 import styles from "./Detalle.module.css";
 
@@ -18,7 +19,7 @@ export const metadata: Metadata = { title: "Detalle del pedido" };
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ conflicto?: string }>;
+  searchParams: Promise<{ conflicto?: string; guardado?: string; sin_cambios?: string; aviso?: string }>;
 };
 
 const fecha = new Intl.DateTimeFormat("es-AR", {
@@ -40,7 +41,7 @@ export default async function DetallePage({ params, searchParams }: Props) {
   if (!ticket || !puedeVerTicket(quien, ticket.cliente)) notFound();
 
   const capturas = await listAdjuntos([ticket.id]);
-  const { conflicto } = await searchParams;
+  const { conflicto, guardado, sin_cambios: sinCambios, aviso } = await searchParams;
   const prompt = armarPrompt(ticket, capturas, APP_URL);
 
   return (
@@ -151,7 +152,7 @@ export default async function DetallePage({ params, searchParams }: Props) {
                 </div>
                 <div>
                   <dt>Origen</dt>
-                  <dd>Sólo lectura: título, detalle y estado vienen del Hub.</dd>
+                  <dd>Título y detalle vienen del Hub; el estado lo manejamos acá.</dd>
                 </div>
               </>
             ) : null}
@@ -194,6 +195,14 @@ export default async function DetallePage({ params, searchParams }: Props) {
           ) : null}
         </aside>
       </div>
+
+      {parseAviso(aviso) === "resuelto" ? (
+        <Toast>Le avisamos al cliente que el pedido quedó resuelto.</Toast>
+      ) : guardado ? (
+        <Toast>Cambios guardados.</Toast>
+      ) : sinCambios ? (
+        <Toast>No había cambios para guardar.</Toast>
+      ) : null}
     </div>
   );
 }

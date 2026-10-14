@@ -81,26 +81,22 @@ test.describe("detalle del pedido, como cliente", () => {
     await expect(page.getByText("Respuesta para el cliente")).toHaveCount(0);
   });
 
-  test("desde el tablero, un click en el título abre el detalle", async ({ page }) => {
+  test("desde el tablero, el título abre el panel y de ahí la página completa", async ({ page }) => {
     await page.goto("/tablero/");
+    await page.getByRole("link", { name: TITULOS.completo }).click();
 
-    const titulo = page.getByRole("link", { name: TITULOS.completo });
-    await expect(titulo).toBeVisible();
-    await titulo.click();
-
+    const panel = page.getByRole("dialog", { name: TITULOS.completo });
+    await expect(panel.getByText("Cargo el descuento y al guardar salta un error.")).toBeVisible();
+    await panel.getByRole("link", { name: "Abrir página completa" }).click();
     await expect(page).toHaveURL(new RegExp(`/tablero/${tickets.completo}/?$`));
-    await expect(page.getByText("Cargo el descuento y al guardar salta un error.")).toBeVisible();
   });
 
-  test("con el teclado, Enter sobre el título también abre el detalle", async ({ page }) => {
+  test("con el teclado, Enter sobre el título también abre el panel", async ({ page }) => {
     await page.goto("/tablero/");
-
     const titulo = page.getByRole("link", { name: TITULOS.completo });
     await titulo.focus();
-    await expect(titulo).toBeFocused();
     await page.keyboard.press("Enter");
-
-    await expect(page).toHaveURL(new RegExp(`/tablero/${tickets.completo}/?$`));
+    await expect(page.getByRole("dialog", { name: TITULOS.completo })).toBeVisible();
   });
 
   test("el cliente no mueve tickets desde la tarjeta", async ({ page }) => {
@@ -108,5 +104,6 @@ test.describe("detalle del pedido, como cliente", () => {
 
     const tarjeta = page.locator("li", { has: page.getByRole("link", { name: TITULOS.completo }) });
     await expect(tarjeta.getByRole("combobox")).toHaveCount(0);
+    await expect(tarjeta).not.toHaveAttribute("draggable", "true");
   });
 });

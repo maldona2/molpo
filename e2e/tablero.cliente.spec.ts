@@ -1,0 +1,51 @@
+import { test, expect } from "@playwright/test";
+import { OTRO_CLIENTE, TITULOS } from "./sembrar.ts";
+import { tickets } from "./tickets.ts";
+
+test.describe("tablero, como cliente", () => {
+  test("ve sus pedidos con un buscador acotado y sin herramientas de admin", async ({ page }) => {
+    await page.goto("/tablero/");
+    await expect(page.getByRole("heading", { level: 1, name: "Tus pedidos" })).toBeVisible();
+    await expect(page.getByRole("searchbox", { name: "Buscar pedidos" })).toHaveAttribute(
+      "placeholder",
+      "Buscar por título o #id",
+    );
+    await expect(page.getByRole("button", { name: /^Cliente/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /^Sin respuesta/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /^KOMUK Hub/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Sincronizar" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: TITULOS.completo })).toBeVisible();
+    await expect(page.getByText(TITULOS.ajeno)).toHaveCount(0);
+  });
+
+  test("un ?cliente= ajeno en la URL no le muestra nada de otro", async ({ page }) => {
+    await page.goto(`/tablero/?cliente=${encodeURIComponent(OTRO_CLIENTE)}`);
+    await expect(page.getByText(TITULOS.ajeno)).toHaveCount(0);
+    await expect(page.getByRole("link", { name: TITULOS.completo })).toBeVisible();
+  });
+
+  test("el panel le muestra la respuesta, sin botones de gestión", async ({ page }) => {
+    await page.goto("/tablero/");
+    await page.getByRole("link", { name: TITULOS.completo }).click();
+    const panel = page.getByRole("dialog", { name: TITULOS.completo });
+    await expect(panel.getByText("Lo estamos mirando.")).toBeVisible();
+    await expect(panel.getByRole("button", { name: "En curso", exact: true })).toHaveCount(0);
+    await expect(panel.getByRole("textbox")).toHaveCount(0);
+    await expect(panel.getByRole("link", { name: "Abrir página completa" })).toHaveAttribute(
+      "href",
+      `/tablero/${tickets.completo}/`,
+    );
+  });
+
+  test("en el celular la página no scrollea de costado y el panel ocupa la pantalla", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/tablero/");
+
+    const ancho = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(ancho).toBeLessThanOrEqual(375);
+
+    await page.getByRole("link", { name: TITULOS.completo }).click();
+    const caja = await page.getByRole("dialog", { name: TITULOS.completo }).boundingBox();
+    expect(caja?.width).toBe(375);
+  });
+});

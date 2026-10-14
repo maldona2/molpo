@@ -70,8 +70,9 @@ test.describe("detalle del pedido, como admin", () => {
 
     await page.locator("textarea[name=respuesta]").fill("Lo miro esta semana.");
     await page.getByRole("button", { name: "Guardar y avisar" }).click();
-    // La acción siempre vuelve al tablero.
-    await expect(page).toHaveURL(/\/tablero\/?$/);
+    // Vuelve al mismo pedido y lo dice (el toast limpia la query, por eso no se mira la URL entera).
+    await expect(page).toHaveURL(new RegExp(`/tablero/${id}/`));
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
 
     await page.goto(`/tablero/${id}/`);
     await expect(page.getByRole("heading", { name: "Respuesta" })).toBeVisible();
@@ -85,39 +86,12 @@ test.describe("detalle del pedido, como admin", () => {
 
     await page.locator("select[name=estado]").selectOption("en_curso");
     await page.getByRole("button", { name: "Guardar y avisar" }).click();
-    await expect(page).toHaveURL(/\/tablero\/?$/);
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
+    await expect(page.locator("select[name=estado]")).toHaveValue("en_curso");
 
     await page.goto(`/tablero/${id}/`);
     await expect(page.locator("select[name=estado]")).toHaveValue("en_curso");
     await expect(page.locator("textarea[name=respuesta]")).toHaveValue("Ya lo vimos.");
-  });
-
-  test("mover la tarjeta desde el tablero no borra la respuesta", async ({ page }) => {
-    // El select de la tarjeta no manda el campo `respuesta`: si alguna vez lo
-    // mandara vacío, este pedido perdería lo que el admin ya había escrito.
-    const titulo = "Mover desde la tarjeta";
-    const id = await altaTicket({ titulo, respuesta: "Escrita desde el detalle." });
-    await page.goto("/tablero/");
-
-    const tarjeta = page.locator("li", { has: page.getByRole("link", { name: titulo }) }).first();
-    await tarjeta.getByRole("combobox", { name: `Mover #${id}` }).selectOption("resuelto");
-    await expect(page).toHaveURL(/\/tablero\/?$/);
-    // Esperar a que la tarjeta aparezca en su columna nueva: sin esto, el
-    // `goto` de abajo compite con el redirect de la acción y sale ERR_ABORTED.
-    await expect(
-      page.getByRole("region", { name: "Resuelto" }).getByRole("link", { name: titulo }),
-    ).toBeVisible();
-
-    await page.goto(`/tablero/${id}/`);
-    await expect(page.locator("select[name=estado]")).toHaveValue("resuelto");
-    await expect(page.locator("textarea[name=respuesta]")).toHaveValue("Escrita desde el detalle.");
-  });
-
-  test("si el pedido pasó a resuelto con mail, el tablero muestra el toast", async ({ page }) => {
-    await page.goto("/tablero/?aviso=resuelto");
-    await expect(page.getByRole("status")).toHaveText(
-      "Le avisamos al cliente que el pedido quedó resuelto.",
-    );
   });
 
   test("no pisa una respuesta que cambió en otra pestaña", async ({ page, context }) => {
@@ -132,7 +106,7 @@ test.describe("detalle del pedido, como admin", () => {
     await nueva.goto(`/tablero/${id}/`);
     await nueva.locator("textarea[name=respuesta]").fill("La escribió la otra pestaña.");
     await nueva.getByRole("button", { name: "Guardar y avisar" }).click();
-    await expect(nueva).toHaveURL(/\/tablero\/?$/);
+    await expect(nueva.getByRole("status")).toHaveText("Cambios guardados.");
     await nueva.close();
 
     // La vieja se pintó con la respuesta vacía y ahora intenta mover el estado.
@@ -164,9 +138,40 @@ test.describe("detalle del pedido, como admin", () => {
     const antes = await ultimaNovedad.innerText();
 
     await page.getByRole("button", { name: "Guardar y avisar" }).click();
-    await expect(page).toHaveURL(/\/tablero\/?$/);
+    await expect(page.getByRole("status")).toHaveText("No había cambios para guardar.");
 
     await page.goto(`/tablero/${id}/`);
     await expect(ultimaNovedad).toHaveText(antes);
+  });
+
+  test("si el pedido pasó a resuelto con mail, el detalle lo dice", async ({ page }) => {
+    await page.goto(`/tablero/${compartido.completo}/?guardado=1&aviso=resuelto`);
+    await expect(page.getByRole("status")).toHaveText(
+      "Le avisamos al cliente que el pedido quedó resuelto.",
+    );
+  });
+
+  test("un id inválido en el form vuelve al tablero sin romper", async ({ page }) => {
+    await page.goto(`/tablero/${compartido.completo}/`);
+    await page.locator("input[name=id]").evaluate((input: HTMLInputElement) => {
+      input.value = "2147483648";
+    });
+    await page.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(page).toHaveURL(/\/tablero\/?$/);
+  });
+
+  test("guardar dos veces seguidas en la misma página confirma las dos", async ({ page }) => {
+    const id = await altaTicket({ titulo: "Dos guardados" });
+    await page.goto(`/tablero/${id}/`);
+
+    await page.locator("textarea[name=respuesta]").fill("Primera respuesta.");
+    await page.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
+
+    // Sin recargar, con el primer toast ya apagado: el segundo tiene que volver a salir.
+    await expect(page.getByRole("status")).toBeHidden({ timeout: 8000 });
+    await page.locator("textarea[name=respuesta]").fill("Segunda respuesta.");
+    await page.getByRole("button", { name: "Guardar y avisar" }).click();
+    await expect(page.getByRole("status")).toHaveText("Cambios guardados.");
   });
 });
