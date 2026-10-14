@@ -17,8 +17,8 @@ test.describe("tickets espejo de KOMUK Hub, como admin", () => {
     await expect(page.getByText("in_progress")).toBeVisible();
   });
 
-  test("el tablero muestra el botón Sincronizar ahora al admin", async ({ page }) => {
+  test("el tablero muestra el botón Sincronizar al admin", async ({ page }) => {
     await page.goto("/tablero/");
-    await expect(page.getByRole("button", { name: "Sincronizar ahora" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sincronizar" })).toBeVisible();
   });
 });

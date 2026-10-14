@@ -1,120 +1,185 @@
-import MoverEstado from "@/components/MoverEstado";
-import { hrefSeguro } from "@/lib/komuk-hub-sync";
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { sincronizarKomuk } from "@/app/(privado)/tablero/acciones";
+import type { Estado } from "@/lib/tickets";
+import {
+  DIAS_ESTANCADO,
+  FILTROS_INICIALES,
+  estancado,
+  filtrar,
+  filtrosAQuery,
+  hayFiltros,
+  textoSync,
+  vivo,
+  type Filtros,
+  type TarjetaTablero,
+} from "@/lib/tablero";
+import TableroBarra from "@/components/TableroBarra";
+import TableroColumnas from "@/components/TableroColumnas";
+import TableroLista from "@/components/TableroLista";
+import panel from "@/app/(privado)/Panel.module.css";
 import styles from "./Tablero.module.css";
 
-export type TarjetaData = {
-  id: number;
-  titulo: string;
-  tipo: string;
-  prioridad: string;
-  prioridadEtiqueta: string;
-  cliente: string;
-  respuesta: string | null;
-  capturas: number;
-  primerAdjunto: number | null;
-  externa: string | null;
-};
-
-export type ColumnaData = {
-  estado: string;
-  etiqueta: string;
-  tickets: TarjetaData[];
-};
-
 type Props = {
-  columnas: ColumnaData[];
+  tickets: TarjetaTablero[];
   esAdmin: boolean;
+  /** La hora del server: con la del navegador, "hoy" y "ayer" podrían no coincidir al hidratar. */
+  ahora: number;
+  filtrosIniciales: Filtros;
+  sync: { ultima: number | null; error: string | null } | null;
 };
 
-function Tarjeta({
-  tarjeta,
-  esAdmin,
-  columnas,
-  estado,
-}: {
-  tarjeta: TarjetaData;
-  esAdmin: boolean;
-  columnas: ColumnaData[];
-  estado: string;
-}) {
-  return (
-    <li className={styles.tarjeta} data-prioridad={tarjeta.prioridad}>
-      <div className={styles.tarjetaMeta}>
-        <span className={`${styles.prioridad} ${styles[tarjeta.prioridad]}`}>
-          {tarjeta.prioridadEtiqueta}
-        </span>
-        <span>
-          #{tarjeta.id} · {tarjeta.tipo}
-          {esAdmin ? ` · ${tarjeta.cliente}` : ""}
-        </span>
-        {tarjeta.externa ? (
-          <a
-            className={styles.badgeExterno}
-            href={hrefSeguro(tarjeta.externa)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            KOMUK Hub
-          </a>
-        ) : null}
-      </div>
-      <p className={styles.tarjetaTitulo}>
-        <a className={styles.enlaceTitulo} href={`/tablero/${tarjeta.id}/`}>
-          {tarjeta.titulo}
-        </a>
-      </p>
-      {tarjeta.primerAdjunto ? (
-        <a
-          className={styles.miniatura}
-          href={`/adjuntos/${tarjeta.primerAdjunto}`}
-          target="_blank"
-          rel="noopener"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/adjuntos/${tarjeta.primerAdjunto}`} alt="" />
-          <span>
-            {tarjeta.capturas} captura{tarjeta.capturas > 1 ? "s" : ""}
-          </span>
-        </a>
-      ) : null}
-      {tarjeta.respuesta ? <p className={styles.respuesta}>{tarjeta.respuesta}</p> : null}
+const CLAVE_COLAPSADAS = "molpo:tablero:colapsadas";
 
-      {esAdmin ? (
-        <MoverEstado
-          id={tarjeta.id}
-          estado={estado}
-          opciones={columnas.map((columna) => ({
-            estado: columna.estado,
-            etiqueta: columna.etiqueta,
-          }))}
-        />
+export default function Tablero({ tickets, esAdmin, ahora, filtrosIniciales, sync }: Props) {
+  const [filtros, setFiltros] = useState(filtrosIniciales);
+  const [menu, setMenu] = useState<string | null>(null);
+  const [colapsadas, setColapsadas] = useState<Partial<Record<Estado, boolean>>>({ cerrado: true });
+  const buscador = useRef<HTMLInputElement>(null);
+
+  const cambiar = (parcial: Partial<Filtros>) => setFiltros((f) => ({ ...f, ...parcial }));
+
+  useEffect(() => {
+    try {
+      const guardadas = localStorage.getItem(CLAVE_COLAPSADAS);
+      if (guardadas) setColapsadas(JSON.parse(guardadas));
+    } catch {
+      // Sin storage (ventana privada, sitio bloqueado): quedan las de fábrica.
+    }
+  }, []);
+
+  function alternarColumna(estado: Estado) {
+    const nuevas = { ...colapsadas, [estado]: !colapsadas[estado] };
+    setColapsadas(nuevas);
+    try {
+      localStorage.setItem(CLAVE_COLAPSADAS, JSON.stringify(nuevas));
+    } catch {
+      // Ídem: sin storage la preferencia dura hasta recargar.
+    }
+  }
+
+  // Los filtros viven en la URL para recargar o compartir la vista. replaceState
+  // y no router.replace: el router le volvería a pedir la página al server.
+  useEffect(() => {
+    const query = filtrosAQuery(filtros);
+    window.history.replaceState(null, "", `/tablero/${query ? `?${query}` : ""}`);
+  }, [filtros]);
+
+  useEffect(() => {
+    function tecla(e: KeyboardEvent) {
+      const escribiendo =
+        e.target instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+      if (e.key === "Escape") {
+        if (menu) setMenu(null);
+        if (escribiendo) (e.target as HTMLElement).blur();
+        return;
+      }
+      if (escribiendo || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "/") {
+        e.preventDefault();
+        buscador.current?.focus();
+      }
+    }
+    window.addEventListener("keydown", tecla);
+    return () => window.removeEventListener("keydown", tecla);
+  });
+
+  const visibles = useMemo(
+    () => filtrar(tickets, filtros, esAdmin, ahora),
+    [tickets, filtros, esAdmin, ahora],
+  );
+  const filtrando = hayFiltros(filtros, esAdmin);
+  const sinCerrar = tickets.filter(vivo).length;
+  const altas = tickets.filter((t) => t.prioridad === "alta" && vivo(t)).length;
+  const estancados = tickets.filter((t) => estancado(t, ahora)).length;
+
+  return (
+    <div className={styles.raiz}>
+      <header className={styles.encabezado}>
+        <div>
+          <h1 className={panel.h1}>{esAdmin ? "Tablero" : "Tus pedidos"}</h1>
+          <p className={styles.resumen}>
+            {tickets.length} pedidos · {sinCerrar} sin cerrar
+          </p>
+        </div>
+        {sync ? (
+          <form action={sincronizarKomuk} className={styles.sync}>
+            <BotonSync ultima={sync.ultima} ahora={ahora} />
+            {sync.error ? (
+              <p className={styles.syncError} role="alert">
+                Último error: {sync.error}
+              </p>
+            ) : null}
+          </form>
+        ) : null}
+      </header>
+
+      {altas > 0 || estancados > 0 ? (
+        <div className={styles.alertas}>
+          {altas > 0 ? (
+            <button type="button" className={styles.alerta} onClick={() => cambiar({ prioridades: ["alta"] })}>
+              {altas} de prioridad alta
+            </button>
+          ) : null}
+          {estancados > 0 ? (
+            <button
+              type="button"
+              className={styles.alerta}
+              onClick={() =>
+                setFiltros((f) =>
+                  f.atajos.includes("estancados") ? f : { ...f, atajos: [...f.atajos, "estancados"] },
+                )
+              }
+            >
+              {estancados} sin movimiento hace más de {DIAS_ESTANCADO} días
+            </button>
+          ) : null}
+        </div>
       ) : null}
-    </li>
+
+      <TableroBarra
+        tickets={tickets}
+        filtros={filtros}
+        cambiar={cambiar}
+        limpiar={() => setFiltros((f) => ({ ...FILTROS_INICIALES, orden: f.orden, vista: f.vista }))}
+        esAdmin={esAdmin}
+        ahora={ahora}
+        visibles={visibles.length}
+        filtrando={filtrando}
+        menu={menu}
+        setMenu={setMenu}
+        buscador={buscador}
+      />
+
+      {filtros.vista === "tablero" ? (
+        <TableroColumnas
+          tickets={tickets}
+          visibles={visibles}
+          filtrando={filtrando}
+          colapsadas={colapsadas}
+          onColapsar={alternarColumna}
+          esAdmin={esAdmin}
+          ahora={ahora}
+        />
+      ) : (
+        <TableroLista visibles={visibles} filtrando={filtrando} esAdmin={esAdmin} ahora={ahora} />
+      )}
+    </div>
   );
 }
 
-export default function Tablero({ columnas, esAdmin }: Props) {
+function BotonSync({ ultima, ahora }: { ultima: number | null; ahora: number }) {
+  const { pending } = useFormStatus();
   return (
-    <div className={styles.tablero}>
-      {columnas.map((columna) => (
-        <section key={columna.estado} className={styles.columna} aria-label={columna.etiqueta}>
-          <h2 className={styles.columnaTitulo}>
-            {columna.etiqueta} <span className={styles.cuenta}>{columna.tickets.length}</span>
-          </h2>
-          <ul className={styles.pila}>
-            {columna.tickets.map((tarjeta) => (
-              <Tarjeta
-                key={tarjeta.id}
-                tarjeta={tarjeta}
-                esAdmin={esAdmin}
-                columnas={columnas}
-                estado={columna.estado}
-              />
-            ))}
-            {columna.tickets.length === 0 ? <li className={styles.vacia}>Nada acá.</li> : null}
-          </ul>
-        </section>
-      ))}
-    </div>
+    <>
+      <span className={styles.syncEstado}>
+        KOMUK Hub · {pending ? "sincronizando…" : textoSync(ultima, ahora)}
+      </span>
+      <button type="submit" className={styles.syncBoton} disabled={pending}>
+        {pending ? "Sincronizando…" : "Sincronizar"}
+      </button>
+    </>
   );
 }

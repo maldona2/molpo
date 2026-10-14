@@ -6,21 +6,11 @@ import {
   TIPOS,
   type Estado,
   type Prioridad,
-  type Ticket,
   type Tipo,
 } from "./tickets.ts";
 
 /** Columnas del tablero, en el orden en que se leen. */
 export const COLUMNAS: readonly Estado[] = ESTADOS;
-
-export function agruparPorEstado(tickets: Ticket[]): Record<Estado, Ticket[]> {
-  const columnas = Object.fromEntries(ESTADOS.map((e) => [e, [] as Ticket[]])) as Record<
-    Estado,
-    Ticket[]
-  >;
-  for (const ticket of tickets) columnas[ticket.estado].push(ticket);
-  return columnas;
-}
 
 /** Lo que el client component necesita de cada pedido. Fechas en ms: viajan del server sin ambigüedad. */
 export type TarjetaTablero = {
