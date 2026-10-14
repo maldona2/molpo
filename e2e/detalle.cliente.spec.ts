@@ -104,5 +104,6 @@ test.describe("detalle del pedido, como cliente", () => {
 
     const tarjeta = page.locator("li", { has: page.getByRole("link", { name: TITULOS.completo }) });
     await expect(tarjeta.getByRole("combobox")).toHaveCount(0);
+    await expect(tarjeta).not.toHaveAttribute("draggable", "true");
   });
 });

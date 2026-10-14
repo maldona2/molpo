@@ -201,6 +201,36 @@ test.describe("tablero, como admin", () => {
     await expect(page.getByRole("dialog", { name: "Recorrer uno" })).toBeVisible();
   });
 
+  test("arrastrar una tarjeta la mueve, y Deshacer la devuelve de verdad", async ({ page }) => {
+    const titulo = "Arrastrar y deshacer";
+    const id = await altaTicket({ titulo });
+    await page.goto(`/tablero/?q=${encodeURIComponent(titulo)}`);
+
+    const resuelto = page.getByRole("region", { name: "Resuelto" });
+    await page.locator("li", { has: tarjeta(page, titulo) }).dragTo(resuelto);
+    await expect(resuelto.getByRole("link", { name: titulo })).toBeVisible();
+    await expect(page.getByRole("status")).toContainText(`#${id} pasó a Resuelto.`);
+
+    await page.getByRole("button", { name: "Deshacer" }).click();
+    await expect(page.getByRole("status")).toContainText(`#${id} volvió a Abierto.`);
+    await expect(page.getByRole("region", { name: "Abierto" }).getByRole("link", { name: titulo })).toBeVisible();
+
+    // Persistido, no sólo en pantalla.
+    await page.reload();
+    await expect(page.getByRole("region", { name: "Abierto" }).getByRole("link", { name: titulo })).toBeVisible();
+  });
+
+  test("soltar en la misma columna no hace nada", async ({ page }) => {
+    const titulo = "Soltar en el lugar";
+    await altaTicket({ titulo });
+    await page.goto(`/tablero/?q=${encodeURIComponent(titulo)}`);
+
+    await page.locator("li", { has: tarjeta(page, titulo) }).dragTo(page.getByRole("region", { name: "Abierto" }));
+    // mover() sale antes de llamar al server: si hubiera toast, aparecería enseguida.
+    await page.waitForTimeout(500);
+    await expect(page.getByRole("status")).toHaveCount(0);
+  });
+
   test("si el server falla al mover, avisa y la tarjeta vuelve a su columna", async ({ page }) => {
     const titulo = "Mover con falla";
     const id = await altaTicket({ titulo });

@@ -1,6 +1,6 @@
 "use client";
 
-import type { MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 import { ETIQUETAS, type Estado } from "@/lib/tickets";
 import { COLUMNAS, diasDesde, edad, estancado, vivo, type TarjetaTablero } from "@/lib/tablero";
 import styles from "./Tablero.module.css";
@@ -27,6 +27,7 @@ type Props = {
   ahora: number;
   abierto?: number | null;
   onAbrir?: (id: number) => void;
+  onMover?: (id: number, estado: Estado) => void;
 };
 
 export default function TableroColumnas({
@@ -39,9 +40,18 @@ export default function TableroColumnas({
   ahora,
   abierto,
   onAbrir,
+  onMover,
 }: Props) {
+  const [arrastrando, setArrastrando] = useState<number | null>(null);
+  const [sobre, setSobre] = useState<Estado | null>(null);
+  const soltar = () => {
+    setArrastrando(null);
+    setSobre(null);
+  };
+  const arrastrable = esAdmin && Boolean(onMover);
+
   return (
-    <div className={styles.tablero}>
+    <div className={styles.tablero} onDragEnd={soltar}>
       {COLUMNAS.map((estado) => {
         const tarjetas = visibles.filter((t) => t.estado === estado);
         const total = tickets.filter((t) => t.estado === estado).length;
@@ -53,7 +63,27 @@ export default function TableroColumnas({
             key={estado}
             className={styles.columna}
             data-colapsada={colapsada || undefined}
+            data-sobre={sobre === estado || undefined}
             aria-label={etiqueta}
+            // Sólo se acepta lo que se arrastró desde este tablero: un link o
+            // un archivo soltado desde afuera no mueve nada.
+            onDragOver={(e) => {
+              if (arrastrando === null) return;
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+              setSobre(estado);
+            }}
+            onDragLeave={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                setSobre((s) => (s === estado ? null : s));
+              }
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              const id = arrastrando;
+              soltar();
+              if (id !== null) onMover?.(id, estado);
+            }}
           >
             <header className={styles.columnaCabecera}>
               <span className={styles.punto} data-estado={estado} aria-hidden />
@@ -83,11 +113,16 @@ export default function TableroColumnas({
                     esAdmin={esAdmin}
                     ahora={ahora}
                     seleccionada={abierto === t.id}
+                    arrastrable={arrastrable}
+                    arrastrada={arrastrando === t.id}
+                    onArrastrar={() => setArrastrando(t.id)}
                     onAbrir={onAbrir && (() => onAbrir(t.id))}
                   />
                 ))}
                 {tarjetas.length === 0 ? (
-                  <li className={styles.vacia}>{filtrando ? "Nada con estos filtros" : "Nada acá"}</li>
+                  <li className={styles.vacia}>
+                    {arrastrando !== null ? "Soltá acá" : filtrando ? "Nada con estos filtros" : "Nada acá"}
+                  </li>
                 ) : null}
               </ul>
             )}
@@ -103,12 +138,18 @@ function Tarjeta({
   esAdmin,
   ahora,
   seleccionada,
+  arrastrable,
+  arrastrada,
+  onArrastrar,
   onAbrir,
 }: {
   t: TarjetaTablero;
   esAdmin: boolean;
   ahora: number;
   seleccionada: boolean;
+  arrastrable: boolean;
+  arrastrada: boolean;
+  onArrastrar: () => void;
   onAbrir?: () => void;
 }) {
   const dias = diasDesde(t.actividad, ahora);
@@ -116,6 +157,15 @@ function Tarjeta({
     <li
       className={styles.tarjeta}
       data-seleccionada={seleccionada || undefined}
+      data-arrastrada={arrastrada || undefined}
+      draggable={arrastrable}
+      onDragStart={(e) => {
+        if (!arrastrable) return;
+        e.dataTransfer.effectAllowed = "move";
+        // Firefox no arranca el drag sin datos; el id real viaja en el estado.
+        e.dataTransfer.setData("text/plain", String(t.id));
+        onArrastrar();
+      }}
       onClick={(e) => abrirDesdeFondo(e, onAbrir)}
     >
       <div className={styles.tarjetaMeta}>
@@ -135,7 +185,7 @@ function Tarjeta({
       </div>
       {esAdmin ? <p className={styles.tarjetaCliente}>{t.cliente}</p> : null}
       <p className={styles.tarjetaTitulo}>
-        <a href={`/tablero/${t.id}/`} onClick={(e) => abrirSinSalir(e, onAbrir)}>
+        <a href={`/tablero/${t.id}/`} draggable={false} onClick={(e) => abrirSinSalir(e, onAbrir)}>
           {t.titulo}
         </a>
       </p>

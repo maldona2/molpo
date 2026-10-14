@@ -255,6 +255,7 @@ export default function Tablero({ tickets: delServer, esAdmin, ahora, filtrosIni
           ahora={ahora}
           abierto={abierto}
           onAbrir={setAbierto}
+          onMover={mover}
         />
       ) : (
         <TableroLista
