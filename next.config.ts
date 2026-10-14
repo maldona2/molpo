@@ -2,6 +2,8 @@ import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // standalone: server mínimo con sólo las deps trazadas, ~mitad de RAM que next start.
+  output: "standalone",
   trailingSlash: true,
   images: { unoptimized: true },
   reactStrictMode: true,
